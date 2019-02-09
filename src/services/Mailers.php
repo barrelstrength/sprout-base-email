@@ -1,10 +1,10 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\services;
+namespace barrelstrength\sproutbaseemail\services;
 
-use barrelstrength\sproutbase\app\email\base\Mailer;
-use barrelstrength\sproutbase\app\email\events\RegisterMailersEvent;
-use barrelstrength\sproutbase\SproutBase;
+use barrelstrength\sproutbaseemail\base\Mailer;
+use barrelstrength\sproutbaseemail\events\RegisterMailersEvent;
+use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use craft\base\Component;
 
 
@@ -65,7 +65,7 @@ class Mailers extends Component
 
     public function includeMailerModalResources()
     {
-        $mailers = SproutBase::$app->mailers->getMailers();
+        $mailers = SproutBaseEmail::$app->mailers->getMailers();
 
         if ($mailers) {
             /**

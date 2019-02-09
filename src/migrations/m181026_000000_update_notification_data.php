@@ -2,7 +2,7 @@
 
 /** @noinspection ClassConstantCanBeUsedInspection */
 
-namespace barrelstrength\sproutbase\app\email\migrations;
+namespace barrelstrength\sproutbaseemail\migrations;
 
 use craft\db\Migration;
 use craft\db\Query;

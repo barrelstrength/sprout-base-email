@@ -1,8 +1,8 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\services;
+namespace barrelstrength\sproutbaseemail\services;
 
-use barrelstrength\sproutbase\app\email\base\EmailTemplates as BaseEmailTemplates;
+use barrelstrength\sproutbaseemail\base\EmailTemplates as BaseEmailTemplates;
 use craft\events\RegisterComponentTypesEvent;
 use craft\base\Component;
 

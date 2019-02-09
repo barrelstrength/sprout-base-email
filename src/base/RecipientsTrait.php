@@ -1,9 +1,9 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\base;
+namespace barrelstrength\sproutbaseemail\base;
 
-use barrelstrength\sproutbase\app\email\models\SimpleRecipient;
-use barrelstrength\sproutbase\app\email\models\SimpleRecipientList;
+use barrelstrength\sproutbaseemail\models\SimpleRecipient;
+use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
 use barrelstrength\sproutlists\records\SubscriberList as ListsRecord;
 use barrelstrength\sproutlists\records\Subscriber;
 use Craft;

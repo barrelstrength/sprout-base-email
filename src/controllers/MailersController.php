@@ -1,8 +1,8 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\controllers;
+namespace barrelstrength\sproutbaseemail\controllers;
 
-use barrelstrength\sproutbase\app\email\base\EmailElement;
+use barrelstrength\sproutbaseemail\base\EmailElement;
 use craft\web\Controller;
 use Craft;
 use yii\base\InvalidArgumentException;

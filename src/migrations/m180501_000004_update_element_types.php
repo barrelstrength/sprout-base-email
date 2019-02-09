@@ -1,6 +1,6 @@
 <?php /** @noinspection ClassConstantCanBeUsedInspection */
 
-namespace barrelstrength\sproutbase\app\email\migrations;
+namespace barrelstrength\sproutbaseemail\migrations;
 
 use craft\db\Migration;
 
@@ -15,7 +15,7 @@ class m180501_000004_update_element_types extends Migration
         $campaignClasses = [
             0 => [
                 'oldType' => 'SproutEmail_CampaignEmail',
-                'newType' => 'barrelstrength\sproutbase\app\email\elements\CampaignEmail'
+                'newType' => 'barrelstrength\sproutbaseemail\elements\CampaignEmail'
             ]
         ];
 
@@ -28,7 +28,7 @@ class m180501_000004_update_element_types extends Migration
         $notificationClasses = [
             0 => [
                 'oldType' => 'SproutEmail_NotificationEmail',
-                'newType' => 'barrelstrength\sproutbase\app\email\elements\NotificationEmail'
+                'newType' => 'barrelstrength\sproutbaseemail\elements\NotificationEmail'
             ]
         ];
 

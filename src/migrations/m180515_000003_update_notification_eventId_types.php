@@ -1,6 +1,6 @@
 <?php /** @noinspection ClassConstantCanBeUsedInspection */
 
-namespace barrelstrength\sproutbase\app\email\migrations;
+namespace barrelstrength\sproutbaseemail\migrations;
 
 use craft\db\Migration;
 
@@ -22,7 +22,7 @@ class m180515_000003_update_notification_eventId_types extends Migration
             ],
             1 => [
                 'oldType' => 'sproutemail-basictemplates',
-                'newType' => 'barrelstrength\sproutbase\app\email\emailtemplates\BasicTemplates'
+                'newType' => 'barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates'
             ]
         ];
 

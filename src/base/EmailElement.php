@@ -1,10 +1,10 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\base;
+namespace barrelstrength\sproutbaseemail\base;
 
-use barrelstrength\sproutbase\app\email\emailtemplates\BasicTemplates;
-use barrelstrength\sproutbase\app\email\emailtemplates\CustomTemplates;
-use barrelstrength\sproutbase\app\email\mailers\DefaultMailer;
+use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
+use barrelstrength\sproutbaseemail\emailtemplates\CustomTemplates;
+use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
 use barrelstrength\sproutemail\models\Settings;
 use craft\base\Element;
 use Craft;
@@ -15,9 +15,9 @@ use craft\base\Field;
  * @property bool                                                                                                                                                                                            $isTest
  * @property null|object                                                                                                                                                                                     $eventObject
  * @property int                                                                                                                                                                                             $emailTemplateId
- * @property \barrelstrength\sproutbase\app\email\base\Mailer                                                                                                                                                $mailer
+ * @property \barrelstrength\sproutbaseemail\base\Mailer                                                                                                                                                $mailer
  * @property array                                                                                                                                                                                           $fieldLayoutTabs
- * @property \barrelstrength\sproutbase\app\email\base\EmailTemplates|\barrelstrength\sproutbase\app\email\emailtemplates\CustomTemplates|\barrelstrength\sproutbase\app\email\emailtemplates\BasicTemplates $emailTemplates
+ * @property \barrelstrength\sproutbaseemail\base\EmailTemplates|\barrelstrength\sproutbaseemail\emailtemplates\CustomTemplates|\barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates $emailTemplates
  */
 abstract class EmailElement extends Element
 {

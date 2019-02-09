@@ -1,13 +1,14 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\services;
+namespace barrelstrength\sproutbaseemail\services;
 
-use barrelstrength\sproutbase\app\email\base\Mailer;
-use barrelstrength\sproutbase\app\email\base\NotificationEmailSenderInterface;
-use barrelstrength\sproutbase\app\email\base\NotificationEvent;
-use barrelstrength\sproutbase\app\email\elements\NotificationEmail;
+use barrelstrength\sproutbaseemail\base\Mailer;
+use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
+use barrelstrength\sproutbaseemail\base\NotificationEvent;
+use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbase\SproutBase;
-use barrelstrength\sproutbase\app\email\records\NotificationEmail as NotificationEmailRecord;
+use barrelstrength\sproutbaseemail\records\NotificationEmail as NotificationEmailRecord;
+use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use craft\base\Component;
 use Craft;
 use craft\helpers\ElementHelper;
@@ -19,7 +20,7 @@ use craft\models\FieldLayout;
 /**
  * Class NotificationEmails
  *
- * @package barrelstrength\sproutbase\app\email\services
+ * @package barrelstrength\sproutbaseemail\services
  */
 class NotificationEmails extends Component
 {
@@ -32,7 +33,7 @@ class NotificationEmails extends Component
      */
     public function saveNotification(NotificationEmail $notificationEmail)
     {
-        if (!$notificationEmail->validate()) {
+        if (!$notificationEmail->validate(null, false)) {
             SproutBase::info(Craft::t('sprout-base', 'Notification Email not saved due to validation error.'));
             return false;
         }
@@ -141,7 +142,7 @@ class NotificationEmails extends Component
          */
         $notificationEmail = $this->getNotificationEmailById($notificationId);
 
-        $event = SproutBase::$app->notificationEvents->getEvent($notificationEmail);
+        $event = SproutBaseEmail::$app->notificationEvents->getEvent($notificationEmail);
 
         if (!$event) {
             ob_start();
@@ -192,7 +193,7 @@ class NotificationEmails extends Component
         }
 
         /* @var NotificationEvent $event */
-        $event = SproutBase::$app->notificationEvents->getEvent($email);
+        $event = SproutBaseEmail::$app->notificationEvents->getEvent($email);
 
         $email->setEventObject($event->getMockEventObject());
 
@@ -226,7 +227,7 @@ class NotificationEmails extends Component
         $notificationEditSettingsUrl = UrlHelper::cpUrl($currentPluginHandle.'/settings/notifications/edit/'.
             $notificationEmail->id);
 
-        $event = SproutBase::$app->notificationEvents->getEventById($notificationEmail->eventId);
+        $event = SproutBaseEmail::$app->notificationEvents->getEventById($notificationEmail->eventId);
 
         $emailTemplates = $notificationEmail->getEmailTemplates();
 

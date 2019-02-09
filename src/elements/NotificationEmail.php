@@ -1,20 +1,23 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\elements;
+namespace barrelstrength\sproutbaseemail\elements;
 
-use barrelstrength\sproutbase\app\email\base\EmailElement;
-use barrelstrength\sproutbase\app\email\base\SenderTrait;
-use barrelstrength\sproutbase\app\email\elements\actions\DeleteNotification;
-use barrelstrength\sproutbase\SproutBase;
-use barrelstrength\sproutbase\app\email\web\assets\base\NotificationAsset;
-use barrelstrength\sproutbase\app\email\elements\db\NotificationEmailQuery;
-use barrelstrength\sproutbase\app\email\records\NotificationEmail as NotificationEmailRecord;
+use barrelstrength\sproutbaseemail\base\EmailElement;
+use barrelstrength\sproutbaseemail\base\SenderTrait;
+use barrelstrength\sproutbaseemail\elements\actions\DeleteNotification;
+use barrelstrength\sproutbaseemail\SproutBaseEmail;
+use barrelstrength\sproutbaseemail\web\assets\base\NotificationAsset;
+use barrelstrength\sproutbaseemail\elements\db\NotificationEmailQuery;
+use barrelstrength\sproutbaseemail\records\NotificationEmail as NotificationEmailRecord;
 use Craft;
 use craft\behaviors\FieldLayoutBehavior;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use yii\base\Exception;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 /**
  * Class NotificationEmail
@@ -214,7 +217,7 @@ class NotificationEmail extends EmailElement
             $shareUrl = null;
 
             if ($this->id && $this->getUrl()) {
-                $shareUrl = UrlHelper::actionUrl('sprout/notifications/share-notification-email', [
+                $shareUrl = UrlHelper::actionUrl('sprout-base-email/notifications/share-notification-email', [
                     'notificationId' => $this->id,
                 ]);
             }
@@ -316,7 +319,7 @@ class NotificationEmail extends EmailElement
 
         Craft::$app->getView()->registerAssetBundle(NotificationAsset::class);
         Craft::$app->getView()->registerJs('var sproutModalInstance = new SproutModal(); sproutModalInstance.init();');
-        SproutBase::$app->mailers->includeMailerModalResources();
+        SproutBaseEmail::$app->mailers->includeMailerModalResources();
 
         return $html;
     }
@@ -372,9 +375,70 @@ class NotificationEmail extends EmailElement
 
         $rules[] = [['subjectLine', 'fromName', 'fromEmail'], 'required'];
         $rules[] = [['fromName', 'fromEmail', 'replyToEmail'], 'default', 'value' => ''];
-        $rules[] = [['fromEmail'], 'email'];
+        $rules[] = [['fromEmail', 'replyToEmail'], 'email'];
+        $rules[] = ['recipients', 'emailList'];
+        $rules[] = ['cc', 'emailList'];
+        $rules[] = ['bcc', 'emailList'];
 
         return $rules;
+    }
+
+    /**
+     * @param $attribute
+     *
+     * @return bool
+     * @throws Exception
+     * @throws \Throwable
+     */
+    public function emailList($attribute): bool
+    {
+        $recipients = $this->{$attribute};
+        $validator = new EmailValidator();
+        $multipleValidations = new MultipleValidationWithAnd([
+            new RFCValidation()
+        ]);
+
+        // Add any On The Fly Recipients to our List
+        if (!empty($recipients)) {
+            $recipientArray = explode(',', trim($recipients));
+
+            foreach ($recipientArray as $recipient) {
+                $recipient = trim($recipient);
+
+                // If it is dynamic string
+                if (strpos($recipient, '{') !== false) {
+
+                    // Validate event object E.g. {{ object.email }} and {{ email }}
+                    $isExist = true;
+
+                    $event = SproutBaseEmail::$app->notificationEvents->getEvent($this);
+
+                    if ($event) {
+                        $this->setEventObject($event->getMockEventObject());
+
+                        $eventObject = $this->getEventObject();
+
+                        try {
+                            $renderedEmail = Craft::$app->getView()->renderObjectTemplate($recipient, $eventObject);
+                            if (empty($renderedEmail)) {
+                                $isExist = false;
+                            }
+                        } catch (\Exception $e) {
+                            $isExist = false;
+                        }
+                    }
+
+                    if ($isExist === false) {
+                        $this->addError($attribute, "Dynamic $recipient attribute does not exist.");
+                    }
+                } elseif (!$validator->isValid(trim($recipient), $multipleValidations)) {
+                    $this->addError($attribute, Craft::t('sprout-base',
+                        $recipient . ' email is not valid.'));
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -405,7 +469,7 @@ class NotificationEmail extends EmailElement
      */
     public function getEmailTemplateId(): string
     {
-        return $this->emailTemplateId;
+        return $this->emailTemplateId ?? '';
     }
 
     public function isReady(): bool

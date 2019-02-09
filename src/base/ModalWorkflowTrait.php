@@ -1,8 +1,8 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\base;
+namespace barrelstrength\sproutbaseemail\base;
 
-use barrelstrength\sproutbase\app\email\models\ModalResponse;
+use barrelstrength\sproutbaseemail\models\ModalResponse;
 use Craft;
 
 trait ModalWorkflowTrait
@@ -31,7 +31,7 @@ trait ModalWorkflowTrait
      */
     public function getActionForPrepareModal(): string
     {
-        return 'sprout/mailers/get-prepare-modal';
+        return 'sprout-base-email/mailers/get-prepare-modal';
     }
 
     /**

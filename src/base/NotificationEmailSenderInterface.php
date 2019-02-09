@@ -5,9 +5,9 @@
  * @license   http://sprout.barrelstrengthdesign.com/license
  */
 
-namespace barrelstrength\sproutbase\app\email\base;
+namespace barrelstrength\sproutbaseemail\base;
 
-use barrelstrength\sproutbase\app\email\elements\NotificationEmail;
+use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 
 interface NotificationEmailSenderInterface
 {

@@ -5,10 +5,10 @@
  * @license   http://sprout.barrelstrengthdesign.com/license
  */
 
-namespace barrelstrength\sproutbase\app\email\base;
+namespace barrelstrength\sproutbaseemail\base;
 
-use barrelstrength\sproutbase\app\email\models\SimpleRecipient;
-use barrelstrength\sproutbase\app\email\models\SimpleRecipientList;
+use barrelstrength\sproutbaseemail\models\SimpleRecipient;
+use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
 use craft\base\Component;
 use craft\helpers\Html;
 use Craft;

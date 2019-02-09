@@ -1,6 +1,6 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\migrations;
+namespace barrelstrength\sproutbaseemail\migrations;
 
 use craft\db\Migration;
 

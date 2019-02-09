@@ -1,6 +1,6 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\base;
+namespace barrelstrength\sproutbaseemail\base;
 
 use Craft;
 use League\HTMLToMarkdown\HtmlConverter;

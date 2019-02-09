@@ -7,27 +7,16 @@
 
 namespace barrelstrength\sproutbaseemail;
 
-use barrelstrength\sproutbase\app\email\services\EmailTemplates;
-use barrelstrength\sproutbase\app\import\controllers\ImportController;
-use barrelstrength\sproutbase\app\import\console\controllers\ImportController as ConsoleImportController;
-use barrelstrength\sproutbase\app\import\console\controllers\SeedController as ConsoleSeedController;
-use barrelstrength\sproutbase\app\import\controllers\SeedController;
-use barrelstrength\sproutbase\app\import\controllers\SproutSeoController;
-use barrelstrength\sproutbase\app\import\controllers\WeedController;
+use barrelstrength\sproutbaseemail\services\App;
+use barrelstrength\sproutbaseemail\services\EmailTemplates;
 use barrelstrength\sproutbase\base\BaseSproutTrait;
-use barrelstrength\sproutbase\controllers\SettingsController;
-use barrelstrength\sproutbase\app\email\controllers\NotificationsController;
-use barrelstrength\sproutbase\app\email\events\RegisterMailersEvent;
-use barrelstrength\sproutbase\app\email\emailtemplates\BasicTemplates;
-use barrelstrength\sproutbase\app\email\mailers\DefaultMailer;
-use barrelstrength\sproutbase\app\email\services\Mailers;
-use barrelstrength\sproutbase\app\fields\controllers\AddressController;
-use barrelstrength\sproutbase\app\fields\controllers\FieldsController;
-use barrelstrength\sproutbase\app\fields\web\twig\variables\SproutFieldsVariable;
-use barrelstrength\sproutbase\app\email\web\twig\variables\SproutEmailVariable;
-use barrelstrength\sproutbase\app\reports\controllers\ReportsController;
-use barrelstrength\sproutbase\app\import\web\twig\variables\SproutImportVariable;
-use barrelstrength\sproutbase\app\email\controllers\MailersController;
+use barrelstrength\sproutbaseemail\controllers\NotificationsController;
+use barrelstrength\sproutbaseemail\events\RegisterMailersEvent;
+use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
+use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
+use barrelstrength\sproutbaseemail\services\Mailers;
+use barrelstrength\sproutbaseemail\web\twig\variables\SproutEmailVariable;
+use barrelstrength\sproutbaseemail\controllers\MailersController;
 use craft\events\RegisterComponentTypesEvent;
 use craft\web\Application;
 use craft\web\twig\variables\CraftVariable;
@@ -38,8 +27,6 @@ use craft\events\RegisterTemplateRootsEvent;
 use craft\helpers\ArrayHelper;
 use craft\i18n\PhpMessageSource;
 use Craft;
-
-use barrelstrength\sproutbase\services\App;
 
 class SproutBaseEmail extends Module
 {
@@ -122,24 +109,24 @@ class SproutBaseEmail extends Module
             $this->controllerNamespace = 'sproutbaseemail\\controllers';
 
             $this->controllerMap = [
+                'mailers' => MailersController::class,
                 'notifications' => NotificationsController::class,
             ];
         }
 
         // Setup Template Roots
         Event::on(View::class, View::EVENT_REGISTER_CP_TEMPLATE_ROOTS, function(RegisterTemplateRootsEvent $e) {
-            $e->roots['sprout-base-email'] = $this->getBasePath().DIRECTORY_SEPARATOR.'app/email/templates';
+            $e->roots['sprout-base-email'] = $this->getBasePath().DIRECTORY_SEPARATOR.'templates';
         });
 
         // Setup Variables
         Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
-            $variable = $event->sender;
-            $variable->set('sproutEmail', SproutEmailVariable::class);
+            $event->sender->set('sproutEmail', SproutEmailVariable::class);
         });
 
         // Register Sprout Email Events
         Event::on(Application::class, Application::EVENT_INIT, function() {
-            SproutBase::$app->notificationEvents->registerNotificationEmailEventHandlers();
+            SproutBaseEmail::$app->notificationEvents->registerNotificationEmailEventHandlers();
         });
 
         // Register Sprout Email Mailers

@@ -1,6 +1,6 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\elements\actions;
+namespace barrelstrength\sproutbaseemail\elements\actions;
 
 use Craft;
 use craft\elements\actions\Delete;
@@ -9,7 +9,7 @@ use craft\elements\db\ElementQueryInterface;
 /**
  * DeleteNotification represents a Delete notifications element action.
  *
- * @package barrelstrength\sproutbase\app\email\elements\actions
+ * @package barrelstrength\sproutbaseemail\elements\actions
  */
 class DeleteNotification extends Delete
 {

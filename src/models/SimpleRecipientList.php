@@ -1,6 +1,6 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\models;
+namespace barrelstrength\sproutbaseemail\models;
 
 use craft\base\Model;
 

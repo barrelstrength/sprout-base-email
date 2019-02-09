@@ -5,11 +5,11 @@
  * @license   http://sprout.barrelstrengthdesign.com/license
  */
 
-namespace barrelstrength\sproutbase;
+namespace barrelstrength\sproutbaseemail;
 
 use Craft;
 
-abstract class SproutBaseHelper
+abstract class SproutBaseEmailHelper
 {
     /**
      * Register the Sprout Base module on the Craft::$app instance
@@ -18,11 +18,11 @@ abstract class SproutBaseHelper
      */
     public static function registerModule()
     {
-        $moduleId = 'sprout';
+        $moduleId = 'sprout-base-email';
 
         if (!Craft::$app->hasModule($moduleId)) {
 
-            $sproutModule = new SproutBase($moduleId);
+            $sproutModule = new SproutBaseEmail($moduleId);
             Craft::$app->setModule($moduleId, $sproutModule);
 
             // Have Craft load this module right away (so we can create templates)

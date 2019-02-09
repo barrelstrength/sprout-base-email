@@ -1,6 +1,6 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\events;
+namespace barrelstrength\sproutbaseemail\events;
 
 use yii\base\Event;
 

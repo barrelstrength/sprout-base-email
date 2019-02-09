@@ -1,9 +1,9 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\base;
+namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutbase\base\BaseSproutTrait;
-use barrelstrength\sproutbase\app\email\elements\NotificationEmail;
+use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use craft\base\SavableComponent;
 
 

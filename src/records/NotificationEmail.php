@@ -1,6 +1,6 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\records;
+namespace barrelstrength\sproutbaseemail\records;
 
 use craft\base\Element;
 use craft\db\ActiveRecord;

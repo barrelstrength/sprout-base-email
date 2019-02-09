@@ -18,7 +18,7 @@
 {% set fullPageForm = true %}
 
 {% set saveShortcutRedirect = (campaignTypeId != 'new') ? 'sprout-email/settings/campaigntypes/edit/' ~
-    campaignTypeId : 'sprout-base-email/settings/campaigntypes/edit/{id}' %}
+    campaignTypeId : 'sprout/settings/campaigntypes/edit/{id}' %}
 {% block actionButton %}
     <div class="btngroup submit first">
         <input type="submit" class="btn submit"

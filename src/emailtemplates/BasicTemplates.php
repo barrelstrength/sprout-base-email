@@ -1,8 +1,8 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\emailtemplates;
+namespace barrelstrength\sproutbaseemail\emailtemplates;
 
-use barrelstrength\sproutbase\app\email\base\EmailTemplates;
+use barrelstrength\sproutbaseemail\base\EmailTemplates;
 use Craft;
 
 /**
@@ -23,7 +23,7 @@ class BasicTemplates extends EmailTemplates
      */
     public function getPath(): string
     {
-        return Craft::getAlias('@sproutbase/app/email/templates/_components/emailtemplates/basic');
+        return Craft::getAlias('@sproutbaseemail/templates/_components/emailtemplates/basic');
     }
 }
 

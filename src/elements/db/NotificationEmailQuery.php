@@ -1,7 +1,6 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\elements\db;
-
+namespace barrelstrength\sproutbaseemail\elements\db;
 
 use craft\elements\db\ElementQuery;
 use craft\base\Element;

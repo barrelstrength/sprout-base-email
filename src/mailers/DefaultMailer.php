@@ -1,11 +1,11 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\mailers;
+namespace barrelstrength\sproutbaseemail\mailers;
 
-use barrelstrength\sproutbase\app\email\base\EmailElement;
-use barrelstrength\sproutbase\app\email\base\Mailer;
-use barrelstrength\sproutbase\app\email\base\NotificationEmailSenderInterface;
-use barrelstrength\sproutbase\app\email\elements\NotificationEmail;
+use barrelstrength\sproutbaseemail\base\EmailElement;
+use barrelstrength\sproutbaseemail\base\Mailer;
+use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
+use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutemail\elements\CampaignEmail;
 use barrelstrength\sproutemail\models\CampaignType;
 use barrelstrength\sproutemail\services\SentEmails;

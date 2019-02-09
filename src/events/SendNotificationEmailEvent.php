@@ -1,8 +1,8 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\events;
+namespace barrelstrength\sproutbaseemail\events;
 
-use barrelstrength\sproutbase\app\email\elements\NotificationEmail;
+use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use yii\base\Event;
 
 class SendNotificationEmailEvent extends Event

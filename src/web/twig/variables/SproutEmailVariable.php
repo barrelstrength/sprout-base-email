@@ -1,11 +1,11 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\web\twig\variables;
+namespace barrelstrength\sproutbaseemail\web\twig\variables;
 
-use barrelstrength\sproutbase\app\email\base\Mailer;
-use barrelstrength\sproutbase\SproutBase;
-use barrelstrength\sproutbase\app\email\base\EmailTemplates;
-use barrelstrength\sproutbase\app\email\emailtemplates\BasicTemplates;
+use barrelstrength\sproutbaseemail\base\Mailer;
+use barrelstrength\sproutbaseemail\base\EmailTemplates;
+use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
+use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutemail\SproutEmail;
 use Craft;
 use craft\helpers\UrlHelper;
@@ -17,7 +17,7 @@ class SproutEmailVariable
      */
     public function getCampaignMailers(): array
     {
-        return SproutBase::$app->mailers->getMailers();
+        return SproutBaseEmail::$app->mailers->getMailers();
     }
 
     /**
@@ -36,7 +36,7 @@ class SproutEmailVariable
      */
     public function getMailer($mailer): Mailer
     {
-        return SproutBase::$app->mailers->getMailerByName($mailer);
+        return SproutBaseEmail::$app->mailers->getMailerByName($mailer);
     }
 
     /**
@@ -84,7 +84,7 @@ class SproutEmailVariable
 
     public function getNotificationEmailById($id)
     {
-        return SproutBase::$app->notifications->getNotificationEmailById($id);
+        return SproutBaseEmail::$app->notifications->getNotificationEmailById($id);
     }
 
     /**
@@ -98,7 +98,7 @@ class SproutEmailVariable
     {
         $defaultEmailTemplates = new BasicTemplates();
 
-        $templates = SproutBase::$app->sproutEmail->getAllEmailTemplates();
+        $templates = SproutBaseEmail::$app->emailTemplates->getAllEmailTemplates();
 
         $templateIds = [];
         $options = [

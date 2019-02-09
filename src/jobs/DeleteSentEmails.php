@@ -5,7 +5,7 @@
  * @license   http://sprout.barrelstrengthdesign.com/license
  */
 
-namespace barrelstrength\sproutbase\app\email\jobs;
+namespace barrelstrength\sproutbaseemail\jobs;
 
 use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutemail\elements\SentEmail;

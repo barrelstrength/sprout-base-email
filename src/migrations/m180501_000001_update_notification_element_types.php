@@ -1,6 +1,6 @@
 <?php /** @noinspection ClassConstantCanBeUsedInspection */
 
-namespace barrelstrength\sproutbase\app\email\migrations;
+namespace barrelstrength\sproutbaseemail\migrations;
 
 use craft\db\Migration;
 
@@ -18,7 +18,7 @@ class m180501_000001_update_notification_element_types extends Migration
         $seedClasses = [
             0 => [
                 'oldType' => 'barrelstrength\sproutbase\elements\sproutemail\NotificationEmail',
-                'newType' => 'barrelstrength\sproutbase\app\email\elements\NotificationEmail'
+                'newType' => 'barrelstrength\sproutbaseemail\elements\NotificationEmail'
             ]
         ];
 

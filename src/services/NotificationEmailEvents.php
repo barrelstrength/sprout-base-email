@@ -1,12 +1,12 @@
 <?php
 
-namespace barrelstrength\sproutbase\app\email\services;
+namespace barrelstrength\sproutbaseemail\services;
 
-use barrelstrength\sproutbase\app\email\base\NotificationEvent;
-use barrelstrength\sproutbase\app\email\elements\NotificationEmail;
-use barrelstrength\sproutbase\app\email\events\NotificationEmailEvent;
-use barrelstrength\sproutbase\app\email\events\SendNotificationEmailEvent;
-use barrelstrength\sproutbase\SproutBase;
+use barrelstrength\sproutbaseemail\base\NotificationEvent;
+use barrelstrength\sproutbaseemail\elements\NotificationEmail;
+use barrelstrength\sproutbaseemail\events\NotificationEmailEvent;
+use barrelstrength\sproutbaseemail\events\SendNotificationEmailEvent;
+use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use craft\base\Component;
 use Craft;
 
@@ -16,7 +16,7 @@ use yii\base\Event;
 /**
  * Class NotificationEmailEvents
  *
- * @package barrelstrength\sproutbase\app\email\services
+ * @package barrelstrength\sproutbaseemail\services
  *
  * @property array    $notificationEmailEventTypes
  * @property Callable $dynamicEventHandler
@@ -172,7 +172,7 @@ class NotificationEmailEvents extends Component
         ]));
 
         // Get all Notification Emails that match this Notification Event
-        $notificationEmails = SproutBase::$app->notifications->getAllNotificationEmails($notificationEmailEventClassName);
+        $notificationEmails = SproutBaseEmail::$app->notifications->getAllNotificationEmails($notificationEmailEventClassName);
 
         if ($notificationEmails) {
 
@@ -198,7 +198,7 @@ class NotificationEmailEvents extends Component
                         continue;
                     }
 
-                    SproutBase::$app->notifications->sendNotificationViaMailer($notificationEmail);
+                    SproutBaseEmail::$app->notifications->sendNotificationViaMailer($notificationEmail);
 
                     $sendNotificationEmailEvent = new SendNotificationEmailEvent([
                         'event' => $event,
