@@ -4,7 +4,7 @@ A collection of common email classes and libraries for the Sprout Plugins Suite 
 
 ## Usage
 
-Include Sprout Base in your Sprout plugin composer.json file:
+Include Sprout Base Email in your Sprout plugin composer.json file:
 
 ``` json
 {

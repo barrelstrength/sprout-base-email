@@ -95,7 +95,7 @@ class NotificationsController extends Controller
                 return $this->redirect($url);
             }
 
-            throw new Exception(Craft::t('sprout-base', 'Unable to create Notification Email'));
+            throw new Exception(Craft::t('sprout-base-email', 'Unable to create Notification Email'));
         }
 
         if (!$notificationEmail) {
@@ -264,7 +264,7 @@ class NotificationsController extends Controller
         if (!SproutBaseEmail::$app->notifications->saveNotification($notificationEmail)
         || $validateTemplate == false) {
 
-            Craft::$app->getSession()->setError(Craft::t('sprout-base', 'Unable to save notification.'));
+            Craft::$app->getSession()->setError(Craft::t('sprout-base-email', 'Unable to save notification.'));
 
             $errorMessage = SproutBaseFields::$app->utilities->formatErrors();
 
@@ -282,7 +282,7 @@ class NotificationsController extends Controller
             return null;
         }
 
-        Craft::$app->getSession()->setNotice(Craft::t('sprout-base', 'Notification saved.'));
+        Craft::$app->getSession()->setNotice(Craft::t('sprout-base-email', 'Notification saved.'));
 
         return $this->redirectToPostedUrl();
     }
@@ -334,7 +334,7 @@ class NotificationsController extends Controller
 
         if (!SproutBaseEmail::$app->notifications->saveNotification($notificationEmail)) {
 
-            Craft::$app->getSession()->setError(Craft::t('sprout-base', 'Unable to save notification.'));
+            Craft::$app->getSession()->setError(Craft::t('sprout-base-email', 'Unable to save notification.'));
 
             $errorMessage = SproutBaseFields::$app->utilities->formatErrors();
 
@@ -345,7 +345,7 @@ class NotificationsController extends Controller
             ]);
         }
 
-        Craft::$app->getSession()->setNotice(Craft::t('sprout-base', 'Notification saved.'));
+        Craft::$app->getSession()->setNotice(Craft::t('sprout-base-email', 'Notification saved.'));
 
         return $this->redirectToPostedUrl($notificationEmail);
     }
@@ -367,7 +367,7 @@ class NotificationsController extends Controller
         $notificationEmail = SproutBaseEmail::$app->notifications->getNotificationEmailById($notificationEmailId);
 
         if (!$notificationEmail) {
-            throw new \InvalidArgumentException(Craft::t('sprout-base', 'No Notification Email exists with the ID “{id}”.', [
+            throw new \InvalidArgumentException(Craft::t('sprout-base-email', 'No Notification Email exists with the ID “{id}”.', [
                 'id' => $notificationEmailId
             ]));
         }
@@ -380,7 +380,7 @@ class NotificationsController extends Controller
 
             Craft::info(Json::encode($notificationEmail->getErrors()));
 
-            Craft::$app->getSession()->setNotice(Craft::t('sprout-base', 'Couldn’t delete notification.'));
+            Craft::$app->getSession()->setNotice(Craft::t('sprout-base-email', 'Couldn’t delete notification.'));
 
             // Send the entry back to the template
             Craft::$app->getUrlManager()->setRouteParams([
@@ -394,7 +394,7 @@ class NotificationsController extends Controller
             return $this->asJson(['success' => true]);
         }
 
-        Craft::$app->getSession()->setNotice(Craft::t('sprout-base', 'Notification deleted.'));
+        Craft::$app->getSession()->setNotice(Craft::t('sprout-base-email', 'Notification deleted.'));
 
         return $this->redirect($this->currentPluginHandle.'/notifications');
     }
@@ -423,7 +423,7 @@ class NotificationsController extends Controller
             return $this->asJson(
                 ModalResponse::createErrorModalResponse('sprout-base-email/_modals/response', [
                     'email' => $notificationEmail,
-                    'message' => Craft::t('sprout-base', 'Add at least one recipient.')
+                    'message' => Craft::t('sprout-base-email', 'Add at least one recipient.')
                 ])
             );
         }
@@ -440,7 +440,7 @@ class NotificationsController extends Controller
             return $this->asJson(
                 ModalResponse::createErrorModalResponse('sprout-base-email/_modals/response', [
                     'email' => $notificationEmail,
-                    'message' => Craft::t('sprout-base', 'Unable to find Notification Email event.')
+                    'message' => Craft::t('sprout-base-email', 'Unable to find Notification Email event.')
                 ])
             );
         }
@@ -458,7 +458,7 @@ class NotificationsController extends Controller
             return $this->asJson(
                 ModalResponse::createErrorModalResponse('sprout-base-email/_modals/response', [
                     'email' => $notificationEmail,
-                    'message' => Craft::t('sprout-base', 'Recipient email addresses do not validate: {invalidEmails}', [
+                    'message' => Craft::t('sprout-base-email', 'Recipient email addresses do not validate: {invalidEmails}', [
                         'invalidEmails' => implode(', ', $invalidEmails)
                     ])
                 ])
@@ -469,7 +469,7 @@ class NotificationsController extends Controller
             return $this->asJson(
                 ModalResponse::createErrorModalResponse('sprout-base-email/_modals/response', [
                     'email' => $notificationEmail,
-                    'message' => Craft::t('sprout-base', 'Unable to send Test Notification Email')
+                    'message' => Craft::t('sprout-base-email', 'Unable to send Test Notification Email')
                 ])
             );
         }
@@ -477,7 +477,7 @@ class NotificationsController extends Controller
         return $this->asJson(
             ModalResponse::createModalResponse('sprout-base-email/_modals/response', [
                 'email' => $notificationEmail,
-                'message' => Craft::t('sprout-base', 'Test Notification Email sent.')
+                'message' => Craft::t('sprout-base-email', 'Test Notification Email sent.')
             ])
         );
     }

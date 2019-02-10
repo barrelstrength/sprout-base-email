@@ -103,7 +103,7 @@ class SproutEmailVariable
         $templateIds = [];
         $options = [
             [
-                'label' => Craft::t('sprout-base', 'Select...'),
+                'label' => Craft::t('sprout-base-email', 'Select...'),
                 'value' => ''
             ]
         ];
@@ -133,7 +133,7 @@ class SproutEmailVariable
         $templateFolder = $notificationEmail->emailTemplateId ?? $settings->emailTemplateId ?? $defaultEmailTemplates->getPath();
 
         $options[] = [
-            'optgroup' => Craft::t('sprout-base', 'Custom Template Folder')
+            'optgroup' => Craft::t('sprout-base-email', 'Custom Template Folder')
         ];
 
         if (!in_array($templateFolder, $templateIds, false) && $templateFolder != '') {
@@ -144,7 +144,7 @@ class SproutEmailVariable
         }
 
         $options[] = [
-            'label' => Craft::t('sprout-base', 'Add Custom'),
+            'label' => Craft::t('sprout-base-email', 'Add Custom'),
             'value' => 'custom'
         ];
 

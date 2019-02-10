@@ -2,18 +2,18 @@
 
 <div class="body">
 
-    <h1>{{ "Test Notification"|t('sprout-base') }}</h1>
+    <h1>{{ "Test Notification"|t('sprout-base-email') }}</h1>
 
     <div class="sproutemail-preparemodalbody">
         <table class="data fullwidth">
             <tbody>
             <tr>
-                <td><strong>{{ "Subject"|t('sprout-base') }}</strong></td>
+                <td><strong>{{ "Subject"|t('sprout-base-email') }}</strong></td>
                 <td class="title">{{ email.subjectLine }}</td>
             </tr>
 
             <tr>
-                <td><strong>{{ "Recipients"|t('sprout-base') }}</strong></td>
+                <td><strong>{{ "Recipients"|t('sprout-base-email') }}</strong></td>
                 <td>
 
                     {% set baseUrl = craft.app.request.serverName %}
@@ -46,7 +46,7 @@
     <div class="spinner send-spinner hidden"></div>
     <div class="clearfix"></div>
     <div class="buttons left">
-        <button id="close" class="btn">{{ "Cancel"|t('sprout-base') }}</button>
+        <button id="close" class="btn">{{ "Cancel"|t('sprout-base-email') }}</button>
     </div>
     <div class="buttons right">
         <button
@@ -55,7 +55,7 @@
                 data-action="sprout-base-email/notifications/send-test-notification-email"
                 data-notification-id="{{ email.id }}"
                 class="btn submit actions">
-            {{- "Send Test"|t('sprout-base') -}}
+            {{- "Send Test"|t('sprout-base-email') -}}
         </button>
     </div>
 </div>

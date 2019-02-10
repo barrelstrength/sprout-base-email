@@ -46,7 +46,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      */
     public function getDescription(): string
     {
-        return Craft::t('sprout-base', 'Smart transactional email, easy recipient management, and advanced third party integrations.');
+        return Craft::t('sprout-base-email', 'Smart transactional email, easy recipient management, and advanced third party integrations.');
     }
 
     /**
@@ -122,7 +122,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         $recipients = $recipientList->getRecipients();
 
         if (empty($recipients)) {
-            $notificationEmail->addError('recipients', Craft::t('sprout-base', 'No recipients found.'));
+            $notificationEmail->addError('recipients', Craft::t('sprout-base-email', 'No recipients found.'));
         }
 
         $recipientCc = $mailer->getRecipients($notificationEmail, $notificationEmail->cc);
@@ -280,7 +280,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         }
 
         if (empty($email->getEmailTemplateId())) {
-            $email->addError('emailTemplateId', Craft::t('sprout-base', 'No email template setting found.'));
+            $email->addError('emailTemplateId', Craft::t('sprout-base-email', 'No email template setting found.'));
         }
 
         return Craft::$app->getView()->renderTemplate('sprout-base-email/_modals/prepare-email-snapshot', [
@@ -378,7 +378,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
 //        $notificationEditSettingsUrl = UrlHelper::cpUrl($currentPluginHandle.'/settings/notifications/edit/'.$campaignType->id);
 //
 //        if (empty($campaignType->template)) {
-//            $errors[] = Craft::t('sprout-base', 'Email Template setting is blank. <a href="{url}">Edit Settings</a>.', [
+//            $errors[] = Craft::t('sprout-base-email', 'Email Template setting is blank. <a href="{url}">Edit Settings</a>.', [
 //                'url' => $notificationEditSettingsUrl
 //            ]);
 //        }

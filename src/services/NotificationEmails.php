@@ -34,7 +34,7 @@ class NotificationEmails extends Component
     public function saveNotification(NotificationEmail $notificationEmail)
     {
         if (!$notificationEmail->validate(null, false)) {
-            SproutBase::info(Craft::t('sprout-base', 'Notification Email not saved due to validation error.'));
+            SproutBase::info(Craft::t('sprout-base-email', 'Notification Email not saved due to validation error.'));
             return false;
         }
 
@@ -147,7 +147,7 @@ class NotificationEmails extends Component
         if (!$event) {
             ob_start();
 
-            echo Craft::t('sprout-base', 'Notification Email cannot display. The Event setting must be set.');
+            echo Craft::t('sprout-base-email', 'Notification Email cannot display. The Event setting must be set.');
 
             // End the request
 
@@ -232,13 +232,13 @@ class NotificationEmails extends Component
         $emailTemplates = $notificationEmail->getEmailTemplates();
 
         if ($event === null) {
-            $errors[] = Craft::t('sprout-base', 'No Event is selected. <a href="{url}">Edit Notification</a>.', [
+            $errors[] = Craft::t('sprout-base-email', 'No Event is selected. <a href="{url}">Edit Notification</a>.', [
                 'url' => $notificationEditUrl
             ]);
         }
 
         if (empty($emailTemplates->getPath())) {
-            $errors[] = Craft::t('sprout-base', 'No template found. <a href="{url}">Edit Notification Settings</a>.',
+            $errors[] = Craft::t('sprout-base-email', 'No template found. <a href="{url}">Edit Notification Settings</a>.',
                 [
                     'url' => $notificationEditSettingsUrl
                 ]);
@@ -263,7 +263,7 @@ class NotificationEmails extends Component
         if (!empty($templateErrors['template'])) {
 
             foreach ($templateErrors['template'] as $templateError) {
-                $errors[] = Craft::t('sprout-base', $templateError);
+                $errors[] = Craft::t('sprout-base-email', $templateError);
             }
         }
 
@@ -284,7 +284,7 @@ class NotificationEmails extends Component
         $currentPluginHandle = Craft::$app->request->getSegment(1);
 
         $notificationEmail = new NotificationEmail();
-        $subjectLine = $subjectLine ?? Craft::t('sprout-base', 'Notification');
+        $subjectLine = $subjectLine ?? Craft::t('sprout-base-email', 'Notification');
         $handle = $handle ?? ElementHelper::createSlug($subjectLine);
 
         $subjectLine = $this->getFieldAsNew('subjectLine', $subjectLine);

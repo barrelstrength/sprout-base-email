@@ -71,8 +71,8 @@
         {% set templateOptions = craft.sproutEmail.getEmailTemplateOptions(campaignType) %}
 
         {{ forms.field({
-            label: "Email Templates"|t('sprout-base'),
-            instructions: "The Email Templates that will be used to display your email."|t('sprout-base'),
+            label: "Email Templates"|t('sprout-base-email'),
+            instructions: "The Email Templates that will be used to display your email."|t('sprout-base-email'),
             errors: campaignType is defined ? campaignType.getErrors('emailTemplateId') : null,
         }, sproutFields.selectOther({
             name: 'sproutEmail[emailTemplateId]',

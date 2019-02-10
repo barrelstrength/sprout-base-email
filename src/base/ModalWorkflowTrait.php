@@ -76,7 +76,7 @@ trait ModalWorkflowTrait
         }
 
         if (empty($email->getEmailTemplateId())) {
-            $email->addError('emailTemplateId', Craft::t('sprout-base', 'No email template setting found.'));
+            $email->addError('emailTemplateId', Craft::t('sprout-base-email', 'No email template setting found.'));
         }
 
         return Craft::$app->getView()->renderTemplate(

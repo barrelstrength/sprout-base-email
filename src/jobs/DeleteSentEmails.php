@@ -34,7 +34,7 @@ class DeleteSentEmails extends BaseJob
      */
     protected function defaultDescription(): string
     {
-        return Craft::t('sprout-base', 'Cleaning up Sent Email');
+        return Craft::t('sprout-base-email', 'Cleaning up Sent Email');
     }
 
     /**

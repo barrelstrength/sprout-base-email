@@ -167,7 +167,7 @@ class NotificationEmailEvents extends Component
      */
     public function handleDynamicEvent($notificationEmailEventClassName, Event $event, NotificationEvent $eventHandlerClass): bool
     {
-        Craft::info(Craft::t('sprout-base', 'A Notification Event has been triggered: {eventName}', [
+        Craft::info(Craft::t('sprout-base-email', 'A Notification Event has been triggered: {eventName}', [
             'eventName' => $eventHandlerClass->getName()
         ]));
 

@@ -27,7 +27,7 @@ class MailersController extends Controller
         $email = Craft::$app->getElements()->getElementById($emailId);
 
         if (!$email) {
-            throw new InvalidArgumentException(Craft::t('sprout-base', 'No Email exists with the ID “{id}”.', [
+            throw new InvalidArgumentException(Craft::t('sprout-base-email', 'No Email exists with the ID “{id}”.', [
                 'id' => $emailId
             ]));
         }

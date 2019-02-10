@@ -25,7 +25,7 @@ class CustomTemplates extends EmailTemplates
      */
     public function getName(): string
     {
-        return Craft::t('sprout-base', 'Custom Templates');
+        return Craft::t('sprout-base-email', 'Custom Templates');
     }
 
     /**

@@ -87,7 +87,7 @@ class NotificationEmail extends EmailElement
      */
     public static function displayName(): string
     {
-        return Craft::t('sprout-base', 'Notification Email');
+        return Craft::t('sprout-base-email', 'Notification Email');
     }
 
     /**
@@ -136,9 +136,9 @@ class NotificationEmail extends EmailElement
     public function getStatuses(): array
     {
         return [
-            self::ENABLED => Craft::t('sprout-base', 'enabled'),
-            self::PENDING => Craft::t('sprout-base', 'pending'),
-            self::DISABLED => Craft::t('sprout-base', 'disabled')
+            self::ENABLED => Craft::t('sprout-base-email', 'enabled'),
+            self::PENDING => Craft::t('sprout-base-email', 'pending'),
+            self::DISABLED => Craft::t('sprout-base-email', 'disabled')
         ];
     }
 
@@ -162,7 +162,7 @@ class NotificationEmail extends EmailElement
         $sources = [
             [
                 'key' => '*',
-                'label' => Craft::t('sprout-base', 'All notifications')
+                'label' => Craft::t('sprout-base-email', 'All notifications')
             ]
         ];
 
@@ -175,11 +175,11 @@ class NotificationEmail extends EmailElement
     protected static function defineTableAttributes(): array
     {
         $attributes = [
-            'title' => ['label' => Craft::t('sprout-base', 'Title')],
-            'subjectLine' => ['label' => Craft::t('sprout-base', 'Subject Line')],
-            'dateCreated' => ['label' => Craft::t('sprout-base', 'Date Created')],
-            'send' => ['label' => Craft::t('sprout-base', 'Send')],
-            'preview' => ['label' => Craft::t('sprout-base', 'Preview'), 'icon' => 'view']
+            'title' => ['label' => Craft::t('sprout-base-email', 'Title')],
+            'subjectLine' => ['label' => Craft::t('sprout-base-email', 'Subject Line')],
+            'dateCreated' => ['label' => Craft::t('sprout-base-email', 'Date Created')],
+            'send' => ['label' => Craft::t('sprout-base-email', 'Send')],
+            'preview' => ['label' => Craft::t('sprout-base-email', 'Preview'), 'icon' => 'view']
         ];
 
         return $attributes;
@@ -191,10 +191,10 @@ class NotificationEmail extends EmailElement
     protected static function defineSortOptions(): array
     {
         return [
-            'title' => Craft::t('sprout-base', 'Title'),
-            'subjectLine' => Craft::t('sprout-base', 'Subject Line'),
-            'elements.dateCreated' => Craft::t('sprout-base', 'Date Created'),
-            'elements.dateUpdated' => Craft::t('sprout-base', 'Date Updated'),
+            'title' => Craft::t('sprout-base-email', 'Title'),
+            'subjectLine' => Craft::t('sprout-base-email', 'Subject Line'),
+            'elements.dateCreated' => Craft::t('sprout-base-email', 'Date Created'),
+            'elements.dateUpdated' => Craft::t('sprout-base-email', 'Date Updated'),
         ];
     }
 
@@ -432,7 +432,7 @@ class NotificationEmail extends EmailElement
                         $this->addError($attribute, "Dynamic $recipient attribute does not exist.");
                     }
                 } elseif (!$validator->isValid(trim($recipient), $multipleValidations)) {
-                    $this->addError($attribute, Craft::t('sprout-base',
+                    $this->addError($attribute, Craft::t('sprout-base-email',
                         $recipient . ' email is not valid.'));
                 }
             }

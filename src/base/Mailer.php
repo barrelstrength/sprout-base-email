@@ -150,11 +150,11 @@ abstract class Mailer extends Component
         }
 
         if (empty($textBody)) {
-            $email->addError('body', Craft::t('sprout-base', 'Text template is blank.'));
+            $email->addError('body', Craft::t('sprout-base-email', 'Text template is blank.'));
         }
 
         if (empty($htmlBody)) {
-            $email->addError('htmlBody', Craft::t('sprout-base', 'HTML template is blank.'));
+            $email->addError('htmlBody', Craft::t('sprout-base-email', 'HTML template is blank.'));
         }
 
         $styleTags = [];

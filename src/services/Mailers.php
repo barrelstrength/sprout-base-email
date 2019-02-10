@@ -55,7 +55,7 @@ class Mailers extends Component
         $mailer = $this->mailers[$name] ?? null;
 
         if (!$mailer) {
-            throw new Exception(Craft::t('sprout-base', 'Mailer not found: {mailer}', [
+            throw new Exception(Craft::t('sprout-base-email', 'Mailer not found: {mailer}', [
                 'mailer' => $name
             ]));
         }

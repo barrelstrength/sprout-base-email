@@ -1,7 +1,7 @@
 {% extends "sprout-base-email/_layouts/base" %}
 {% import "_includes/forms" as forms %}
 
-{% set title = "Edit Notification"|t('sprout-base') %}
+{% set title = "Edit Notification"|t('sprout-base-email') %}
 
 {% set currentPluginHandle = craft.app.request.getSegment(1) %}
 {% set crumbs = [
@@ -22,7 +22,7 @@
     <div class="buttons">
         <div class="btngroup">
             <input class="btn submit" type="submit"
-                   value="{{ 'Save'|t('sprout-base') }}">
+                   value="{{ 'Save'|t('sprout-base-email') }}">
 
             {% if notificationEmail['id'] is defined %}
 
@@ -33,7 +33,7 @@
                     <ul>
                         <li><a class="formsubmit"
                                data-redirect="{{ craft.app.request.url|hash }}"
-                               title="{{ 'Save and continue editing'|t('sprout-base') }}">{{ 'Save and continue editing'|t('sprout-base') }}
+                               title="{{ 'Save and continue editing'|t('sprout-base-email') }}">{{ 'Save and continue editing'|t('sprout-base-email') }}
                                 <span
                                         class="shortcut">⌘S</span></a>
                         </li>

@@ -1,13 +1,13 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.checkboxField({
-    label: "When user is created?"|t('sprout-base'),
+    label: "When user is created?"|t('sprout-base-email'),
     name: "whenNew",
     checked: event.whenNew
 }) }}
 
 {{ forms.checkboxField({
-    label: "When user is updated?"|t('sprout-base'),
+    label: "When user is updated?"|t('sprout-base-email'),
     name: "whenUpdated",
     checked: event.whenUpdated
 }) }}
@@ -15,7 +15,7 @@
 {% if event.groups|length %}
 
     {{ forms.checkboxSelectField({
-        label: "User Groups <span class='info'>Select which user groups will trigger the notification.</span>"|t('sprout-base'),
+        label: "User Groups <span class='info'>Select which user groups will trigger the notification.</span>"|t('sprout-base-email'),
         name: "userGroupIds",
         options: event.groups,
         values: event.userGroupIds,
@@ -32,7 +32,7 @@
 {% endif %}
 
 {{ forms.checkboxField({
-    label: "Send to Admins?"|t('sprout-base'),
+    label: "Send to Admins?"|t('sprout-base-email'),
     name: "adminUsers",
     checked: event.adminUsers
 }) }}
