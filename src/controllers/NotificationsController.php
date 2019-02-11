@@ -119,7 +119,7 @@ class NotificationsController extends Controller
                         'fields' => '#subjectLine-field, #body-field, #defaultBody, #title-field, #fields > div > .field',
                         'extraFields' => '#settings',
                         'previewUrl' => $notificationEmail->getUrl(),
-                        'previewAction' => 'sprout-base-email/notifications/live-preview-notification-email',
+                        'previewAction' => Craft::$app->getSecurity()->hashData('sprout-base-email/notifications/live-preview-notification-email'),
                         'previewParams' => [
                             'notificationId' => $notificationEmail->id,
                         ]
