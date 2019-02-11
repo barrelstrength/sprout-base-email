@@ -391,7 +391,6 @@ class NotificationEmail extends EmailElement
      * @param $attribute
      *
      * @return bool
-     * @throws Exception
      * @throws \Throwable
      */
     public function emailList($attribute): bool

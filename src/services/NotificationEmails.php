@@ -294,7 +294,7 @@ class NotificationEmails extends Component
         $notificationEmail->pluginHandle = $currentPluginHandle;
         $notificationEmail->slug = $handle;
 
-        $systemEmailSettings = Craft::$app->getSystemSettings()->getEmailSettings();
+        $systemEmailSettings = \craft\helpers\App::mailSettings();
 
         // @todo - add override settings to Sprout Email
         $notificationEmail->fromName = $systemEmailSettings->fromName;

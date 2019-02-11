@@ -121,7 +121,6 @@ return [
     'Make your emails personal and use dynamic data from your Notification Events. Custom Notification Email fields support Twig syntax (<code>{{ object.fieldHandle }}</code>) and shorthand syntax (<code>{fieldHandle}</code>). Read more about <a href=\'https://sprout.barrelstrengthdesign.com/docs/email/personalization.html\' target=\'_blank\'>Personalization</a>.' => 'Make your emails personal and use dynamic data from your Notification Events. Custom Notification Email fields support Twig syntax (<code>{{ object.fieldHandle }}</code>) and shorthand syntax (<code>{fieldHandle}</code>). Read more about <a href=\'https://sprout.barrelstrengthdesign.com/docs/email/personalization.html\' target=\'_blank\'>Personalization</a>.',
     'Mailer not found: {mailer}' => 'Mailer not found: {mailer}',
     'Your campaign was sent successfully.' => 'Your campaign was sent successfully.',
-    'Genderal Settings' => 'Genderal Settings',
     'Select...' => 'Select...',
     'An error occurred while sending your campaign. Please review the Craft logs
      for more info.' => 'An error occurred while sending your campaign. Please review the Craft logs
