@@ -13,7 +13,8 @@
             </tr>
 
             <tr>
-                <td><strong>{{ "Recipients"|t('sprout-base-email') }}</strong></td>
+                <td><strong>{{ "Recipients"|t('sprout-base-email') }}</strong>
+                </td>
                 <td>
 
                     {% set baseUrl = craft.app.request.serverName %}
@@ -50,11 +51,11 @@
     </div>
     <div class="buttons right">
         <button
-                {% if errors is defined and errors is not empty %} disabled style="opacity: 0.25;" {% endif %}
-                data-mailer="defaultmailer"
-                data-action="sprout-base-email/notifications/send-test-notification-email"
-                data-notification-id="{{ email.id }}"
-                class="btn submit actions">
+            {% if errors is defined and errors is not empty %} disabled style="opacity: 0.25;" {% endif %}
+            data-mailer="defaultmailer"
+            data-action="sprout-base-email/notifications/send-test-notification-email"
+            data-notification-id="{{ email.id }}"
+            class="btn submit actions">
             {{- "Send Test"|t('sprout-base-email') -}}
         </button>
     </div>

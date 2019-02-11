@@ -39,29 +39,29 @@
         </tr>
 
         {% if not email.getErrors('emailTemplateId') %}
-        <tr>
-            <td>
-                <strong>{{ "HTML"|t('sprout-email') }}</strong>
-            </td>
-            <td>
-                <a href="{{ cpUrl('sprout-email/campaigns/edit/' ~ email.id) }}">{{ "Edit"|t('sprout-email') }}</a>
-                or
-                <a href="{{ emailUrl }}" title="{{ email.title }}"
-                   data-preview-url="{{ emailUrl }}"
-                   class="email-preview">{{ "Preview"|t('sprout-email') }}</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <strong>{{ "Text"|t('sprout-email') }}</strong>
-            </td>
-            <td>
-                <a href="{{ emailUrl ~ '?type=text' }}"
-                   title="{{ email.title }}"
-                   data-preview-url="{{ emailUrl ~ '?type=text' }}"
-                   class="email-preview">{{ "Preview"|t('sprout-email') }}</a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    <strong>{{ "HTML"|t('sprout-email') }}</strong>
+                </td>
+                <td>
+                    <a href="{{ cpUrl('sprout-email/campaigns/edit/' ~ email.id) }}">{{ "Edit"|t('sprout-email') }}</a>
+                    or
+                    <a href="{{ emailUrl }}" title="{{ email.title }}"
+                       data-preview-url="{{ emailUrl }}"
+                       class="email-preview">{{ "Preview"|t('sprout-email') }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>{{ "Text"|t('sprout-email') }}</strong>
+                </td>
+                <td>
+                    <a href="{{ emailUrl ~ '?type=text' }}"
+                       title="{{ email.title }}"
+                       data-preview-url="{{ emailUrl ~ '?type=text' }}"
+                       class="email-preview">{{ "Preview"|t('sprout-email') }}</a>
+                </td>
+            </tr>
 
         {% else %}
 
@@ -84,14 +84,14 @@
                 {% for list in lists %}
                     <td colspan="2">
                         {{ list.name }} <span
-                                class="light"><i>(</i>{{ list.members_count }}
+                            class="light"><i>(</i>{{ list.members_count }}
                             <i>)</i></span>
                     </td>
                 {% endfor %}
             {% else %}
                 <td colspan="2">
                     {{ "No recipients defined."|t('sprout-email') }} <a
-                            href="{{ cpUrl('sprout-email/campaigns/edit/' ~ email.id) }}">{{ "Add Recipients"|t('sprout-email') }}</a>
+                        href="{{ cpUrl('sprout-email/campaigns/edit/' ~ email.id) }}">{{ "Add Recipients"|t('sprout-email') }}</a>
                 </td>
             {% endif %}
         </tr>

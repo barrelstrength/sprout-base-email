@@ -258,7 +258,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
          */
         $volume = $asset->getVolume();
 
-        $path = $volume->getRootPath() . DIRECTORY_SEPARATOR . $asset->getPath();
+        $path = $volume->getRootPath().DIRECTORY_SEPARATOR.$asset->getPath();
 
         return FileHelper::normalizePath($path);
     }

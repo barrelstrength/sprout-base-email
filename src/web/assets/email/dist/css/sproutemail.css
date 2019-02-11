@@ -11,13 +11,13 @@
 }
 
 .status.sent, .status.ready {
-    background-color: #27AE60;
+    background-color: #27ae60;
 }
 
 .status.scheduled {
-    background-color: #0D99F2;
+    background-color: #0d99f2;
 }
 
 .status.failed, .status.incomplete {
-    background-color: #D0021B;
+    background-color: #d0021b;
 }

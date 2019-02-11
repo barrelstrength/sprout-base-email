@@ -12,11 +12,11 @@ use craft\base\Field;
 
 /**
  *
- * @property bool                                                                                                                                                                                            $isTest
- * @property null|object                                                                                                                                                                                     $eventObject
- * @property int                                                                                                                                                                                             $emailTemplateId
- * @property \barrelstrength\sproutbaseemail\base\Mailer                                                                                                                                                $mailer
- * @property array                                                                                                                                                                                           $fieldLayoutTabs
+ * @property bool                                                                                                                                                                             $isTest
+ * @property null|object                                                                                                                                                                      $eventObject
+ * @property int                                                                                                                                                                              $emailTemplateId
+ * @property \barrelstrength\sproutbaseemail\base\Mailer                                                                                                                                      $mailer
+ * @property array                                                                                                                                                                            $fieldLayoutTabs
  * @property \barrelstrength\sproutbaseemail\base\EmailTemplates|\barrelstrength\sproutbaseemail\emailtemplates\CustomTemplates|\barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates $emailTemplates
  */
 abstract class EmailElement extends Element

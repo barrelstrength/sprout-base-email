@@ -313,8 +313,12 @@ class NotificationEmail extends EmailElement
      *
      * @throws \yii\base\InvalidConfigException
      */
-    public static function indexHtml(ElementQueryInterface $elementQuery, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */ array $disabledElementIds = null, array $viewState, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */ string $sourceKey = null, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */ string $context = null, bool $includeContainer, bool $showCheckboxes): string
-    {
+    public static function indexHtml(
+        ElementQueryInterface $elementQuery, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */
+        array $disabledElementIds = null, array $viewState, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */
+        string $sourceKey = null, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */
+        string $context = null, bool $includeContainer, bool $showCheckboxes
+    ): string {
         $html = parent::indexHtml($elementQuery, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, true);
 
         Craft::$app->getView()->registerAssetBundle(NotificationAsset::class);
@@ -433,7 +437,7 @@ class NotificationEmail extends EmailElement
                     }
                 } elseif (!$validator->isValid(trim($recipient), $multipleValidations)) {
                     $this->addError($attribute, Craft::t('sprout-base-email',
-                        $recipient . ' email is not valid.'));
+                        $recipient.' email is not valid.'));
                 }
             }
         }

@@ -49,11 +49,11 @@
         <button id="close" class="btn">{{ "Cancel"|t('sprout-email') }}</button>
 
         <button
-                {% if errors is defined and errors is not empty %} disabled
-                    style="opacity: 0.25;" {% endif %}
-                data-action="sprout-email/sent-email/resend-email"
-                data-email-id="{{ sentEmail.id }}"
-                class="btn submit actions">
+            {% if errors is defined and errors is not empty %} disabled
+                style="opacity: 0.25;" {% endif %}
+            data-action="sprout-email/sent-email/resend-email"
+            data-email-id="{{ sentEmail.id }}"
+            class="btn submit actions">
             {{ "Resend Email" }}
         </button>
     </div>

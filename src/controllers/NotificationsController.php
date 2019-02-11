@@ -262,7 +262,7 @@ class NotificationsController extends Controller
         $validateTemplate = $this->validateTemplate($notificationEmail);
 
         if (!SproutBaseEmail::$app->notifications->saveNotification($notificationEmail)
-        || $validateTemplate == false) {
+            || $validateTemplate == false) {
 
             Craft::$app->getSession()->setError(Craft::t('sprout-base-email', 'Unable to save notification.'));
 
@@ -293,13 +293,12 @@ class NotificationsController extends Controller
             $notificationEmail->getEmailTemplates()->getTextBody();
             $notificationEmail->getEmailTemplates()->getHtmlBody();
         } catch (\Exception $e) {
-            $errorMessage = "Dynamic variables on your template does not exist. " . $e->getMessage();
+            $errorMessage = "Dynamic variables on your template does not exist. ".$e->getMessage();
             $notificationEmail->addError('emailTemplateId', $errorMessage);
 
             SproutBaseFields::$app->utilities->addError('template', $errorMessage);
 
             return false;
-
         }
 
         return true;
