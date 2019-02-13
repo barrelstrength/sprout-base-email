@@ -4,7 +4,7 @@ namespace barrelstrength\sproutbaseemail\migrations;
 
 use craft\db\Migration;
 
-class m191202_000004_update_element_types extends Migration
+class m190212_000004_update_element_types extends Migration
 {
     /**
      * @inheritdoc
@@ -45,7 +45,7 @@ class m191202_000004_update_element_types extends Migration
      */
     public function safeDown(): bool
     {
-        echo "m180725_080640_update_element_types cannot be reverted.\n";
+        echo "m190212_000004_update_element_types cannot be reverted.\n";
         return false;
     }
 }
