@@ -259,7 +259,9 @@ class NotificationsController extends Controller
 
         // Get cp path cause template validation change current template path
         $cpPath = Craft::$app->getView()->getTemplatesPath();
-        $validateTemplate = $this->validateTemplate($notificationEmail);
+        // @todo - disable template validations due to errors on clean installations
+        // $validateTemplate = $this->validateTemplate($notificationEmail);
+        $validateTemplate = true;
 
         if (!SproutBaseEmail::$app->notifications->saveNotification($notificationEmail)
             || $validateTemplate == false) {
