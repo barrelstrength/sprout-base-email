@@ -106,6 +106,7 @@ abstract class EmailTemplates
         $oldTemplatePath = $view->getTemplatesPath();
         $view->setTemplatesPath($this->getPath());
 
+        // @todo - make dynamic
         $htmlEmailTemplate = 'email.html';
         $textEmailTemplate = 'email.txt';
 
