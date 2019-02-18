@@ -406,35 +406,12 @@ class NotificationEmail extends EmailElement
             $recipientArray = explode(',', trim($recipients));
 
             foreach ($recipientArray as $recipient) {
-                $recipient = trim($recipient);
-
-                // If it is dynamic string
+                // Let the user use shorthand syntax and don't validate it
                 if (strpos($recipient, '{') !== false) {
-
-                    // Validate event object E.g. {{ object.email }} and {{ email }}
-                    $isExist = true;
-
-                    $event = SproutBaseEmail::$app->notificationEvents->getEvent($this);
-
-                    if ($event) {
-                        $this->setEventObject($event->getMockEventObject());
-
-                        $eventObject = $this->getEventObject();
-
-                        try {
-                            $renderedEmail = Craft::$app->getView()->renderObjectTemplate($recipient, $eventObject);
-                            if (empty($renderedEmail)) {
-                                $isExist = false;
-                            }
-                        } catch (\Exception $e) {
-                            $isExist = false;
-                        }
-                    }
-
-                    if ($isExist === false) {
-                        $this->addError($attribute, "Dynamic $recipient attribute does not exist.");
-                    }
-                } elseif (!$validator->isValid(trim($recipient), $multipleValidations)) {
+                    continue;
+                }
+                // Validate actual emails
+                if (!$validator->isValid(trim($recipient), $multipleValidations)) {
                     $this->addError($attribute, Craft::t('sprout-base-email',
                         $recipient.' email is not valid.'));
                 }
