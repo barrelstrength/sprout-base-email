@@ -100,7 +100,7 @@ class SproutBaseEmail extends Module
         self::$app = new App();
 
         Craft::setAlias('@sproutbaseemail', $this->getBasePath());
-        Craft::setAlias('@sproutbaseemaillib', dirname(__DIR__, 2).'/sprout-base-email/lib');
+        Craft::setAlias('@sproutbaseemaillib', dirname(__DIR__, 1).'/lib');
 
         // Setup Controllers
         if (Craft::$app->getRequest()->getIsConsoleRequest()) {
