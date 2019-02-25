@@ -6,6 +6,7 @@ use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\EmailTemplates;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
+use barrelstrength\sproutcampaign\SproutCampaign;
 use barrelstrength\sproutemail\SproutEmail;
 use Craft;
 use craft\helpers\UrlHelper;
@@ -25,7 +26,7 @@ class SproutEmailVariable
      */
     public function getCampaignTypes(): array
     {
-        return SproutEmail::$app->campaignTypes->getCampaignTypes();
+        return SproutCampaign::$app->campaignTypes->getCampaignTypes();
     }
 
     /**
@@ -58,7 +59,7 @@ class SproutEmailVariable
 
     public function getCampaignEmailById($id)
     {
-        return SproutEmail::$app->campaignEmails->getCampaignEmailById($id);
+        return SproutCampaign::$app->campaignEmails->getCampaignEmailById($id);
     }
 
     public function getSentEmailById($sentEmailId)
