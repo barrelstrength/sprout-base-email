@@ -113,6 +113,7 @@ abstract class EmailTemplates
         // Allow other extensions for email.html
         foreach (Craft::$app->getConfig()->getGeneral()->defaultTemplateExtensions as $extension) {
             $templateName = 'email.'.$extension;
+
             if (Craft::$app->getView()->doesTemplateExist($templateName)) {
                 $htmlEmailTemplate = $templateName;
                 break;

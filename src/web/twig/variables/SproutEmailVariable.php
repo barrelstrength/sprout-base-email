@@ -77,7 +77,7 @@ class SproutEmailVariable
      */
     public function getCampaignEmailShareUrl($emailId, $campaignTypeId)
     {
-        return UrlHelper::actionUrl('sprout-email/campaign-email/share-campaign-email', [
+        return UrlHelper::actionUrl('sprout-campaign/campaign-email/share-campaign-email', [
             'emailId' => $emailId,
             'campaignTypeId' => $campaignTypeId
         ]);
