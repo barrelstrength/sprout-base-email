@@ -6,8 +6,8 @@ use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
-use barrelstrength\sproutemail\elements\CampaignEmail;
-use barrelstrength\sproutemail\models\CampaignType;
+use barrelstrength\sproutcampaign\elements\CampaignEmail;
+use barrelstrength\sproutcampaign\models\CampaignType;
 use barrelstrength\sproutemail\services\SentEmails;
 use barrelstrength\sproutemail\SproutEmail;
 use barrelstrength\sproutforms\fields\formfields\FileUpload;
@@ -150,10 +150,6 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
             $message->variables = $variables;
         }
 
-        $processedRecipients = [];
-        $prepareRecipients = [];
-        $mailer = Craft::$app->getMailer();
-
         if ($bcc = $recipientBc->getRecipientEmails()) {
             $message->setBcc($bcc);
         }
@@ -162,7 +158,20 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
             $message->setCc($cc);
         }
 
-        if ($notificationEmail->singleEmail) {
+        $this->sendEmail($notificationEmail, $message, $recipients);
+
+        $this->deleteExternalPaths($externalPaths);
+
+        return true;
+    }
+
+    private function sendEmail(EmailElement $emailElement, Message $message, $recipients)
+    {
+        $processedRecipients = [];
+        $prepareRecipients = [];
+        $mailer = Craft::$app->getMailer();
+
+        if ($emailElement->singleEmail) {
             /*
              * Assigning email with name array does not work on craft
              * [$recipient->email => $recipient->name]
@@ -195,12 +204,38 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
                         continue;
                     }
                 } catch (\Exception $e) {
-                    $notificationEmail->addError('send-failure', $e->getMessage());
+                    $emailElement->addError('send-failure', $e->getMessage());
                 }
             }
         }
 
-        $this->deleteExternalPaths($externalPaths);
+        return $emailElement;
+    }
+
+    /**
+     * @param CampaignEmail $campaignEmail
+     *
+     * @return bool
+     * @throws Exception
+     * @throws \Throwable
+     */
+    public function sendTestCampaignEmail(CampaignEmail $campaignEmail)
+    {
+        $message = $this->getMessage($campaignEmail);
+
+        $recipientList = $this->getRecipientList($campaignEmail);
+
+        $recipients = $recipientList->getRecipients();
+
+        if (empty($recipients)) {
+            $campaignEmail->addError('recipients', Craft::t('sprout-base-email', 'No recipients found.'));
+        }
+
+        if (!$recipients) {
+            return false;
+        }
+
+        $this->sendEmail($campaignEmail, $message, $recipients);
 
         return true;
     }

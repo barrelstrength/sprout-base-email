@@ -33,7 +33,7 @@ class MailersController extends Controller
         }
 
         $mailer = $email->getMailer();
-        $modal = $mailer->getPrepareModal($email);
+        $modal  = $mailer->getPrepareModal($email);
 
         return $this->asJson($modal->getAttributes());
     }
