@@ -29,7 +29,6 @@ class NotificationEmails extends Component
      *
      * @return bool
      * @throws \Throwable
-     * @throws \yii\db\Exception
      */
     public function saveNotification(NotificationEmail $notificationEmail)
     {
@@ -277,7 +276,6 @@ class NotificationEmails extends Component
      * @return NotificationEmail|null
      * @throws \Exception
      * @throws \Throwable
-     * @throws \yii\base\Exception
      */
     public function createNewNotification($subjectLine = null, $handle = null)
     {

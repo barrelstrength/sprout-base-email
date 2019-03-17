@@ -6,7 +6,7 @@ use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\EmailTemplates;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
-use barrelstrength\sproutcampaign\SproutCampaign;
+use barrelstrength\sproutcampaigns\SproutCampaign;
 use barrelstrength\sproutemail\SproutEmail;
 use Craft;
 use craft\helpers\UrlHelper;

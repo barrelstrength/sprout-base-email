@@ -36,7 +36,6 @@ return [
     'Notification saved.' => 'Notification saved.',
     'Sender' => 'Sender',
     'Unable to save notification.' => 'Unable to save notification.',
-    'General Settings' => 'General Settings',
     'Close' => 'Close',
     'Email Templates' => 'Email Templates',
     'Basic Notification (Sprout Email)' => 'Basic Notification (Sprout Email)',
@@ -124,5 +123,8 @@ return [
     'Select...' => 'Select...',
     'An error occurred while sending your campaign. Please review the Craft logs
      for more info.' => 'An error occurred while sending your campaign. Please review the Craft logs
-     for more info.'
+     for more info.',
+    'Unable to save Notification Email.' => 'Unable to save Notification Email.',
+    'General Settings' => 'General Settings',
+    'Genderal Settings' => 'Genderal Settings'
 ];

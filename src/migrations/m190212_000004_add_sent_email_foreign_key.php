@@ -20,7 +20,7 @@ class m190212_000004_add_sent_email_foreign_key extends Migration
             // Updates foreign key if it does not exist. Try catch avoid errors if it exist
             try {
                 $this->addForeignKey(null, $this->sentEmailTable,
-                    ['id'], '{{%elements}}', ['id'], 'CASCADE', null);
+                    ['id'], '{{%elements}}', ['id'], 'CASCADE');
             } catch (\Exception $e) {
                 Craft::info('Foreign Key already exists', __METHOD__);
             }

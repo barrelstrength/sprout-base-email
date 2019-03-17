@@ -213,7 +213,6 @@ class NotificationsController extends Controller
      * @throws Exception
      * @throws \Throwable
      * @throws \craft\errors\MissingComponentException
-     * @throws \yii\db\Exception
      * @throws \yii\web\BadRequestHttpException
      */
     public function actionSaveNotificationEmail()
@@ -334,7 +333,7 @@ class NotificationsController extends Controller
             $notificationEmail->getEmailTemplates()->getTextBody();
             $notificationEmail->getEmailTemplates()->getHtmlBody();
         } catch (\Exception $e) {
-            $errorMessage = "Dynamic variables on your template does not exist. ".$e->getMessage();
+            $errorMessage = 'Dynamic variables on your template does not exist. '.$e->getMessage();
             $notificationEmail->addError('emailTemplateId', $errorMessage);
 
             SproutBaseFields::$app->utilities->addError('template', $errorMessage);
@@ -460,7 +459,7 @@ class NotificationsController extends Controller
 
         /** @var NotificationEmail $notificationEmail */
         $notificationEmail = Craft::$app->getElements()->getElementById($notificationId);
-        $notificationEmail->setIsTest(true);
+        $notificationEmail->setIsTest();
 
         if (empty(trim($recipients))) {
             return $this->asJson(

@@ -180,7 +180,7 @@ class NotificationEmailEvents extends Component
             foreach ($notificationEmails as $notificationEmail) {
 
                 // Add the Notification Event settings to the $eventHandlerClass
-                $settings = Json::decode($notificationEmail->settings, true);
+                $settings = Json::decode($notificationEmail->settings);
 
                 /** @var NotificationEvent $eventHandlerClass */
                 $eventHandlerClass = new $eventHandlerClass($settings);

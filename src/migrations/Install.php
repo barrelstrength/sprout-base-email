@@ -52,7 +52,7 @@ class Install extends Migration
                 ]
             );
 
-            $this->addForeignKey(null, $this->notificationEmailTable, ['id'], '{{%elements}}', ['id'], 'CASCADE', null);
+            $this->addForeignKey(null, $this->notificationEmailTable, ['id'], '{{%elements}}', ['id'], 'CASCADE');
         }
     }
 

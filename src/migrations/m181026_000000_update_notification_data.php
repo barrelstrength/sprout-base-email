@@ -60,7 +60,7 @@ class m181026_000000_update_notification_data extends Migration
 
             if ($notifications) {
                 foreach ($notifications as $notification) {
-                    $options = Json::decode($notification['settings'], true);
+                    $options = Json::decode($notification['settings']);
                     $newOptions = [];
                     if (isset($options['craft'])) {
                         if (isset($options['craft']['saveUser'])) {

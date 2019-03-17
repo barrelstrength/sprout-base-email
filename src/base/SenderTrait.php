@@ -2,7 +2,7 @@
 
 namespace barrelstrength\sproutbaseemail\base;
 
-use barrelstrength\sproutcampaign\elements\CampaignEmail;
+use barrelstrength\sproutcampaigns\elements\CampaignEmail;
 use Craft;
 
 trait SenderTrait
