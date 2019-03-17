@@ -8,6 +8,7 @@ use Craft;
 class m190212_000004_add_sent_email_foreign_key extends Migration
 {
     private $sentEmailTable = '{{%sproutemail_sentemail}}';
+
     /**
      * @inheritdoc
      */
@@ -23,8 +24,6 @@ class m190212_000004_add_sent_email_foreign_key extends Migration
             } catch (\Exception $e) {
                 Craft::info('Foreign Key already exists', __METHOD__);
             }
-
-
         }
 
         return true;
