@@ -12,6 +12,7 @@ use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasefields\SproutBaseFields;
+use barrelstrength\sproutemail\models\Settings;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
@@ -31,13 +32,45 @@ class NotificationsController extends Controller
 {
     private $currentPluginHandle;
 
+    private $permissions = [];
+
     public function init()
     {
+        $permissionNames = Settings::getSharedPermissions();
+        $this->currentPluginHandle = Craft::$app->request->getSegment(1);
+        $this->permissions = SproutBase::$app->settings->getSharedPermissions($permissionNames, 'sprout-email', $this->currentPluginHandle);
+
         parent::init();
+    }
 
-        $currentPluginHandle = Craft::$app->request->getSegment(1);
+    /**
+     * @return Response
+     * @throws \yii\web\ForbiddenHttpException
+     */
+    public function actionIndex(): Response
+    {
+        $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
 
-        $this->currentPluginHandle = $currentPluginHandle;
+        return $this->renderTemplate('sprout-base-email/notifications/index', [
+            'viewNotificationsPermission' => $this->permissions['sproutEmail-viewNotifications'],
+        ]);
+    }
+
+    /**
+     * @param null   $emailId
+     * @param string $emailType
+     *
+     * @return Response
+     * @throws \yii\web\ForbiddenHttpException
+     */
+    public function actionPreview(string $emailType, $emailId = null): Response
+    {
+        $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
+
+        return $this->renderTemplate('sprout-base-email/notifications/_special/preview', [
+            'emailId' => $emailId,
+            'emailType' => $emailType
+        ]);
     }
 
     /**
@@ -45,14 +78,11 @@ class NotificationsController extends Controller
      * @param NotificationEmail|null $notificationEmail
      *
      * @return Response
+     * @throws \yii\web\ForbiddenHttpException
      */
     public function actionEditNotificationEmailSettingsTemplate($emailId = null, NotificationEmail $notificationEmail = null): Response
     {
-        $currentUser = Craft::$app->getUser()->getIdentity();
-
-        if (!$currentUser->can('editSproutEmailSettings')) {
-            return $this->redirect($this->currentPluginHandle);
-        }
+        $this->requireAdmin();
 
         $isNewNotificationEmail = $emailId !== null && $emailId === 'new';
 
@@ -81,6 +111,8 @@ class NotificationsController extends Controller
      */
     public function actionEditNotificationEmailTemplate($emailId = null, NotificationEmail $notificationEmail = null): Response
     {
+        $this->requirePermission($this->permissions['sproutEmail-editNotifications']);
+
         $routeParams = Craft::$app->getUrlManager()->getRouteParams();
 
         // Our currentPluginHandle helps us allow notifications to be managed in other plugins
@@ -169,7 +201,8 @@ class NotificationsController extends Controller
             'lists' => $lists,
             'tabs' => $tabs,
             'showPreviewBtn' => $showPreviewBtn,
-            'shareUrl' => $shareUrl
+            'shareUrl' => $shareUrl,
+            'editNotificationsPermission' => $this->permissions['sproutEmail-editNotifications']
         ]);
     }
 
@@ -186,6 +219,7 @@ class NotificationsController extends Controller
     public function actionSaveNotificationEmail()
     {
         $this->requirePostRequest();
+        $this->requirePermission($this->permissions['sproutEmail-editNotifications']);
 
         $notificationEmail = new NotificationEmail();
 
@@ -289,6 +323,11 @@ class NotificationsController extends Controller
         return $this->redirectToPostedUrl();
     }
 
+    /**
+     * @param NotificationEmail $notificationEmail
+     *
+     * @return bool
+     */
     private function validateTemplate(NotificationEmail $notificationEmail): bool
     {
         try {
@@ -318,6 +357,7 @@ class NotificationsController extends Controller
     public function actionSaveNotificationEmailSettings()
     {
         $this->requirePostRequest();
+        $this->requireAdmin();
 
         $notificationEmail = new NotificationEmail();
 
@@ -361,6 +401,7 @@ class NotificationsController extends Controller
     public function actionDeleteNotificationEmail()
     {
         $this->requirePostRequest();
+        $this->requirePermission($this->permissions['sproutEmail-editNotifications']);
 
         $notificationEmailId = Craft::$app->getRequest()->getBodyParam('emailId');
 
@@ -412,6 +453,7 @@ class NotificationsController extends Controller
     public function actionSendTestNotificationEmail(): Response
     {
         $this->requirePostRequest();
+        $this->requirePermission($this->permissions['sproutEmail-editNotifications']);
 
         $notificationId = Craft::$app->getRequest()->getBodyParam('notificationId');
         $recipients = Craft::$app->getRequest()->getBodyParam('recipients');
