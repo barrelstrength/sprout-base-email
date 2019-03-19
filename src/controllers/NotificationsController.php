@@ -12,7 +12,7 @@ use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasefields\SproutBaseFields;
-use barrelstrength\sproutemail\models\Settings;
+use barrelstrength\sproutbaseemail\models\Settings;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;

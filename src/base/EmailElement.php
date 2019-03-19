@@ -5,7 +5,7 @@ namespace barrelstrength\sproutbaseemail\base;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
 use barrelstrength\sproutbaseemail\emailtemplates\CustomTemplates;
 use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
-use barrelstrength\sproutemail\models\Settings;
+use barrelstrength\sproutbaseemail\models\Settings;
 use craft\base\Element;
 use Craft;
 use craft\base\Field;
