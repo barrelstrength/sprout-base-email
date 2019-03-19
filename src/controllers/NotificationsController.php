@@ -13,6 +13,7 @@ use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasefields\SproutBaseFields;
 use barrelstrength\sproutbaseemail\models\Settings;
+use craft\db\Query;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
@@ -172,8 +173,8 @@ class NotificationsController extends Controller
 
         $defaultEmailTemplate = BasicTemplates::class;
 
-        if ($currentPluginHandle !== 'sprout-email') {
-            $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEventsByPluginHandle($notificationEmail, $currentPluginHandle);
+        if ($pluginHandle !== 'sprout-email') {
+            $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEventsByPluginHandle($notificationEmail, $pluginHandle);
 
             if (new $routeParams['defaultEmailTemplate'] instanceof EmailTemplates) {
                 $defaultEmailTemplate = $routeParams['defaultEmailTemplate'];
