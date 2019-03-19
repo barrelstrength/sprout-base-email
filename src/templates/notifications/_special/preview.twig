@@ -16,8 +16,6 @@
     {% set htmlBody = null %}
     {% set body = null %}
 
-    {% set email = craft.sproutEmail.getNotificationEmailById(emailId) %}
-
     {% set emailUrl = actionUrl('sprout-base-email/notifications/share-notification-email', {
         notificationId: email.id
     }) %}
