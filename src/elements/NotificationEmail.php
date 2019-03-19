@@ -147,7 +147,7 @@ class NotificationEmail extends EmailElement
      */
     public function getCpEditUrl()
     {
-        $pluginHandle = Craft::$app->request->getBodyParam('criteria.base') ?: 'sprout-email';
+        $pluginHandle = Craft::$app->request->getBodyParam('criteria.pluginHandle') ?: 'sprout-email';
 
         return UrlHelper::cpUrl(
             $pluginHandle.'/notifications/edit/'.$this->id
@@ -221,7 +221,7 @@ class NotificationEmail extends EmailElement
                     'notificationId' => $this->id,
                 ]);
             }
-            $pluginHandle = Craft::$app->request->getBodyParam('criteria.base') ?: 'sprout-email';
+            $pluginHandle = Craft::$app->request->getBodyParam('criteria.pluginHandle') ?: 'sprout-email';
 
             return Craft::$app->getView()->renderTemplate('sprout-base-email/_components/elementindex/NotificationEmail/preview-links', [
                 'email' => $this,

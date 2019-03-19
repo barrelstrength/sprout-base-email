@@ -8,7 +8,10 @@ use Craft;
 
 class NotificationEmailQuery extends ElementQuery
 {
-    public $base;
+    /**
+     * @var string
+     */
+    public $pluginHandle;
 
     /**
      * @inheritdoc
@@ -38,11 +41,10 @@ class NotificationEmailQuery extends ElementQuery
             'sproutemail_notificationemails.fieldLayoutId'
         ]);
 
-        $pluginHandle = Craft::$app->request->getBodyParam('criteria.base');
+        $this->pluginHandle = Craft::$app->request->getBodyParam('criteria.pluginHandle');
 
-        // Displays all notification event on sprout-email plugin and filters on plugin integration
-        if ($pluginHandle != null && $pluginHandle != 'sprout-email') {
-            $this->query->where(['sproutemail_notificationemails.pluginHandle' => $pluginHandle]);
+        if ($this->pluginHandle !== null && $this->pluginHandle !== 'sprout-email') {
+            $this->query->where(['sproutemail_notificationemails.pluginHandle' => $this->pluginHandle]);
         }
 
         return parent::beforePrepare();
@@ -53,12 +55,10 @@ class NotificationEmailQuery extends ElementQuery
      */
     protected function statusCondition(string $status)
     {
-        $currentPluginHandle = Craft::$app->getRequest()->getSegment(1);
-
         /**
          * To show disabled notification emails on integrated plugins
          */
-        if ($currentPluginHandle != 'sprout-email') {
+        if ($this->pluginHandle !== 'sprout-email') {
             return ['elements.enabled' => ['0', '1']];
         }
 

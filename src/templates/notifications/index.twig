@@ -26,8 +26,8 @@
 
 {% block initJs %}
     // Pass segment to the NotificationEmailQuery class to filter notification entries
-    var pluginHandle = {'base': '{{ craft.app.request.getSegment(1) }}'};
-    var criteria = Object.assign(Craft.defaultIndexCriteria, pluginHandle);
+    var params = {'pluginHandle': '{{ craft.app.request.getSegment(1) }}'};
+    var criteria = Object.assign(Craft.defaultIndexCriteria, params);
 
     Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#main'), {
     context:        '{{ context }}',
