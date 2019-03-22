@@ -4,8 +4,8 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutbaseemail\models\SimpleRecipient;
 use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
-use barrelstrength\sproutlists\records\SubscriberList as ListsRecord;
-use barrelstrength\sproutlists\records\Subscriber;
+use barrelstrength\sproutbaselists\records\SubscriberList as ListsRecord;
+use barrelstrength\sproutbaselists\records\Subscriber;
 use Craft;
 use craft\helpers\Json;
 use Egulias\EmailValidator\EmailValidator;

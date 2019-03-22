@@ -6,13 +6,13 @@ use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
+use barrelstrength\sproutbaselists\SproutBaseLists;
 use barrelstrength\sproutcampaigns\elements\CampaignEmail;
 use barrelstrength\sproutcampaigns\models\CampaignType;
 use barrelstrength\sproutemail\services\SentEmails;
 use barrelstrength\sproutemail\SproutEmail;
 use barrelstrength\sproutforms\fields\formfields\FileUpload;
-use barrelstrength\sproutlists\listtypes\SubscriberListType;
-use barrelstrength\sproutlists\SproutLists;
+use barrelstrength\sproutbaselists\listtypes\SubscriberListType;
 use craft\base\Element;
 use craft\base\LocalVolumeInterface;
 use craft\elements\Asset;
@@ -339,8 +339,8 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      */
     public function getLists(): array
     {
-        if ($this->lists === null && Craft::$app->getPlugins()->getPlugin('sprout-lists') != null) {
-            $listType = SproutLists::$app->lists
+        if (empty($this->lists) && Craft::$app->getPlugins()->getPlugin('sprout-lists') !== null) {
+            $listType = SproutBaseLists::$app->lists
                 ->getListType(SubscriberListType::class);
 
             $this->lists = $listType ? $listType->getLists() : [];
