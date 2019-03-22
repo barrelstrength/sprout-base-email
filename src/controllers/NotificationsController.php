@@ -13,7 +13,6 @@ use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasefields\SproutBaseFields;
 use barrelstrength\sproutbaseemail\models\Settings;
-use craft\db\Query;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
@@ -37,9 +36,7 @@ class NotificationsController extends Controller
 
     public function init()
     {
-        $permissionNames = Settings::getSharedPermissions();
-        $this->currentPluginHandle = Craft::$app->request->getSegment(1);
-        $this->permissions = SproutBase::$app->settings->getSharedPermissions($permissionNames, 'sprout-email', $this->currentPluginHandle);
+        $this->permissions = SproutBase::$app->settings->getPluginPermissions(new Settings(), 'sprout-email');
 
         parent::init();
     }

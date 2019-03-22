@@ -2,15 +2,17 @@
 
 namespace barrelstrength\sproutbaseemail\models;
 
+use barrelstrength\sproutbase\base\SharedPermissionsInterface;
 use barrelstrength\sproutbase\base\SproutSettingsInterface;
 use Craft;
 use craft\base\Model;
 
 /**
  *
+ * @property array $sharedPermissions
  * @property array $settingsNavItems
  */
-class Settings extends Model implements SproutSettingsInterface
+class Settings extends Model implements SproutSettingsInterface, SharedPermissionsInterface
 {
     /**
      * @var string
@@ -126,7 +128,7 @@ class Settings extends Model implements SproutSettingsInterface
      *
      * @return array
      */
-    public static function getSharedPermissions(): array
+    public function getSharedPermissions(): array
     {
         return [
             'viewNotifications',
