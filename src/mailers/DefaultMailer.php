@@ -6,6 +6,7 @@ use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
+use barrelstrength\sproutbaselists\listtypes\MailingList;
 use barrelstrength\sproutbaselists\SproutBaseLists;
 use barrelstrength\sproutcampaigns\elements\CampaignEmail;
 use barrelstrength\sproutcampaigns\models\CampaignType;
@@ -341,7 +342,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
     {
         if (empty($this->lists) && Craft::$app->getPlugins()->getPlugin('sprout-lists') !== null) {
             $listType = SproutBaseLists::$app->lists
-                ->getListType(SubscriberListType::class);
+                ->getListType(MailingList::class);
 
             $this->lists = $listType ? $listType->getLists() : [];
         }
