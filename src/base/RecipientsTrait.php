@@ -4,7 +4,8 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutbaseemail\models\SimpleRecipient;
 use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
-use barrelstrength\sproutbaselists\records\SubscriberList as ListsRecord;
+use barrelstrength\sproutbaselists\records\ListElement as ListElementRecord;
+use barrelstrength\sproutbaselists\records\ListElement;
 use barrelstrength\sproutbaselists\records\Subscriber;
 use Craft;
 use craft\helpers\Json;
@@ -217,6 +218,7 @@ trait RecipientsTrait
      * @param $listSettings
      *
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public function getRecipientsFromSelectedLists($listSettings): array
     {
@@ -232,25 +234,25 @@ trait RecipientsTrait
         }
 
         // Get all subscribers by list IDs from the Subscriber ListType
-        $listRecords = ListsRecord::find()
+        $listRecords = ListElementRecord::find()
             ->where([
                 'id' => $listIds
             ])
             ->all();
 
-
         $sproutListsRecipientsInfo = [];
         if ($listRecords != null) {
+            /**
+             * @var $listRecord ListElement
+             */
             foreach ($listRecords as $listRecord) {
-                if (!empty($listRecord->subscribers)) {
 
-                    /** @var Subscriber $subscribers */
-                    $subscribers = $listRecord->subscribers;
-
-                    /** @var SimpleRecipient $subscriber */
-                    foreach ($subscribers as $subscriber) {
+                $items = $listRecord->getItems()->all();
+                if (count($items)) {
+                    /** @var SimpleRecipient $item */
+                    foreach ($items as $item) {
                         // Assign email as key to not repeat subscriber
-                        $sproutListsRecipientsInfo[$subscriber->email] = $subscriber->getAttributes();
+                        $sproutListsRecipientsInfo[$item->email] = $item->getAttributes();
                     }
                 }
             }
