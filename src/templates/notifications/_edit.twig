@@ -146,6 +146,20 @@
     <hr>
     <div class="meta">
 
+        {% if (mailer is not null and mailer.getLists()|length) %}
+
+            <div class="field mailing-lists">
+                <div class="heading">
+                    Lists
+                </div>
+                <div class="input">
+                    {% namespace 'lists' %}
+                        {{ mailer.getListsHtml(notificationEmail.listSettings)|raw }}
+                    {% endnamespace %}
+                </div>
+            </div>
+        {% endif %}
+
         {{ forms.textField({
             label: "To <span class='info'>A comma separated list of email addresses.</span>"|t('sprout-base-email'),
             placeholder: "user@domain.com, other@domain.com"|t('sprout-base-email'),
@@ -185,19 +199,6 @@
             onLabel: "Enable"|t('sprout-base-email'),
             offLabel: "Disable"|t('sprout-base-email')
         }) }}
-
-        {% if (mailer is not null and mailer.getLists()|length) %}
-            <div class="field mailing-lists">
-                <div class="heading">
-                    Lists
-                </div>
-                <div class="input">
-                    {% namespace 'lists' %}
-                        {{ mailer.getListsHtml(notificationEmail.listSettings)|raw }}
-                    {% endnamespace %}
-                </div>
-            </div>
-        {% endif %}
 
     </div>
 
