@@ -247,7 +247,7 @@ trait RecipientsTrait
              */
             foreach ($listRecords as $listRecord) {
 
-                $items = $listRecord->getItems()->all();
+                $items = $listRecord->getSubscribers()->all();
                 if (count($items)) {
                     /** @var SimpleRecipient $item */
                     foreach ($items as $item) {
