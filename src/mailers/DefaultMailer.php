@@ -369,8 +369,8 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         foreach ($lists as $list) {
             $listName = $list->name;
 
-            if ($list->totalSubscribers) {
-                $listName .= ' ('.$list->totalSubscribers.')';
+            if ($list->count) {
+                $listName .= ' ('.$list->count.')';
             } else {
                 $listName .= ' (0)';
             }
