@@ -32,7 +32,7 @@ class m190220_000000_clean_up_sent_email_records extends Migration
 
             (new Query)
                 ->createCommand()
-                ->delete('{{%sproutemail_sentemail}}', ['id' => $sentEmailId])
+                ->delete('{{%sproutemail_sentemail}}', ['[[id]]' => $sentEmailId])
                 ->execute();
         }
 
