@@ -119,7 +119,6 @@ class NotificationEmailEvents extends Component
 
                 Event::on($eventClassName, $event, function($eventHandlerClassName)
                 use ($self, $notificationEmailEventClassName, $notificationEmailEvent) {
-
                     return call_user_func($self->getRegisteredEvent($notificationEmailEventClassName),
                         $notificationEmailEventClassName, $eventHandlerClassName, $notificationEmailEvent);
                 });
@@ -188,25 +187,28 @@ class NotificationEmailEvents extends Component
                 $eventHandlerClass->notificationEmail = $notificationEmail;
                 $eventHandlerClass->event = $event;
 
-                if ($eventHandlerClass->validate()) {
-
-                    $object = $eventHandlerClass->getEventObject();
-                    $notificationEmail->setEventObject($object);
-
-                    // Don't send emails for disabled notification email entries.
-                    if (!$notificationEmail->isReady()) {
-                        continue;
-                    }
-
-                    SproutBaseEmail::$app->notifications->sendNotificationViaMailer($notificationEmail);
-
-                    $sendNotificationEmailEvent = new SendNotificationEmailEvent([
-                        'event' => $event,
-                        'notificationEmail' => $notificationEmail,
-                    ]);
-
-                    $this->trigger(self::EVENT_SEND_NOTIFICATION_EMAIL, $sendNotificationEmailEvent);
+                if (!$eventHandlerClass->validate()) {
+                    Craft::error($eventHandlerClass->getName().' event does not validate: '.json_encode($eventHandlerClass->getErrors()), __METHOD__);
+                    return false;
                 }
+
+                $object = $eventHandlerClass->getEventObject();
+                $notificationEmail->setEventObject($object);
+
+                // Don't send emails for disabled notification email entries.
+                if (!$notificationEmail->isReady()) {
+                    continue;
+                }
+
+                SproutBaseEmail::$app->notifications->sendNotificationViaMailer($notificationEmail);
+
+                $sendNotificationEmailEvent = new SendNotificationEmailEvent([
+                    'event' => $event,
+                    'notificationEmail' => $notificationEmail,
+                ]);
+
+                $this->trigger(self::EVENT_SEND_NOTIFICATION_EMAIL, $sendNotificationEmailEvent);
+
             }
         }
 
@@ -270,7 +272,6 @@ class NotificationEmailEvents extends Component
             foreach ($notificationEmailEventTypes as $notificationEmailEventClass) {
 
                 $settings = Json::decode($notificationEmail->settings, true);
-
                 if ($notificationEmailEventClass === $notificationEmail->eventId) {
                     // If the Event matches are current selected event, initialize the NotificationEvent class with the Event settings
                     $event = new $notificationEmailEventClass($settings);

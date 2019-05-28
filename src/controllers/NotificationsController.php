@@ -269,7 +269,6 @@ class NotificationsController extends Controller
         }
 
         if ($event) {
-
             $eventSettings = Craft::$app->getRequest()->getBodyParam('eventSettings');
 
             if (isset($eventSettings[$notificationEmail->eventId])) {
@@ -288,6 +287,10 @@ class NotificationsController extends Controller
             }
 
             $notificationEmail->setEventObject($event->getMockEventObject());
+        }
+
+        if (is_null($event->getSettingsHtml()) || $event->getSettingsHtml() == ''){
+            $notificationEmail->settings = null;
         }
 
         // Get cp path cause template validation change current template path
