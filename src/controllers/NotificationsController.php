@@ -287,10 +287,10 @@ class NotificationsController extends Controller
             }
 
             $notificationEmail->setEventObject($event->getMockEventObject());
-        }
 
-        if (is_null($event->getSettingsHtml()) || $event->getSettingsHtml() == ''){
-            $notificationEmail->settings = null;
+            if (is_null($event->getSettingsHtml()) || $event->getSettingsHtml() == ''){
+                $notificationEmail->settings = null;
+            }
         }
 
         // Get cp path cause template validation change current template path
