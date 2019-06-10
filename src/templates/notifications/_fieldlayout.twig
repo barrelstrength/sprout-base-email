@@ -32,7 +32,7 @@
 
     {{ textareaField({
         label: "Body"|t('sprout-base-email'),
-        instructions: "Add a message to your recipients for when your selected event is triggered. Leave this field blank if no message is desired."|t('sprout-base-email'),
+        instructions: "Add a message to your recipients for when your selected event is triggered. Leave this field blank if no message is desired. Format: **&#42;&#42;bold&#42;&#42;** _&#95;italics&#95;_ &#91;Website&#93;(https&#58;//website.com)"|t('sprout-base-email'),
         id: 'defaultBody',
         name: 'defaultBody',
         value: notificationEmail.defaultBody,
