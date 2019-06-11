@@ -189,7 +189,7 @@ class NotificationEmailEvents extends Component
 
                 if (!$eventHandlerClass->validate()) {
                     Craft::error($eventHandlerClass->getName().' event does not validate: '.json_encode($eventHandlerClass->getErrors()), __METHOD__);
-                    return false;
+                    continue;
                 }
 
                 $object = $eventHandlerClass->getEventObject();
