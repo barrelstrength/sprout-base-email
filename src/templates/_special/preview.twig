@@ -45,7 +45,6 @@
     {% endif %}
 
     {% if emailType == 'sent' %}
-
         {% set email = craft.sproutEmail.getSentEmailById(emailId) %}
 
         {% set body = email.body %}

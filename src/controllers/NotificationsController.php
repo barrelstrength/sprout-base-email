@@ -65,10 +65,13 @@ class NotificationsController extends Controller
     {
         $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
 
-        $email = Craft::$app->getElements()->getElementById($emailId, NotificationEmail::class);
+        $folder = $emailType == 'notification' ? 'notifications/' : '';
 
-        return $this->renderTemplate('sprout-base-email/notifications/_special/preview', [
+        $email = Craft::$app->getElements()->getElementById($emailId);
+
+        return $this->renderTemplate("sprout-base-email/{$folder}_special/preview", [
             'email' => $email,
+            'emailId' => $emailId,
             'emailType' => $emailType
         ]);
     }
@@ -539,7 +542,7 @@ class NotificationsController extends Controller
     public function actionShareNotificationEmail($notificationId = null): Response
     {
         if ($notificationId) {
-            $notificationEmail = Craft::$app->getElements()->getElementById($notificationId, NotificationEmail::class);
+            $notificationEmail = Craft::$app->getElements()->getElementById($notificationId);
 
             if (!$notificationEmail) {
                 throw new HttpException(404);
