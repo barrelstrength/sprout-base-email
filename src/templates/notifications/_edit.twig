@@ -67,11 +67,12 @@
                 </ul>
                 {% if notificationEmail.id is not null %}
                     <hr>
+                    {% set redirectOnDelete = currentPluginHandle ~ "/notifications" %}
                     <ul>
                         <li><a class="formsubmit error"
                                data-action="sprout-base-email/notifications/delete-notification-email"
                                data-confirm="{{ 'Are you sure you want to delete this notification email?'|t('sprout-base-email') }}"
-                               data-redirect="{{ currentPluginHandle ~ "/notifications"|hash }}">{{ "Delete"|t('sprout-base-email') }}</a>
+                               data-redirect="{{ redirectOnDelete|hash }}">{{ "Delete"|t('sprout-base-email') }}</a>
                         </li>
                     </ul>
                 {% endif %}
