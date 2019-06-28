@@ -443,7 +443,7 @@ class NotificationsController extends Controller
 
         Craft::$app->getSession()->setNotice(Craft::t('sprout-base-email', 'Notification deleted.'));
 
-        return $this->redirect($this->currentPluginHandle.'/notifications');
+        return $this->redirectToPostedUrl();
     }
 
     /**
