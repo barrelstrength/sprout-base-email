@@ -47,7 +47,7 @@ class NotificationEmails extends Component
             $notificationEmail->fieldLayoutId = $fieldLayout->id;
 
             // Save the global set
-            if (!Craft::$app->getElements()->saveElement($notificationEmail, false)) {
+            if (!Craft::$app->getElements()->saveElement($notificationEmail, true)) {
                 return false;
             }
 

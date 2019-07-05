@@ -1,0 +1,29 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.selectField({
+	first: true,
+	required: true,
+	label: "Frequency Unit"|t('sprout-base-email'),
+	id: 'frequencyUnit',
+	name: 'frequencyUnit',
+	options: [
+		{
+			label: 'hours',
+			value: 'hour'
+		},
+		{
+			label: 'minutes',
+			value: 'minute'
+		}
+	],
+	value: event.frequencyUnit
+}) }}
+
+{{ forms.textField ({
+	required: true,
+	label: "Frequency Quantity"|t('sprout-base-email'),
+	id: 'frequencyQuantity',
+	name: 'frequencyQuantity',
+	size: 5,
+	value: event.frequencyQuantity
+}) }}
