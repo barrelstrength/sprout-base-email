@@ -154,10 +154,6 @@ class SproutBaseEmail extends Module
             $notificationEventsService, 'handleSaveJob'
         ]);
 
-        /*	    Event::on(NotificationEmail::class, NotificationEmail::EVENT_BEFORE_SAVE, function (Event $event) {
-
-                });*/
-
         parent::init();
     }
 }
