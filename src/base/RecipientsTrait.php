@@ -6,7 +6,6 @@ use barrelstrength\sproutbaseemail\models\SimpleRecipient;
 use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
 use barrelstrength\sproutbaselists\records\ListElement as ListElementRecord;
 use barrelstrength\sproutbaselists\records\ListElement;
-use barrelstrength\sproutbaselists\records\Subscriber;
 use Craft;
 use craft\helpers\Json;
 use Egulias\EmailValidator\EmailValidator;

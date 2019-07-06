@@ -15,7 +15,6 @@ use barrelstrength\sproutbasejobs\SproutBaseJobs;
 use craft\base\Component;
 use Craft;
 
-use craft\events\ElementEvent;
 use craft\helpers\Json;
 use yii\base\Event;
 use yii\base\InvalidConfigException;
@@ -363,6 +362,7 @@ class NotificationEmailEvents extends Component
      * @param ModelEvent $event
      *
      * @throws InvalidConfigException
+     * @throws \Throwable
      */
     public function handleSaveJob(ModelEvent $event)
     {

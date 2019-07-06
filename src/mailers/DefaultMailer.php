@@ -61,8 +61,12 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
     /**
      * @inheritdoc
      *
-     * @throws Exception
-     * @throws \Twig_Error_Loader
+     * @param array $settings
+     *
+     * @return \Twig\Markup
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function getSettingsHtml(array $settings = [])
     {
@@ -302,8 +306,6 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
     /**
      * @inheritdoc
      *
-     * @throws Exception
-     * @throws \Twig_Error_Loader
      */
     public function getPrepareModalHtml(EmailElement $email): string
     {
@@ -353,8 +355,12 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
     /**
      * @inheritdoc
      *
+     * @param array $values
+     * @return string
      * @throws Exception
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function getListsHtml($values = [])
     {

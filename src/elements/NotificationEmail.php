@@ -201,8 +201,13 @@ class NotificationEmail extends EmailElement
     /**
      * @inheritdoc
      *
+     * @param string $attribute
+     *
+     * @return string
      * @throws Exception
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function getTableAttributeHtml(string $attribute): string
     {

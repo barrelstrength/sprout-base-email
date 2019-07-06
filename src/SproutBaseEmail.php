@@ -7,11 +7,8 @@
 
 namespace barrelstrength\sproutbaseemail;
 
-use barrelstrength\sproutbase\SproutBase;
-use barrelstrength\sproutbaseemail\base\ScheduledJobEvent;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\services\NotificationEmailEvents;
-use barrelstrength\sproutbasejobs\SproutBaseJobs;
 use barrelstrength\sproutbaseemail\services\App;
 use barrelstrength\sproutbaseemail\services\EmailTemplates;
 use barrelstrength\sproutbase\base\BaseSproutTrait;
@@ -23,15 +20,10 @@ use barrelstrength\sproutbaseemail\services\Mailers;
 use barrelstrength\sproutbaseemail\web\twig\variables\SproutEmailVariable;
 use barrelstrength\sproutbaseemail\controllers\MailersController;
 use barrelstrength\sproutbasejobs\SproutBaseJobsHelper;
-use craft\events\ElementEvent;
 use craft\events\RegisterComponentTypesEvent;
-use craft\helpers\Json;
-use craft\services\Elements;
 use craft\web\Application;
 use craft\web\twig\variables\CraftVariable;
 use yii\base\Event;
-use yii\base\Model;
-use yii\base\ModelEvent;
 use \yii\base\Module;
 use craft\web\View;
 use craft\events\RegisterTemplateRootsEvent;

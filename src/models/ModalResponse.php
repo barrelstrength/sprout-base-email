@@ -42,8 +42,9 @@ class ModalResponse extends Model
      * @param array  $variables
      *
      * @return ModalResponse
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public static function createModalResponse($template = '', array $variables = []): ModalResponse
     {
@@ -68,8 +69,9 @@ class ModalResponse extends Model
      * @param array $variables
      *
      * @return ModalResponse
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public static function createErrorModalResponse($template = null, array $variables = []): ModalResponse
     {

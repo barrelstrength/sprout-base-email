@@ -13,7 +13,6 @@ use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasefields\SproutBaseFields;
 use barrelstrength\sproutbaseemail\models\Settings;
-use barrelstrength\sproutemail\events\notificationevents\ScheduledEmailJobEvent;
 use craft\errors\MissingComponentException;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
@@ -22,7 +21,11 @@ use craft\web\Controller;
 use Craft;
 use craft\base\Plugin;
 use Throwable;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use yii\base\Exception;
+use yii\base\ExitException;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
@@ -296,7 +299,7 @@ class NotificationsController extends Controller
 
             $notificationEmail->setEventObject($event->getMockEventObject());
 
-            if (is_null($event->getSettingsHtml()) || $event->getSettingsHtml() == ''){
+            if ($event->getSettingsHtml() === null || $event->getSettingsHtml() == ''){
                 $notificationEmail->settings = null;
             }
         }
@@ -457,7 +460,6 @@ class NotificationsController extends Controller
      * @return Response
      * @throws Exception
      * @throws Throwable
-     * @throws \Twig_Error_Loader
      * @throws BadRequestHttpException
      */
     public function actionSendTestNotificationEmail(): Response
@@ -581,10 +583,12 @@ class NotificationsController extends Controller
      * @param null $notificationId
      * @param null $type
      *
-     * @throws Exception
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\ExitException
      * @throws BadRequestHttpException
+     * @throws Exception
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws ExitException
      */
     public function actionViewSharedNotificationEmail($notificationId = null, $type = null)
     {
@@ -598,8 +602,10 @@ class NotificationsController extends Controller
      * Renders a Notification Email for Live Preview
      *
      * @throws Exception
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\ExitException
+     * @throws ExitException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function actionLivePreviewNotificationEmail()
     {

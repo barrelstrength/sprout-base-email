@@ -6,7 +6,6 @@ use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\base\NotificationEvent;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
-use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\records\NotificationEmail as NotificationEmailRecord;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutemail\events\notificationevents\Manual;
@@ -118,9 +117,11 @@ class NotificationEmails extends Component
      * @param      $notificationId
      * @param null $type
      *
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
+     * @throws \Twig\Error\RuntimeError
      */
     public function getPreviewNotificationEmailById($notificationId, $type = null)
     {
@@ -167,7 +168,9 @@ class NotificationEmails extends Component
      * @param NotificationEmail $email
      * @param string            $fileExtension
      *
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
      */

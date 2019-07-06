@@ -28,8 +28,9 @@ trait SenderTrait
      * @param CampaignEmail $campaignEmail
      *
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function getSenderHtml(CampaignEmail $campaignEmail): string
     {

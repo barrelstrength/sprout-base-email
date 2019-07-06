@@ -62,8 +62,6 @@ trait ModalWorkflowTrait
      *
      * @return string
      * @throws \Throwable
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
      */
     public function getPrepareModalHtml(EmailElement $email): string
     {
