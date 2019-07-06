@@ -164,14 +164,4 @@ abstract class NotificationEvent extends SavableComponent
     {
         return null;
     }
-
-    /**
-     * Additional validation for triggering events.
-     *
-     * @return void
-     */
-    public function validateEvent()
-    {
-        return null;
-    }
 }
