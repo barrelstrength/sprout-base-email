@@ -377,7 +377,7 @@ class NotificationEmail extends EmailElement
     {
         $rules = parent::rules();
 
-        $rules[] = [['subjectLine', 'fromName', 'fromEmail'], 'required'];
+        $rules[] = [['subjectLine', 'fromName', 'fromEmail', 'eventId'], 'required'];
         $rules[] = [['fromName', 'fromEmail', 'replyToEmail'], 'default', 'value' => ''];
         $rules[] = ['recipients', 'emailList'];
         $rules[] = ['cc', 'emailList'];

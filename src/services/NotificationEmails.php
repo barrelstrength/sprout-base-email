@@ -9,6 +9,7 @@ use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\records\NotificationEmail as NotificationEmailRecord;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
+use barrelstrength\sproutemail\events\notificationevents\Manual;
 use craft\base\Component;
 use Craft;
 use craft\helpers\ElementHelper;
@@ -284,6 +285,8 @@ class NotificationEmails extends Component
         // @todo - add override settings to Sprout Email
         $notificationEmail->fromName = $systemEmailSettings->fromName;
         $notificationEmail->fromEmail = $systemEmailSettings->fromEmail;
+
+        $notificationEmail->eventId = Manual::class;
 
         if ($this->saveNotification($notificationEmail)) {
 

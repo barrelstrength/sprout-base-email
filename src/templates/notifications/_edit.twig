@@ -213,10 +213,7 @@
 
         {% if events|length %}
 
-            {% set eventOptions = [{
-                'label': 'Select event...'|t('sprout-base-email'),
-                'value': null
-            }] %}
+            {% set eventOptions = [] %}
 
             {% for eventClass, event in events %}
                 {% set eventOptions = eventOptions|merge([{
@@ -232,6 +229,7 @@
                 fieldClass: 'field-border-top',
                 options: eventOptions,
                 value: notificationEmail.eventId is defined ? notificationEmail.eventId : null,
+                errors: notificationEmail.getErrors('eventId')
             }) }}
 
             {% for type, event in events %}
