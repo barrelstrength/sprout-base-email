@@ -2,8 +2,14 @@
 
 namespace barrelstrength\sproutbaseemail\base;
 
-use craft;
+use Craft;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
+/**
+ * @property string $jobType
+ */
 abstract class ScheduledJobEvent extends NotificationEvent {
 	/**
 	 * @var string
@@ -59,9 +65,9 @@ abstract class ScheduledJobEvent extends NotificationEvent {
 	 * @inheritdoc
 	 * @param array $context
 	 * @return string
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
+	 * @throws LoaderError
+	 * @throws RuntimeError
+	 * @throws SyntaxError
 	 */
 	public function getSettingsHtml(array $context = []): string {
 		return Craft::$app->getView()->renderTemplate('sprout-base-email/_components/events/scheduled-job', [

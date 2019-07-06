@@ -17,6 +17,7 @@ use craft\helpers\ElementHelper;
 use craft\helpers\UrlHelper;
 use craft\base\ElementInterface;
 use craft\models\FieldLayout;
+use Throwable;
 
 /**
  * Class NotificationEmails
@@ -29,12 +30,11 @@ class NotificationEmails extends Component
      * @param NotificationEmail $notificationEmail
      *
      * @return bool
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function saveNotification(NotificationEmail $notificationEmail)
     {
         if (!$notificationEmail->validate(null, false)) {
-            SproutBase::info(Craft::t('sprout-base-email', 'Notification Email not saved due to validation error.'));
             return false;
         }
 
@@ -55,7 +55,7 @@ class NotificationEmails extends Component
             $transaction->commit();
 
             return true;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $transaction->rollBack();
 
             throw $e;
@@ -68,7 +68,7 @@ class NotificationEmails extends Component
      * @param $id
      *
      * @return bool
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function deleteNotificationEmailById($id): bool
     {
@@ -98,7 +98,7 @@ class NotificationEmails extends Component
      * @param NotificationEmail $notificationEmail
      *
      * @return bool
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function sendNotificationViaMailer(NotificationEmail $notificationEmail)
     {
@@ -203,7 +203,7 @@ class NotificationEmails extends Component
      * @param array             $errors
      *
      * @return array
-     * @throws \Throwable
+     * @throws Throwable
      * @throws \yii\base\Exception
      */
     public function getNotificationErrors(NotificationEmail $notificationEmail, array $errors = []): array
@@ -263,7 +263,7 @@ class NotificationEmails extends Component
      *
      * @return NotificationEmail|null
      * @throws \Exception
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function createNewNotification($subjectLine = null, $handle = null)
     {

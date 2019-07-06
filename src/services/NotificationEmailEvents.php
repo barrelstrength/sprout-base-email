@@ -136,6 +136,7 @@ class NotificationEmailEvents extends Component
      * This closure allows us to avoid having to register for every possible event via Event::on
      * This closure allows us to know the current event being triggered dynamically
      *
+     * @return \Callable
      * @example - An overview of how this works. When the sproutemail is initialized...
      *
      * 1. We check which events we need to register for via Event::on
@@ -143,7 +144,6 @@ class NotificationEmailEvents extends Component
      * 3. This closure gets called with the name of the event and the event itself
      * 4. This closure executes as real event handler for the triggered event
      *
-     * @return \Callable
      */
     public function getDynamicEventHandler(): callable
     {
@@ -208,7 +208,6 @@ class NotificationEmailEvents extends Component
                 ]);
 
                 $this->trigger(self::EVENT_SEND_NOTIFICATION_EMAIL, $sendNotificationEmailEvent);
-
             }
         }
 
@@ -297,15 +296,15 @@ class NotificationEmailEvents extends Component
     /**
      * Returns events with a given plugin ID
      *
+     * @param $notificationEmail
+     * @param $pluginHandle
+     *
+     * @return array
      * @example pluginHandle is the unique plugin handle
      *
      * sprout-forms
      * sprout-email
      *
-     * @param $notificationEmail
-     * @param $pluginHandle
-     *
-     * @return array
      */
     public function getNotificationEmailEventsByPluginHandle($notificationEmail, $pluginHandle): array
     {

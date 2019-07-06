@@ -13,13 +13,19 @@ use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasefields\SproutBaseFields;
 use barrelstrength\sproutbaseemail\models\Settings;
+use barrelstrength\sproutemail\events\notificationevents\ScheduledEmailJobEvent;
+use craft\errors\MissingComponentException;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use Craft;
 use craft\base\Plugin;
+use Throwable;
 use yii\base\Exception;
+use yii\base\InvalidConfigException;
+use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
 use yii\web\Response;
 
@@ -43,7 +49,7 @@ class NotificationsController extends Controller
 
     /**
      * @return Response
-     * @throws \yii\web\ForbiddenHttpException
+     * @throws ForbiddenHttpException
      */
     public function actionIndex(): Response
     {
@@ -59,7 +65,7 @@ class NotificationsController extends Controller
      * @param string $emailType
      *
      * @return Response
-     * @throws \yii\web\ForbiddenHttpException
+     * @throws ForbiddenHttpException
      */
     public function actionPreview(string $emailType, $emailId = null): Response
     {
@@ -81,7 +87,7 @@ class NotificationsController extends Controller
      * @param NotificationEmail|null $notificationEmail
      *
      * @return Response
-     * @throws \yii\web\ForbiddenHttpException
+     * @throws ForbiddenHttpException
      */
     public function actionEditNotificationEmailSettingsTemplate($emailId = null, NotificationEmail $notificationEmail = null): Response
     {
@@ -111,9 +117,9 @@ class NotificationsController extends Controller
      *
      * @return Response
      * @throws Exception
-     * @throws \Throwable
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\ForbiddenHttpException
+     * @throws Throwable
+     * @throws InvalidConfigException
+     * @throws ForbiddenHttpException
      */
     public function actionEditNotificationEmailTemplate(string $pluginHandle, $emailId = null, NotificationEmail $notificationEmail = null): Response
     {
@@ -130,7 +136,7 @@ class NotificationsController extends Controller
                 return $this->redirect($url);
             }
 
-            throw new Exception(Craft::t('sprout-base-email', 'Unable to create Notification Email'));
+            throw new Exception('Unable to create Notification Email');
         }
 
         if (!$notificationEmail) {
@@ -212,13 +218,12 @@ class NotificationsController extends Controller
     /**
      * Save a Notification Email from the Notification Email template
      *
-     * @return Response
      * @throws Exception
-     * @throws \Throwable
-     * @throws \craft\errors\MissingComponentException
-     * @throws \yii\web\BadRequestHttpException
+     * @throws Throwable
+     * @throws MissingComponentException
+     * @throws BadRequestHttpException
      */
-    public function actionSaveNotificationEmail(): Response
+    public function actionSaveNotificationEmail()
     {
         $this->requirePostRequest();
         $this->requirePermission($this->permissions['sproutEmail-editNotifications']);
@@ -355,9 +360,9 @@ class NotificationsController extends Controller
      *
      * @return null
      * @throws \Exception
-     * @throws \Throwable
+     * @throws Throwable
      * @throws \yii\base\Exception
-     * @throws \yii\web\BadRequestHttpException
+     * @throws BadRequestHttpException
      */
     public function actionSaveNotificationEmailSettings()
     {
@@ -400,8 +405,8 @@ class NotificationsController extends Controller
      * Delete a Notification Email
      *
      * @return bool|\yii\web\Response
-     * @throws \Throwable
-     * @throws \yii\web\BadRequestHttpException
+     * @throws Throwable
+     * @throws BadRequestHttpException
      */
     public function actionDeleteNotificationEmail()
     {
@@ -451,9 +456,9 @@ class NotificationsController extends Controller
      *
      * @return Response
      * @throws Exception
-     * @throws \Throwable
+     * @throws Throwable
      * @throws \Twig_Error_Loader
-     * @throws \yii\web\BadRequestHttpException
+     * @throws BadRequestHttpException
      */
     public function actionSendTestNotificationEmail(): Response
     {
@@ -579,7 +584,7 @@ class NotificationsController extends Controller
      * @throws Exception
      * @throws \Twig_Error_Loader
      * @throws \yii\base\ExitException
-     * @throws \yii\web\BadRequestHttpException
+     * @throws BadRequestHttpException
      */
     public function actionViewSharedNotificationEmail($notificationId = null, $type = null)
     {
