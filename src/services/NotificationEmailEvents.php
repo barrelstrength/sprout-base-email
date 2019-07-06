@@ -3,15 +3,23 @@
 namespace barrelstrength\sproutbaseemail\services;
 
 use barrelstrength\sproutbaseemail\base\NotificationEvent;
+use barrelstrength\sproutbaseemail\base\ScheduledJobEvent;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\events\NotificationEmailEvent;
 use barrelstrength\sproutbaseemail\events\SendNotificationEmailEvent;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
+use barrelstrength\sproutbasejobs\base\Job;
+use barrelstrength\sproutbasejobs\jobs\MissingJob;
+use barrelstrength\sproutbasejobs\records\Job as JobRecord;
+use barrelstrength\sproutbasejobs\SproutBaseJobs;
 use craft\base\Component;
 use Craft;
 
+use craft\events\ElementEvent;
 use craft\helpers\Json;
 use yii\base\Event;
+use yii\base\InvalidConfigException;
+use yii\base\ModelEvent;
 
 /**
  * Class NotificationEmailEvents
@@ -317,5 +325,130 @@ class NotificationEmailEvents extends Component
         }
 
         return $events;
+    }
+
+    /**
+     * @param ModelEvent $event
+     *
+     * @throws InvalidConfigException
+     */
+    public function handleValidateJob(ModelEvent $event)
+    {
+        ## Check that we have an event instance and it's a valid class
+        if (!class_exists($event->sender->eventId)) {
+            return;
+        }
+
+        /** @var NotificationEmail $notificationEmail */
+        $notificationEmail = $event->sender;
+
+        $scheduledJobType = $this->getScheduledJobType($event->sender->eventId);
+
+        if ($scheduledJobType) {
+
+            $jobInstance = $this->createScheduledJob($notificationEmail, $scheduledJobType);
+
+            if ($errors = $jobInstance->getErrors()) {
+                foreach ($errors AS $errorKey => $errorMessageStrings) {
+                    foreach ($errorMessageStrings AS $errorMessageString) {
+                        $notificationEmail->addError('eventId', (string)$errorMessageString);
+                    }
+                    $event->isValid = false;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param ModelEvent $event
+     *
+     * @throws InvalidConfigException
+     */
+    public function handleSaveJob(ModelEvent $event)
+    {
+        /** @var NotificationEmail $notificationEmail */
+        $notificationEmail = $event->sender;
+
+        $scheduledJobType = $this->getScheduledJobType($event->sender->eventId);
+
+        if ($scheduledJobType) {
+            $jobInstance = $this->createScheduledJob($notificationEmail, $scheduledJobType);
+            SproutBaseJobs::$app->jobs->saveJob($jobInstance);
+        }
+    }
+
+    /**
+     * @param string $eventId
+     *
+     * @return string|null
+     */
+    public function getScheduledJobType(string $eventId)
+    {
+        /** @var NotificationEvent $eventInstance */
+        $eventInstance = new $eventId();
+
+        if ($eventInstance instanceof ScheduledJobEvent) {
+            ## Ensure job class exists
+            $jobClass = $eventInstance->getJobType();
+
+            if (!class_exists($jobClass)) {
+                return null;
+            }
+
+            return $jobClass;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param                   $eventSettings
+     * @param NotificationEmail $notificationEmail
+     *
+     * @return array
+     */
+    public function getJobSettings(NotificationEmail $notificationEmail, $eventSettings): array
+    {
+        $jobSettings = array_diff_key(
+            $eventSettings,
+            array_flip([
+                'frequencyUnit',
+                'frequencyQuantity',
+            ])
+        );
+        $jobSettings['notificationEmailId'] = $notificationEmail->id;
+        return $jobSettings;
+    }
+
+    /**
+     * @param NotificationEmail $notificationEmail
+     * @param string            $type
+     *
+     * @return Job|MissingJob
+     * @throws InvalidConfigException
+     */
+    public function createScheduledJob(NotificationEmail $notificationEmail, string $type)
+    {
+        $jobRecord = JobRecord::find()
+            ->where(['notificationEmailId' => $notificationEmail->id])
+            ->one();
+
+        $jobId = $jobRecord->id ?? null;
+
+        // Determine the event and job settings to be stored
+        $eventSettings = Json::decode($notificationEmail->settings);
+        $jobSettings = $this->getJobSettings($notificationEmail, $eventSettings);
+
+        $jobInstance = SproutBaseJobs::$app->jobs->createJob([
+            'id' => $jobId,
+            'type' => $type,
+            'frequencyUnit' => $eventSettings['frequencyUnit'],
+            'frequencyQuantity' => $eventSettings['frequencyQuantity'],
+            'settings' => $jobSettings,
+            'enabled' => true,
+            'lastExecuted' => null
+        ]);
+
+        return $jobInstance;
     }
 }

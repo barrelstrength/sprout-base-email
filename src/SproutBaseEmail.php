@@ -10,6 +10,7 @@ namespace barrelstrength\sproutbaseemail;
 use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\base\ScheduledJobEvent;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
+use barrelstrength\sproutbaseemail\services\NotificationEmailEvents;
 use barrelstrength\sproutbasejobs\SproutBaseJobs;
 use barrelstrength\sproutbaseemail\services\App;
 use barrelstrength\sproutbaseemail\services\EmailTemplates;
@@ -29,6 +30,8 @@ use craft\services\Elements;
 use craft\web\Application;
 use craft\web\twig\variables\CraftVariable;
 use yii\base\Event;
+use yii\base\Model;
+use yii\base\ModelEvent;
 use \yii\base\Module;
 use craft\web\View;
 use craft\events\RegisterTemplateRootsEvent;
@@ -149,67 +152,20 @@ class SproutBaseEmail extends Module
             $event->types[] = BasicTemplates::class;
         });
 
-	    ## Add scheduled job events to Sprout Jobs
-	    Event::on(Elements::class, Elements::EVENT_BEFORE_SAVE_ELEMENT, function (ElementEvent $event) {
-		    ## Check that we have an event instance and it's a valid class
-		    if (!$event->element instanceof NotificationEmail
-			    OR !isset($event->element->eventId)
-			    OR !class_exists($event->element->eventId)
-		    ) {
-			    return;
-		    }
+        $notificationEventsService = new NotificationEmailEvents();
+        ## Add scheduled job events to Sprout Jobs
+        Event::on(NotificationEmail::class, NotificationEmail::EVENT_BEFORE_VALIDATE, [
+            $notificationEventsService, 'handleValidateJob'
+        ]);
 
-		    /**
-			* @var $notificationEmailElement \barrelstrength\sproutbaseemail\elements\NotificationEmail
-			*/
-		    $notificationEmailElement = $event->element;
-		    $eventInstance     = new $event->element->eventId();
-		    if ($eventInstance instanceof ScheduledJobEvent) {
-			    ## Ensure job class exists
-			    $jobClass = $eventInstance->getJobType();
-			    if (!class_exists($jobClass)) {
-				    return;
-			    }
+        Event::on(NotificationEmail::class, NotificationEmail::EVENT_AFTER_SAVE, [
+            $notificationEventsService, 'handleSaveJob'
+        ]);
 
-			    ## Determine the event and job settings to be stored
-			    $eventSettings                      = Json::decode($notificationEmailElement->settings);
-			    $jobSettings                        = array_diff_key(
-				    $eventSettings,
-				    array_flip([
-					    'frequencyUnit',
-					    'frequencyQuantity',
-				    ])
-			    );
-			    $jobSettings['notificationEmailId'] = $notificationEmailElement->id;
+        /*	    Event::on(NotificationEmail::class, NotificationEmail::EVENT_BEFORE_SAVE, function (Event $event) {
 
-			    $jobInstance = SproutBaseJobs::$app->jobs->createJob([
-				    'type'              => $jobClass,
-				    'frequencyUnit'     => $eventSettings['frequencyUnit'],
-				    'frequencyQuantity' => $eventSettings['frequencyQuantity'],
-				    'settings'          => $jobSettings,
-				    'enabled'           => true,
-				    'lastExecuted'      => NULL
-			    ]);
+                });*/
 
-			    if ($errors = $jobInstance->getErrors()) {
-			    		foreach ($errors AS $errorKey => $errorMessageStrings) {
-			    			foreach ($errorMessageStrings AS $errorMessageString) {
-							$notificationEmailElement->addError('eventId', (string) $errorMessageString);
-						}
-					}
-
-			    		#var_dump($event->element->getErrors());die();
-			    }
-			    else {
-				    SproutBaseJobs::$app->jobs->saveJob($jobInstance);
-			    }
-		    }
-	    });
-
-/*	    Event::on(NotificationEmail::class, NotificationEmail::EVENT_BEFORE_SAVE, function (Event $event) {
-
-	    });*/
-
-	    parent::init();
+        parent::init();
     }
 }
