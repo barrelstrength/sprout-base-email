@@ -2,6 +2,7 @@
 
 namespace barrelstrength\sproutbaseemail\elements\db;
 
+use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use craft\elements\db\ElementQuery;
 use craft\base\Element;
 use Craft;
@@ -11,7 +12,8 @@ class NotificationEmailQuery extends ElementQuery
     /**
      * @var string
      */
-    public $pluginHandle;
+    public $viewContext;
+    public $notificationEmailBaseUrl;
 
     /**
      * @inheritdoc
@@ -20,7 +22,7 @@ class NotificationEmailQuery extends ElementQuery
     {
         $this->joinElementTable('sproutemail_notificationemails');
         $this->query->select([
-            'sproutemail_notificationemails.pluginHandle',
+            'sproutemail_notificationemails.viewContext',
             'sproutemail_notificationemails.titleFormat',
             'sproutemail_notificationemails.emailTemplateId',
             'sproutemail_notificationemails.eventId',
@@ -41,10 +43,10 @@ class NotificationEmailQuery extends ElementQuery
             'sproutemail_notificationemails.fieldLayoutId'
         ]);
 
-        $this->pluginHandle = Craft::$app->request->getBodyParam('criteria.pluginHandle');
+        $this->viewContext = Craft::$app->request->getBodyParam('criteria.viewContext');
 
-        if ($this->pluginHandle !== null && $this->pluginHandle !== 'sprout-email') {
-            $this->query->where(['sproutemail_notificationemails.pluginHandle' => $this->pluginHandle]);
+        if ($this->viewContext !== null && $this->viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT) {
+            $this->query->where(['sproutemail_notificationemails.viewContext' => $this->viewContext]);
         }
 
         return parent::beforePrepare();
@@ -58,7 +60,7 @@ class NotificationEmailQuery extends ElementQuery
         /**
          * To show disabled notification emails on integrated plugins
          */
-        if ($this->pluginHandle !== 'sprout-email') {
+        if ($this->viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT) {
             return ['elements.enabled' => ['0', '1']];
         }
 

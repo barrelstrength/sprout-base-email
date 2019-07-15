@@ -10,17 +10,19 @@
 {% else %}
     {% set notificationId = notificationEmail.id %}
 {% endif %}
-{% set currentPluginHandle = craft.app.request.getSegment(1) %}
 
 {% set crumbs = [
-    { label: "Notifications"|t('sprout-base-email'), url: url(currentPluginHandle ~ '/notifications') },
-    { label: "Settings"|t('sprout-base-email'), url: url(currentPluginHandle ~ '/settings/notifications/edit/' ~ notificationId) },
+    { label: "Notifications"|t('sprout-base-email'), url: cpUrl(notificationEmailBaseUrl) },
+
+
+
+    { label: "Settings"|t('sprout-base-email'), url: cpUrl(notificationEmailBaseUrl ~ 'settings/edit/' ~ notificationId) },
 ] %}
 
 {% set title  = notificationEmail is defined ? notificationEmail.title : 'Create a new Notification Email'|t('sprout-base-email') %}
 
 {% set fullPageForm = true %}
-{% set saveShortcutRedirect = url(currentPluginHandle ~ '/notifications/edit/' ~ notificationId) %}
+{% set saveShortcutRedirect = cpUrl(notificationEmailBaseUrl ~ 'edit/' ~ notificationId) %}
 
 {% set mailer = notificationEmail.getMailer() %}
 
@@ -60,14 +62,17 @@
                             <span
                                 class="shortcut">⌘S</span></a></li>
                     <li><a class="formsubmit"
-                           data-redirect="{{ currentPluginHandle }}/settings/notifications/edit/new"
+
+
+
+                           data-redirect="{{ notificationEmailBaseUrl }}settings/edit/new"
                            title="{{ 'Edit Field Layout'|t('sprout-base-email') }}">
                             {{ "Save and add another"|t('sprout-base-email') }}</a>
                     </li>
                 </ul>
                 {% if notificationEmail.id is not null %}
                     <hr>
-                    {% set redirectOnDelete = currentPluginHandle ~ "/notifications" %}
+                    {% set redirectOnDelete = notificationEmailBaseUrl %}
                     <ul>
                         <li><a class="formsubmit error"
                                data-action="sprout-base-email/notifications/delete-notification-email"
@@ -78,7 +83,11 @@
                 {% endif %}
             </div>
         </div>
-        <a href="{{ cpUrl(currentPluginHandle ~ '/settings/notifications/edit/' ~ notificationId) }}"
+
+
+
+
+        <a href="{{ cpUrl(notificationEmailBaseUrl ~ 'settings/edit/' ~ notificationId) }}"
            data-icon="settings" class="btn"></a>
     </div>
 
@@ -90,7 +99,7 @@
 
     <input type="hidden" name="action"
            value="sprout-base-email/notifications/save-notification-email">
-    {{ redirectInput(currentPluginHandle ~ '/notifications') }}
+    {{ redirectInput(notificationEmailBaseUrl) }}
     {% if notificationEmail.id is not null %}
         <input type="hidden" name="emailId" value="{{ notificationEmail.id }}">
     {% endif %}

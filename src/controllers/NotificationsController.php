@@ -10,16 +10,25 @@ use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
 use barrelstrength\sproutbaseemail\models\ModalResponse;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbase\SproutBase;
+use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasefields\SproutBaseFields;
 use barrelstrength\sproutbaseemail\models\Settings;
+use craft\errors\MissingComponentException;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use Craft;
 use craft\base\Plugin;
+use InvalidArgumentException;
+use Throwable;
+use Twig_Error_Loader;
 use yii\base\Exception;
+use yii\base\ExitException;
+use yii\base\InvalidConfigException;
+use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
 use yii\web\Response;
 
@@ -30,49 +39,38 @@ use yii\web\Response;
  */
 class NotificationsController extends Controller
 {
-    private $currentPluginHandle;
-
     private $permissions = [];
+
+    private $notificationEmailBaseUrl;
 
     public function init()
     {
         $this->permissions = SproutBase::$app->settings->getPluginPermissions(new Settings(), 'sprout-email');
 
+        $segmentOne = Craft::$app->getRequest()->getSegment(1);
+        $segmentTwo = Craft::$app->getRequest()->getSegment(2);
+
+        $this->notificationEmailBaseUrl = $segmentOne.'/'.$segmentTwo.'/';
+
+        parent::init();
+
         parent::init();
     }
 
     /**
+     * @param string $viewContext
+     *
      * @return Response
-     * @throws \yii\web\ForbiddenHttpException
+     * @throws ForbiddenHttpException
      */
-    public function actionIndex(): Response
+    public function actionNotificationsIndexTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT): Response
     {
         $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
 
         return $this->renderTemplate('sprout-base-email/notifications/index', [
             'viewNotificationsPermission' => $this->permissions['sproutEmail-viewNotifications'],
-        ]);
-    }
-
-    /**
-     * @param null   $emailId
-     * @param string $emailType
-     *
-     * @return Response
-     * @throws \yii\web\ForbiddenHttpException
-     */
-    public function actionPreview(string $emailType, $emailId = null): Response
-    {
-        $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
-
-        $folder = $emailType == 'notification' ? 'notifications/' : '';
-
-        $email = Craft::$app->getElements()->getElementById($emailId);
-
-        return $this->renderTemplate("sprout-base-email/{$folder}_special/preview", [
-            'email' => $email,
-            'emailId' => $emailId,
-            'emailType' => $emailType
+            'viewContext' => $viewContext,
+            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl
         ]);
     }
 
@@ -81,7 +79,7 @@ class NotificationsController extends Controller
      * @param NotificationEmail|null $notificationEmail
      *
      * @return Response
-     * @throws \yii\web\ForbiddenHttpException
+     * @throws ForbiddenHttpException
      */
     public function actionEditNotificationEmailSettingsTemplate($emailId = null, NotificationEmail $notificationEmail = null): Response
     {
@@ -100,22 +98,23 @@ class NotificationsController extends Controller
         return $this->renderTemplate('sprout-base-email/notifications/_editFieldLayout', [
             'emailId' => $emailId,
             'notificationEmail' => $notificationEmail,
-            'isNewNotificationEmail' => $isNewNotificationEmail
+            'isNewNotificationEmail' => $isNewNotificationEmail,
+            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl
         ]);
     }
 
     /**
-     * @param string                 $pluginHandle
+     * @param string                 $viewContext
      * @param null                   $emailId
      * @param NotificationEmail|null $notificationEmail
      *
      * @return Response
      * @throws Exception
-     * @throws \Throwable
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\ForbiddenHttpException
+     * @throws Throwable
+     * @throws InvalidConfigException
+     * @throws ForbiddenHttpException
      */
-    public function actionEditNotificationEmailTemplate(string $pluginHandle, $emailId = null, NotificationEmail $notificationEmail = null): Response
+    public function actionEditNotificationEmailTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $emailId = null, NotificationEmail $notificationEmail = null): Response
     {
         $this->requirePermission($this->permissions['sproutEmail-editNotifications']);
 
@@ -123,10 +122,10 @@ class NotificationsController extends Controller
 
         // Immediately create a new Notification
         if ($emailId === 'new') {
-            $notificationEmail = SproutBaseEmail::$app->notifications->createNewNotification();
+            $notificationEmail = SproutBaseEmail::$app->notifications->createNewNotification($viewContext);
 
             if ($notificationEmail) {
-                $url = UrlHelper::cpUrl($pluginHandle.'/notifications/edit/'.$notificationEmail->id);
+                $url = UrlHelper::cpUrl($this->notificationEmailBaseUrl.'edit/'.$notificationEmail->id);
                 return $this->redirect($url);
             }
 
@@ -173,8 +172,8 @@ class NotificationsController extends Controller
 
         $defaultEmailTemplate = BasicTemplates::class;
 
-        if ($pluginHandle !== 'sprout-email') {
-            $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEventsByPluginHandle($notificationEmail, $pluginHandle);
+        if ($viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT) {
+            $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEventsByViewContext($notificationEmail, $viewContext);
 
             if (new $routeParams['defaultEmailTemplate'] instanceof EmailTemplates) {
                 $defaultEmailTemplate = $routeParams['defaultEmailTemplate'];
@@ -205,7 +204,30 @@ class NotificationsController extends Controller
             'tabs' => $tabs,
             'showPreviewBtn' => $showPreviewBtn,
             'shareUrl' => $shareUrl,
-            'editNotificationsPermission' => $this->permissions['sproutEmail-editNotifications']
+            'editNotificationsPermission' => $this->permissions['sproutEmail-editNotifications'],
+            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl
+        ]);
+    }
+
+    /**
+     * @param null   $emailId
+     * @param string $emailType
+     *
+     * @return Response
+     * @throws ForbiddenHttpException
+     */
+    public function actionPreview(string $emailType, $emailId = null): Response
+    {
+        $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
+
+        $folder = $emailType == 'notification' ? 'notifications/' : '';
+
+        $email = Craft::$app->getElements()->getElementById($emailId);
+
+        return $this->renderTemplate("sprout-base-email/{$folder}_special/preview", [
+            'email' => $email,
+            'emailId' => $emailId,
+            'emailType' => $emailType
         ]);
     }
 
@@ -214,9 +236,9 @@ class NotificationsController extends Controller
      *
      * @return Response
      * @throws Exception
-     * @throws \Throwable
-     * @throws \craft\errors\MissingComponentException
-     * @throws \yii\web\BadRequestHttpException
+     * @throws Throwable
+     * @throws MissingComponentException
+     * @throws BadRequestHttpException
      */
     public function actionSaveNotificationEmail(): Response
     {
@@ -286,7 +308,7 @@ class NotificationsController extends Controller
             $plugin = $event->getPlugin();
 
             if ($plugin) {
-                $notificationEmail->pluginHandle = $plugin->id;
+                $notificationEmail->viewContext = $plugin->id;
             }
 
             $notificationEmail->setEventObject($event->getMockEventObject());
@@ -355,9 +377,9 @@ class NotificationsController extends Controller
      *
      * @return null
      * @throws \Exception
-     * @throws \Throwable
-     * @throws \yii\base\Exception
-     * @throws \yii\web\BadRequestHttpException
+     * @throws Throwable
+     * @throws Exception
+     * @throws BadRequestHttpException
      */
     public function actionSaveNotificationEmailSettings()
     {
@@ -399,9 +421,9 @@ class NotificationsController extends Controller
     /**
      * Delete a Notification Email
      *
-     * @return bool|\yii\web\Response
-     * @throws \Throwable
-     * @throws \yii\web\BadRequestHttpException
+     * @return bool|Response
+     * @throws Throwable
+     * @throws BadRequestHttpException
      */
     public function actionDeleteNotificationEmail()
     {
@@ -414,7 +436,7 @@ class NotificationsController extends Controller
         $notificationEmail = Craft::$app->getElements()->getElementById($notificationEmailId, NotificationEmail::class);
 
         if (!$notificationEmail) {
-            throw new \InvalidArgumentException(Craft::t('sprout-base-email', 'No Notification Email exists with the ID “{id}”.', [
+            throw new InvalidArgumentException(Craft::t('sprout-base-email', 'No Notification Email exists with the ID “{id}”.', [
                 'id' => $notificationEmailId
             ]));
         }
@@ -451,9 +473,9 @@ class NotificationsController extends Controller
      *
      * @return Response
      * @throws Exception
-     * @throws \Throwable
-     * @throws \Twig_Error_Loader
-     * @throws \yii\web\BadRequestHttpException
+     * @throws Throwable
+     * @throws Twig_Error_Loader
+     * @throws BadRequestHttpException
      */
     public function actionSendTestNotificationEmail(): Response
     {
@@ -577,9 +599,9 @@ class NotificationsController extends Controller
      * @param null $type
      *
      * @throws Exception
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\ExitException
-     * @throws \yii\web\BadRequestHttpException
+     * @throws Twig_Error_Loader
+     * @throws ExitException
+     * @throws BadRequestHttpException
      */
     public function actionViewSharedNotificationEmail($notificationId = null, $type = null)
     {
@@ -593,8 +615,8 @@ class NotificationsController extends Controller
      * Renders a Notification Email for Live Preview
      *
      * @throws Exception
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\ExitException
+     * @throws Twig_Error_Loader
+     * @throws ExitException
      */
     public function actionLivePreviewNotificationEmail()
     {

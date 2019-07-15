@@ -16,17 +16,6 @@ abstract class EmailTemplates
     public $email;
 
     /**
-     * The Template ID of the email Templates in the email: {pluginhandle}-{emailtemplateclassname}
-     *
-     * @example
-     * sproutemail-basictemplates
-     * sproutforms-basictemplates
-     *
-     * @var string
-     */
-    public $templateId;
-
-    /**
      * @var string
      */
     private $_htmlBody;

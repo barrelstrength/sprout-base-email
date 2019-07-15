@@ -4,6 +4,7 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutbase\base\BaseSproutTrait;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
+use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use craft\base\SavableComponent;
 
 
@@ -39,6 +40,8 @@ abstract class NotificationEvent extends SavableComponent
      * @var Event $event
      */
     public $event;
+
+    public $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT;
 
     /**
      * Returns the event title when used in string context

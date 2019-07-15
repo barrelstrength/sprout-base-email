@@ -25,7 +25,13 @@ use craft\helpers\Template;
 use Craft;
 use craft\mail\Message;
 use craft\volumes\Local;
+use Throwable;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig_Error_Loader;
 use yii\base\Exception;
+use yii\base\InvalidConfigException;
 
 class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
 {
@@ -62,7 +68,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      * @inheritdoc
      *
      * @throws Exception
-     * @throws \Twig_Error_Loader
+     * @throws Twig_Error_Loader
      */
     public function getSettingsHtml(array $settings = [])
     {
@@ -83,8 +89,8 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      *
      * @return bool
      * @throws Exception
-     * @throws \Throwable
-     * @throws \yii\base\InvalidConfigException
+     * @throws Throwable
+     * @throws InvalidConfigException
      */
     public function sendNotificationEmail(NotificationEmail $notificationEmail): bool
     {
@@ -218,7 +224,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      *
      * @return bool
      * @throws Exception
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function sendTestCampaignEmail(CampaignEmail $campaignEmail)
     {
@@ -258,7 +264,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      * @param Asset[] $assets
      * @param array   $externalPaths
      *
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     protected function attachAssetFilesToEmailModel(Message $message, array $assets, &$externalPaths = [])
     {
@@ -285,7 +291,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      * @param Asset $asset
      *
      * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     protected function getLocalAssetFilePath(Asset $asset): string
     {
@@ -303,7 +309,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      * @inheritdoc
      *
      * @throws Exception
-     * @throws \Twig_Error_Loader
+     * @throws Twig_Error_Loader
      */
     public function getPrepareModalHtml(EmailElement $email): string
     {
@@ -351,10 +357,13 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
     }
 
     /**
-     * @inheritdoc
+     * @param array $values
      *
+     * @return string|null
      * @throws Exception
-     * @throws \Twig_Error_Loader
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function getListsHtml($values = [])
     {
@@ -400,25 +409,4 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
             'values' => $selected,
         ]);
     }
-
-    /**
-     * @param CampaignEmail     $campaignEmail
-     * @param CampaignType      $campaignType
-     * @param                   $errors
-     *
-     * @return array
-     */
-//    public function getErrors(CampaignEmail $campaignEmail, CampaignType $campaignType, $errors)
-//    {
-//        $currentPluginHandle = Craft::$app->getRequest()->getSegment(1);
-//        $notificationEditSettingsUrl = UrlHelper::cpUrl($currentPluginHandle.'/settings/notifications/edit/'.$campaignType->id);
-//
-//        if (empty($campaignType->template)) {
-//            $errors[] = Craft::t('sprout-base-email', 'Email Template setting is blank. <a href="{url}">Edit Settings</a>.', [
-//                'url' => $notificationEditSettingsUrl
-//            ]);
-//        }
-//
-//        return $errors;
-//    }
 }

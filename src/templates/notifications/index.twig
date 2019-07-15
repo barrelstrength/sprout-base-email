@@ -5,12 +5,10 @@
 {% set title = "Notification Email"|t('sprout-base-email') %}
 {% set elementType = 'barrelstrength\\sproutbaseemail\\elements\\NotificationEmail' %}
 
-{% set currentPluginHandle = craft.app.request.getSegment(1) %}
-
 {% block actionButton %}
     <div class="buttons">
         <a class="btn submit add icon"
-           href="{{ url(currentPluginHandle ~ '/notifications/edit/new') }}">
+           href="{{ cpUrl(notificationEmailBaseUrl ~ 'edit/new') }}">
             {{ "New Notification"|t('sprout-base-email') }}
         </a>
     </div>
@@ -27,7 +25,8 @@
 {% block initJs %}
     // Pass segment to the NotificationEmailQuery class to filter notification entries
     var criteria = $.extend({}, Craft.defaultIndexCriteria);
-    criteria.pluginHandle = '{{ craft.app.request.getSegment(1) }}';
+    criteria.viewContext = '{{ viewContext }}';
+    criteria.notificationEmailBaseUrl = '{{ notificationEmailBaseUrl }}';
 
     Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#main'), {
     context:        '{{ context }}',

@@ -5,6 +5,7 @@ namespace barrelstrength\sproutbaseemail\elements;
 use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\SenderTrait;
 use barrelstrength\sproutbaseemail\elements\actions\DeleteNotification;
+use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbaseemail\web\assets\base\NotificationAsset;
 use barrelstrength\sproutbaseemail\elements\db\NotificationEmailQuery;
@@ -14,10 +15,16 @@ use craft\behaviors\FieldLayoutBehavior;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
+use InvalidArgumentException;
+use Throwable;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use yii\base\Exception;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
+use yii\base\InvalidConfigException;
 
 /**
  * Class NotificationEmail
@@ -50,7 +57,7 @@ class NotificationEmail extends EmailElement
      *
      * @var string
      */
-    public $pluginHandle;
+    public $viewContext;
 
     /**
      * The Email Template integration handle or folder path of the email templates that should be used when rendering this Notification Email.
@@ -147,10 +154,10 @@ class NotificationEmail extends EmailElement
      */
     public function getCpEditUrl()
     {
-        $pluginHandle = Craft::$app->request->getBodyParam('criteria.pluginHandle') ?: 'sprout-email';
+        $notificationEmailBaseUrl = Craft::$app->request->getBodyParam('criteria.notificationEmailBaseUrl');
 
         return UrlHelper::cpUrl(
-            $pluginHandle.'/notifications/edit/'.$this->id
+            $notificationEmailBaseUrl.'edit/'.$this->id
         );
     }
 
@@ -199,10 +206,13 @@ class NotificationEmail extends EmailElement
     }
 
     /**
-     * @inheritdoc
+     * @param string $attribute
      *
+     * @return string
      * @throws Exception
-     * @throws \Twig_Error_Loader
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function getTableAttributeHtml(string $attribute): string
     {
@@ -221,11 +231,12 @@ class NotificationEmail extends EmailElement
                     'notificationId' => $this->id,
                 ]);
             }
-            $pluginHandle = Craft::$app->request->getBodyParam('criteria.pluginHandle') ?: 'sprout-email';
+            $viewContext = Craft::$app->request->getBodyParam('criteria.viewContext') ?: NotificationEmails::DEFAULT_VIEW_CONTEXT;
+            $notificationEmailBaseUrl = Craft::$app->request->getBodyParam('criteria.notificationEmailBaseUrl');
 
             return Craft::$app->getView()->renderTemplate('sprout-base-email/_components/elementindex/NotificationEmail/preview-links', [
                 'email' => $this,
-                'pluginHandle' => $pluginHandle,
+                'notificationEmailBaseUrl' => $notificationEmailBaseUrl,
                 'shareUrl' => $shareUrl,
                 'type' => $attribute
             ]);
@@ -244,7 +255,7 @@ class NotificationEmail extends EmailElement
     /**
      * @inheritdoc
      *
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getFieldLayout()
     {
@@ -273,14 +284,14 @@ class NotificationEmail extends EmailElement
             $notificationEmailRecord = NotificationEmailRecord::findOne($this->id);
 
             if (!$notificationEmailRecord) {
-                throw new \InvalidArgumentException('Invalid campaign email ID: '.$this->id);
+                throw new InvalidArgumentException('Invalid campaign email ID: '.$this->id);
             }
         } else {
             $notificationEmailRecord = new NotificationEmailRecord();
             $notificationEmailRecord->id = $this->id;
         }
 
-        $notificationEmailRecord->pluginHandle = $this->pluginHandle;
+        $notificationEmailRecord->viewContext = $this->viewContext;
         $notificationEmailRecord->titleFormat = $this->titleFormat;
         $notificationEmailRecord->emailTemplateId = $this->emailTemplateId;
         $notificationEmailRecord->eventId = $this->eventId;
@@ -311,7 +322,7 @@ class NotificationEmail extends EmailElement
     /**
      * @@inheritdoc
      *
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public static function indexHtml(
         ElementQueryInterface $elementQuery, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */
@@ -347,11 +358,12 @@ class NotificationEmail extends EmailElement
      */
     public function getUriFormat()
     {
-        if ($this->pluginHandle == null) {
-            throw new Exception('Invalid integration. No pluginHandle specified');
+        if ($this->viewContext == null) {
+            throw new Exception('Invalid integration. No viewContext specified');
         }
 
-        return $this->pluginHandle.'/{slug}';
+        // @TODO - need to udpate to base URL
+        return $this->viewContext.'/{slug}';
     }
 
     /**
@@ -371,7 +383,7 @@ class NotificationEmail extends EmailElement
     /**
      * @inheritdoc
      *
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function rules(): array
     {
@@ -390,7 +402,7 @@ class NotificationEmail extends EmailElement
      * @param $attribute
      *
      * @return bool
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function emailList($attribute): bool
     {

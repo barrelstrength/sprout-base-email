@@ -16,6 +16,13 @@ use craft\helpers\ElementHelper;
 use craft\helpers\UrlHelper;
 use craft\base\ElementInterface;
 use craft\models\FieldLayout;
+use Exception;
+use Throwable;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig_Error_Loader;
+use yii\base\ExitException;
 
 /**
  * Class NotificationEmails
@@ -24,11 +31,13 @@ use craft\models\FieldLayout;
  */
 class NotificationEmails extends Component
 {
+    const DEFAULT_VIEW_CONTEXT = 'global';
+
     /**
      * @param NotificationEmail $notificationEmail
      *
      * @return bool
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function saveNotification(NotificationEmail $notificationEmail)
     {
@@ -54,7 +63,7 @@ class NotificationEmails extends Component
             $transaction->commit();
 
             return true;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $transaction->rollBack();
 
             throw $e;
@@ -67,7 +76,7 @@ class NotificationEmails extends Component
      * @param $id
      *
      * @return bool
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function deleteNotificationEmailById($id): bool
     {
@@ -97,7 +106,7 @@ class NotificationEmails extends Component
      * @param NotificationEmail $notificationEmail
      *
      * @return bool
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function sendNotificationViaMailer(NotificationEmail $notificationEmail)
     {
@@ -106,7 +115,7 @@ class NotificationEmails extends Component
             $mailer = $notificationEmail->getMailer();
 
             return $mailer->sendNotificationEmail($notificationEmail);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
     }
@@ -117,9 +126,9 @@ class NotificationEmails extends Component
      * @param      $notificationId
      * @param null $type
      *
-     * @throws \Twig_Error_Loader
+     * @throws Twig_Error_Loader
      * @throws \yii\base\Exception
-     * @throws \yii\base\ExitException
+     * @throws ExitException
      */
     public function getPreviewNotificationEmailById($notificationId, $type = null)
     {
@@ -166,9 +175,11 @@ class NotificationEmails extends Component
      * @param NotificationEmail $email
      * @param string            $fileExtension
      *
-     * @throws \Twig_Error_Loader
+     * @throws ExitException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      * @throws \yii\base\Exception
-     * @throws \yii\base\ExitException
      */
     public function showPreviewEmail(NotificationEmail $email, $fileExtension = 'html')
     {
@@ -198,76 +209,15 @@ class NotificationEmails extends Component
     }
 
     /**
-     * @param NotificationEmail $notificationEmail
-     * @param array             $errors
-     *
-     * @return array
-     * @throws \Throwable
-     * @throws \yii\base\Exception
-     */
-    public function getNotificationErrors(NotificationEmail $notificationEmail, array $errors = []): array
-    {
-        $currentPluginHandle = Craft::$app->request->getSegment(1);
-
-        $notificationEditUrl = UrlHelper::cpUrl($currentPluginHandle.'/notifications/edit/'.$notificationEmail->id);
-        $notificationEditSettingsUrl = UrlHelper::cpUrl($currentPluginHandle.'/settings/notifications/edit/'.
-            $notificationEmail->id);
-
-        $event = SproutBaseEmail::$app->notificationEvents->getEventById($notificationEmail->eventId);
-
-        $emailTemplates = $notificationEmail->getEmailTemplates();
-
-        if ($event === null) {
-            $errors[] = Craft::t('sprout-base-email', 'No Event is selected. <a href="{url}">Edit Notification</a>.', [
-                'url' => $notificationEditUrl
-            ]);
-        }
-
-        if (empty($emailTemplates->getPath())) {
-            $errors[] = Craft::t('sprout-base-email', 'No template found. <a href="{url}">Edit Notification Settings</a>.',
-                [
-                    'url' => $notificationEditSettingsUrl
-                ]);
-        }
-
-        if ($errors) {
-            return $errors;
-        }
-
-        $notificationEmail->setEventObject($event->getMockEventObject());
-
-        /**
-         * @var $mailer Mailer
-         */
-        $mailer = $notificationEmail->getMailer();
-
-        // Process our message to generate any errors on the NotificationEmail element we may see when preparing the send
-        $mailer->getMessage($notificationEmail);
-
-        $templateErrors = $notificationEmail->getErrors();
-
-        if (!empty($templateErrors['template'])) {
-
-            foreach ($templateErrors['template'] as $templateError) {
-                $errors[] = Craft::t('sprout-base-email', $templateError);
-            }
-        }
-
-        return $errors;
-    }
-
-    /**
+     * @param string $viewContext
      * @param string $subjectLine
      * @param string $handle
      *
      * @return NotificationEmail|null
-     * @throws \Exception
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function createNewNotification($subjectLine = null, $handle = null)
+    public function createNewNotification($viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $subjectLine = null, $handle = null)
     {
-        $currentPluginHandle = Craft::$app->request->getSegment(1);
-
         $notificationEmail = new NotificationEmail();
         $subjectLine = $subjectLine ?? Craft::t('sprout-base-email', 'Notification');
         $handle = $handle ?? ElementHelper::createSlug($subjectLine);
@@ -276,7 +226,7 @@ class NotificationEmails extends Component
 
         $notificationEmail->title = $subjectLine;
         $notificationEmail->subjectLine = $subjectLine;
-        $notificationEmail->pluginHandle = $currentPluginHandle;
+        $notificationEmail->viewContext = $viewContext;
         $notificationEmail->slug = $handle;
 
         $systemEmailSettings = \craft\helpers\App::mailSettings();
@@ -286,7 +236,6 @@ class NotificationEmails extends Component
         $notificationEmail->fromEmail = $systemEmailSettings->fromEmail;
 
         if ($this->saveNotification($notificationEmail)) {
-
             return $notificationEmail;
         }
 

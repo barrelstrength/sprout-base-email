@@ -297,22 +297,17 @@ class NotificationEmailEvents extends Component
     /**
      * Returns events with a given plugin ID
      *
-     * @example pluginHandle is the unique plugin handle
-     *
-     * sprout-forms
-     * sprout-email
-     *
-     * @param $notificationEmail
-     * @param $pluginHandle
+     * @param NotificationEmail $notificationEmail
+     * @param string            $viewContext
      *
      * @return array
      */
-    public function getNotificationEmailEventsByPluginHandle($notificationEmail, $pluginHandle): array
+    public function getNotificationEmailEventsByViewContext(NotificationEmail $notificationEmail, string $viewContext): array
     {
         $events = $this->getNotificationEmailEvents($notificationEmail);
 
         foreach ($events as $key => $event) {
-            if ($pluginHandle !== $event->getPlugin()->id) {
+            if ($viewContext !== $event->viewContext) {
                 unset($events[$key]);
             }
         }
