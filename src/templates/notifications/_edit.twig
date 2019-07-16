@@ -234,6 +234,16 @@
                 }]) %}
             {% endfor %}
 
+            {{ forms.field({
+                label: "Send Rule <span class='info'>Defines how to check a form submission to determine if a user has opted in to have data sent to this Integration. The Integration will be sent if the setting is set to 'Always'; if the Custom Rule is used and evaluates to '1', 'true', 'on', or 'yes'. If none of those conditions are met, the Event will not be sent.</span>"|t('sprout-base-email'),
+                errors: (notificationEmail is defined ? notificationEmail.getErrors('sendRule') : null)
+            }, sproutFields.selectOther({
+                name: 'sendRule',
+                options: notificationEmail.getSendRuleOptions(),
+                value: notificationEmail.sendRule ?? '*',
+                otherPlaceholderText: "{% if object.customFieldHandle == 'send' %}true{% else %}false{% endif %}"|t('sprout-base-email'),
+            })) }}
+
             {{ forms.selectField({
                 id: "notificationEvent",
                 name: "eventId",

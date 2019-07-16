@@ -30,6 +30,7 @@ class Install extends Migration
                 [
                     'id' => $this->primaryKey(),
                     'viewContext' => $this->string(),
+                    'sendRule' => $this->string(),
                     'titleFormat' => $this->string(),
                     'emailTemplateId' => $this->string(),
                     'eventId' => $this->string(),

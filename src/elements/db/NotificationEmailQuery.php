@@ -24,6 +24,7 @@ class NotificationEmailQuery extends ElementQuery
         $this->query->select([
             'sproutemail_notificationemails.viewContext',
             'sproutemail_notificationemails.titleFormat',
+            'sproutemail_notificationemails.sendRule',
             'sproutemail_notificationemails.emailTemplateId',
             'sproutemail_notificationemails.eventId',
             'sproutemail_notificationemails.settings',

@@ -6,7 +6,7 @@ use barrelstrength\sproutbase\base\BaseSproutTrait;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use craft\base\SavableComponent;
-
+use Craft;
 
 use yii\base\Event;
 

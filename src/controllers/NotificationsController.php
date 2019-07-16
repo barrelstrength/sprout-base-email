@@ -269,6 +269,7 @@ class NotificationsController extends Controller
         $notificationEmail->bcc = Craft::$app->getRequest()->getBodyParam('bcc');
         $notificationEmail->listSettings = Craft::$app->getRequest()->getBodyParam('lists');
         $notificationEmail->emailTemplateId = Craft::$app->getRequest()->getBodyParam('emailTemplateId');
+        $notificationEmail->sendRule = Craft::$app->getRequest()->getRequiredBodyParam('sendRule');
 
         if (!$notificationEmail->replyToEmail) {
             $notificationEmail->replyToEmail = $notificationEmail->fromEmail;

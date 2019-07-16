@@ -90,6 +90,13 @@ class NotificationEmail extends EmailElement
     public $defaultBody;
 
     /**
+     * Statement that gets evaluated to true/false to determine this event will be fired
+     *
+     * @var boolean
+     */
+    public $sendRule;
+
+    /**
      * @inheritdoc
      */
     public static function displayName(): string
@@ -295,6 +302,7 @@ class NotificationEmail extends EmailElement
         $notificationEmailRecord->titleFormat = $this->titleFormat;
         $notificationEmailRecord->emailTemplateId = $this->emailTemplateId;
         $notificationEmailRecord->eventId = $this->eventId;
+        $notificationEmailRecord->sendRule = $this->sendRule;
         $notificationEmailRecord->settings = $this->settings;
         $notificationEmailRecord->subjectLine = $this->subjectLine;
         $notificationEmailRecord->defaultBody = $this->defaultBody;
@@ -466,5 +474,39 @@ class NotificationEmail extends EmailElement
     public function isReady(): bool
     {
         return ($this->getStatus() == static::ENABLED);
+    }
+
+    /**
+     * @return array
+     * @throws InvalidConfigException
+     */
+    final public function getSendRuleOptions(): array
+    {
+        $options = [
+            [
+                'label' => Craft::t('sprout-base-email', 'Always'),
+                'value' => '*'
+            ]
+        ];
+
+        $customSendRule = $this->sendRule;
+
+        $options[] = [
+            'optgroup' => Craft::t('sprout-base-email', 'Custom Rule')
+        ];
+
+        if ($customSendRule != '*' && $customSendRule) {
+            $options[] = [
+                'label' => $customSendRule,
+                'value' => $customSendRule
+            ];
+        }
+
+        $options[] = [
+            'label' => Craft::t('sprout-base-email', 'Add Custom'),
+            'value' => 'custom'
+        ];
+
+        return $options;
     }
 }
