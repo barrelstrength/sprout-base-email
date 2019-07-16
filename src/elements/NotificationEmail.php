@@ -523,7 +523,7 @@ class NotificationEmail extends EmailElement
 
         // Custom Send Rule
         try {
-            $resultTemplate = Craft::$app->view->renderObjectTemplate($this->sendRule, $this);
+            $resultTemplate = Craft::$app->view->renderObjectTemplate($this->sendRule, $this->getEventObject());
             $value = trim($resultTemplate);
             if (filter_var($value, FILTER_VALIDATE_BOOLEAN)) {
                 return true;

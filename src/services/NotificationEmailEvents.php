@@ -118,11 +118,6 @@ class NotificationEmailEvents extends Component
 
                 Event::on($eventClassName, $event, function($eventHandlerClassName)
                 use ($self, $notificationEmailEventClassName, $notificationEmailEvent) {
-                    $notificationEmail = $notificationEmailEvent->notificationEmail;
-                    if (!$notificationEmail->sendRuleIsTrue()) {
-                        return false;
-                    }
-
                     return call_user_func($self->getRegisteredEvent($notificationEmailEventClassName),
                         $notificationEmailEventClassName, $eventHandlerClassName, $notificationEmailEvent);
                 });
@@ -199,7 +194,8 @@ class NotificationEmailEvents extends Component
                 $notificationEmail->setEventObject($object);
 
                 // Don't send emails for disabled notification email entries.
-                if (!$notificationEmail->isReady()) {
+                if (!$notificationEmail->isReady() OR
+                    !$notificationEmail->sendRuleIsTrue()) {
                     continue;
                 }
 
