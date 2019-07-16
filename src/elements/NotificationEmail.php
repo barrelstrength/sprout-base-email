@@ -509,4 +509,29 @@ class NotificationEmail extends EmailElement
 
         return $options;
     }
+
+    /**
+     * @return bool
+     * @throws Throwable
+     */
+    public function sendRuleIsTrue(): bool
+    {
+        // Default setting: Always = *
+        if ($this->sendRule === '*') {
+            return true;
+        }
+
+        // Custom Send Rule
+        try {
+            $resultTemplate = Craft::$app->view->renderObjectTemplate($this->sendRule, $this);
+            $value = trim($resultTemplate);
+            if (filter_var($value, FILTER_VALIDATE_BOOLEAN)) {
+                return true;
+            }
+        } catch (\Exception $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        }
+
+        return false;
+    }
 }

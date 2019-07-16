@@ -104,7 +104,6 @@ class NotificationEmailEvents extends Component
             $notificationEmailEvent = new $notificationEmailEventClassName();
 
             if ($notificationEmailEvent instanceof NotificationEvent) {
-
                 // Register our event
                 $self->registerEvent($notificationEmailEventClassName, $self->getDynamicEventHandler());
 
@@ -119,6 +118,11 @@ class NotificationEmailEvents extends Component
 
                 Event::on($eventClassName, $event, function($eventHandlerClassName)
                 use ($self, $notificationEmailEventClassName, $notificationEmailEvent) {
+                    $notificationEmail = $notificationEmailEvent->notificationEmail;
+                    if (!$notificationEmail->sendRuleIsTrue()) {
+                        return false;
+                    }
+
                     return call_user_func($self->getRegisteredEvent($notificationEmailEventClassName),
                         $notificationEmailEventClassName, $eventHandlerClassName, $notificationEmailEvent);
                 });
@@ -183,7 +187,6 @@ class NotificationEmailEvents extends Component
 
                 /** @var NotificationEvent $eventHandlerClass */
                 $eventHandlerClass = new $eventHandlerClass($settings);
-
                 $eventHandlerClass->notificationEmail = $notificationEmail;
                 $eventHandlerClass->event = $event;
 
