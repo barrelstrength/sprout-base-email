@@ -129,7 +129,7 @@ class NotificationsController extends Controller
                 return $this->redirect($url);
             }
 
-            throw new Exception(Craft::t('sprout-base-email', 'Unable to create Notification Email'));
+            throw new Exception('Unable to create Notification Email');
         }
 
         if (!$notificationEmail) {
@@ -437,9 +437,7 @@ class NotificationsController extends Controller
         $notificationEmail = Craft::$app->getElements()->getElementById($notificationEmailId, NotificationEmail::class);
 
         if (!$notificationEmail) {
-            throw new InvalidArgumentException(Craft::t('sprout-base-email', 'No Notification Email exists with the ID “{id}”.', [
-                'id' => $notificationEmailId
-            ]));
+            throw new InvalidArgumentException('No Notification Email exists with the ID: '.$notificationEmailId);
         }
 
         if (!SproutBaseEmail::$app->notifications->deleteNotificationEmailById($notificationEmailId)) {
