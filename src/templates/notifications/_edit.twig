@@ -38,7 +38,7 @@
         {% endif %}
         {% if shareUrl is defined %}
             <a href="{{ shareUrl }}" class="btn sharebtn"
-               target="_blank">{{ 'Share'|t('sprout-base-email') }}</a>
+                target="_blank">{{ 'Share'|t('sprout-base-email') }}</a>
         {% endif %}
         <div class="flex-grow"></div>
     {% endif %}
@@ -52,21 +52,20 @@
     <div class="buttons">
         <div class="btngroup">
             <input class="btn submit" type="submit"
-                   value="{{ 'Save'|t('sprout-base-email') }}">
+                value="{{ 'Save'|t('sprout-base-email') }}">
             <div class="btn submit menubtn"></div>
             <div class="menu">
                 <ul>
                     <li><a class="formsubmit"
-                           data-redirect="{{ saveShortcutRedirect|hash }}">
+                            data-redirect="{{ saveShortcutRedirect|hash }}">
                             {{ "Save and continue editing"|t('sprout-base-email') }}
                             <span
                                 class="shortcut">⌘S</span></a></li>
                     <li><a class="formsubmit"
 
 
-
-                           data-redirect="{{ notificationEmailBaseUrl }}settings/edit/new"
-                           title="{{ 'Edit Field Layout'|t('sprout-base-email') }}">
+                            data-redirect="{{ notificationEmailBaseUrl }}settings/edit/new"
+                            title="{{ 'Edit Field Layout'|t('sprout-base-email') }}">
                             {{ "Save and add another"|t('sprout-base-email') }}</a>
                     </li>
                 </ul>
@@ -75,9 +74,9 @@
                     {% set redirectOnDelete = notificationEmailBaseUrl %}
                     <ul>
                         <li><a class="formsubmit error"
-                               data-action="sprout-base-email/notifications/delete-notification-email"
-                               data-confirm="{{ 'Are you sure you want to delete this notification email?'|t('sprout-base-email') }}"
-                               data-redirect="{{ redirectOnDelete|hash }}">{{ "Delete"|t('sprout-base-email') }}</a>
+                                data-action="sprout-base-email/notifications/delete-notification-email"
+                                data-confirm="{{ 'Are you sure you want to delete this notification email?'|t('sprout-base-email') }}"
+                                data-redirect="{{ redirectOnDelete|hash }}">{{ "Delete"|t('sprout-base-email') }}</a>
                         </li>
                     </ul>
                 {% endif %}
@@ -85,10 +84,8 @@
         </div>
 
 
-
-
         <a href="{{ cpUrl(notificationEmailBaseUrl ~ 'settings/edit/' ~ notificationId) }}"
-           data-icon="settings" class="btn"></a>
+            data-icon="settings" class="btn"></a>
     </div>
 
 
@@ -98,7 +95,7 @@
 {% block content %}
 
     <input type="hidden" name="action"
-           value="sprout-base-email/notifications/save-notification-email">
+        value="sprout-base-email/notifications/save-notification-email">
     {{ redirectInput(notificationEmailBaseUrl) }}
     {% if notificationEmail.id is not null %}
         <input type="hidden" name="emailId" value="{{ notificationEmail.id }}">
@@ -145,7 +142,6 @@
             value: notificationEmail.replyToEmail is not empty ? notificationEmail.replyToEmail : '',
             errors: notificationEmail is defined ? notificationEmail.getErrors('replyToEmail') : null
         }) }}
-
     </div>
 
     <hr>
@@ -156,20 +152,43 @@
     <hr>
     <div class="meta">
 
-        {% if (mailer is not null and mailer.getLists()|length) %}
+        {{ forms.selectField({
+            label: "Send Method  <span class='info'>The List method will send an individual email to each email identified in your Recipients. The Single Email method will send one email to all Recipients together.</span>"|t('sprout-base-email'),
+            id: 'sendMethod',
+            name: 'sendMethod',
+            options: [
+                { value: 'emailList', label: "List"|t('sprout-base-email') },
+                { value: 'singleEmail', label: "Single Email"|t('sprout-base-email') }
+            ],
+            default: 'emailList',
+            value: notificationEmail.sendMethod ?? 'emailList',
+            required: true
+        }) }}
 
-            <div class="field mailing-lists">
-                <div class="heading">
-                    Lists
-                </div>
-                <div class="input">
-                    {% namespace 'lists' %}
-                        {{ mailer.getListsHtml(notificationEmail.listSettings)|raw }}
-                    {% endnamespace %}
-                </div>
-            </div>
-        {% endif %}
+        {{ forms.elementSelectField({
+            label: "Mailing Lists"|t('sprout-base-email'),
+            id: 'lists',
+            name: 'lists[lists]',
+            elementType: 'barrelstrength\\sproutbaselists\\elements\\ListElement',
+            selectionLabel: "Add List"|t('sprout-base-email'),
+            elements: listElements
+        }) }}
 
+        {{ forms.elementSelectField({
+            label: "Segments"|t('sprout-base-email'),
+            id: 'segments',
+            name: 'lists[segments]',
+            elementType: 'barrelstrength\\sproutbasereports\\elements\\Report',
+            selectionLabel: "Add Segment"|t('sprout-base-email'),
+            criteria: {
+                viewContext: 'segments'
+            },
+            elements: []
+        }) }}
+        {#            sources: ['viewContext:segments'],#}
+        {#        criteria: {#}
+        {#        viewContext: 'segments'#}
+        {#        },#}
         {{ forms.textField({
             label: "To <span class='info'>A comma separated list of email addresses.</span>"|t('sprout-base-email'),
             placeholder: "user@domain.com, other@domain.com"|t('sprout-base-email'),
@@ -184,7 +203,7 @@
             label: "CC <span class='info'>A comma separated list of email addresses.</span>"|t('sprout-base-email'),
             placeholder: "user@domain.com, other@domain.com"|t('sprout-base-email'),
             name: "cc",
-            fieldClass: 'field-border-top',
+            fieldClass: 'field-border-top send-method-singlemail',
             class: "code",
             value: notificationEmail is defined ? notificationEmail.cc : "",
             errors: notificationEmail is defined ? notificationEmail.getErrors('cc')
@@ -194,21 +213,35 @@
             label: "BCC <span class='info'>A comma separated list of email addresses.</span>"|t('sprout-base-email'),
             placeholder: "user@domain.com, other@domain.com"|t('sprout-base-email'),
             name: "bcc",
-            fieldClass: 'field-border-top',
+            fieldClass: 'field-border-top send-method-singlemail',
             class: "code",
             value: notificationEmail is defined ? notificationEmail.bcc : "",
             errors: notificationEmail is defined ? notificationEmail.getErrors('bcc')
         }) }}
 
-        {{ forms.lightswitchField({
-            first: true,
-            label: "Single Email <span class='info'>Send a single message to all Recipients (and Recipients on selected Subscriber List) just like it would be sent if you used your mail client.</span>"|t('sprout-base-email'),
-            id: 'singleEmail',
-            name: 'singleEmail',
-            on: notificationEmail.singleEmail,
-            onLabel: "Enable"|t('sprout-base-email'),
-            offLabel: "Disable"|t('sprout-base-email')
-        }) }}
+        {#          {% if (mailer is not null and mailer.getLists()|length) %}#}
+        {#            <div class="field mailing-lists">#}
+        {#                <div class="heading">#}
+        {#                    Lists#}
+        {#                </div>#}
+        {#                <div class="input">#}
+        {#                    {% namespace 'lists' %}#}
+        {#                        {{ mailer.getListsHtml(notificationEmail.listSettings)|raw }}#}
+        {#                    {% endnamespace %}#}
+        {#                </div>#}
+        {#            </div>#}
+        {#        {% endif %}#}
+
+        {#        <div class="field mailing-lists">#}
+        {#            <div class="heading">#}
+        {#                Segments#}
+        {#            </div>#}
+        {#            <div class="input">#}
+        {#                {% namespace 'lists' %}#}
+        {#                    {{ mailer.getListsHtml(notificationEmail.listSettings)|raw }}#}
+        {#                {% endnamespace %}#}
+        {#            </div>#}
+        {#        </div>#}
 
     </div>
 
@@ -241,6 +274,7 @@
                 fieldClass: 'field-border-top',
                 options: eventOptions,
                 value: notificationEmail.eventId is defined ? notificationEmail.eventId : null,
+                required: true
             }) }}
 
             {% for type, event in events %}
@@ -263,12 +297,13 @@
 
             {{ forms.field({
                 label: "Send Rule <span class='info'>Defines how to check a form submission to determine if a user has opted in to have data sent to this Integration. The Integration will be sent if the setting is set to 'Always'; if the Custom Rule is used and evaluates to '1', 'true', 'on', or 'yes'. If none of those conditions are met, the Event will not be sent.</span>"|t('sprout-base-email'),
-                errors: (notificationEmail is defined ? notificationEmail.getErrors('sendRule') : null)
+                errors: (notificationEmail is defined ? notificationEmail.getErrors('sendRule') : null),
+                required: true
             }, sproutFields.selectOther({
                 name: 'sendRule',
                 options: notificationEmail.getSendRuleOptions(),
                 value: notificationEmail.sendRule ?? '*',
-                otherPlaceholderText: "{% if object.customFieldHandle == 'send' %}true{% else %}false{% endif %}"|t('sprout-base-email'),
+                otherPlaceholderText: "{% if object.customFieldHandle == 'send' %}true{% else %}false{% endif %}"|t('sprout-base-email')
             })) }}
 
             {{ forms.lightswitchField({
@@ -347,9 +382,22 @@
 
 {% js %}
     $(document).ready(function() {
+
     // add support for select other field
     if (Craft.SproutFields != null) {
     Craft.SproutFields.initFields($("#details"));
     }
+
+    {% if notificationEmail.sendMethod == 'emailList' %}
+        $('.send-method-singlemail').hide();
+    {% endif %}
+
+    $('#sendMethod').on('change', function() {
+    if ($(this).val() == 'singleEmail'){
+    $('.send-method-singlemail').show();
+    } else {
+    $('.send-method-singlemail').hide();
+    }
+    });
     });
 {% endjs %}

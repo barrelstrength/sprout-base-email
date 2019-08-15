@@ -12,6 +12,9 @@ use craft\helpers\Json;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
+use Throwable;
+use yii\base\Exception;
+use yii\base\InvalidConfigException;
 
 trait RecipientsTrait
 {
@@ -122,8 +125,8 @@ trait RecipientsTrait
      * @param EmailElement $email
      *
      * @return SimpleRecipientList
-     * @throws \Throwable
-     * @throws \yii\base\Exception
+     * @throws Throwable
+     * @throws Exception
      */
     public function getRecipientList(EmailElement $email): SimpleRecipientList
     {
@@ -151,22 +154,21 @@ trait RecipientsTrait
 
         $recipientList = $this->getRecipients($email, $email->recipients);
 
-        // @todo - test this integration
-        if (Craft::$app->getPlugins()->getPlugin('sprout-lists')) {
 
-            $listRecipients = $this->getRecipientsFromSelectedLists($email->listSettings);
+        $listRecipients = $this->getRecipientsFromSelectedLists($email->listSettings);
 
-            if ($listRecipients) {
-                foreach ($listRecipients as $listRecipient) {
+        if ($listRecipients) {
+            foreach ($listRecipients as $listRecipient) {
 
-                    if ($validator->isValid($listRecipient->email, $multipleValidations)) {
-                        $recipientList->addRecipient($listRecipient);
-                    } else {
-                        $recipientList->addInvalidRecipient($listRecipient);
-                    }
+                if ($validator->isValid($listRecipient->email, $multipleValidations)) {
+                    $recipientList->addRecipient($listRecipient);
+                } else {
+                    $recipientList->addInvalidRecipient($listRecipient);
                 }
             }
         }
+
+        // @todo - Add support for Segment Lists to be added to lists array.
 
         return $recipientList;
     }
@@ -179,8 +181,8 @@ trait RecipientsTrait
      * @param              $recipients
      *
      * @return SimpleRecipientList
-     * @throws \Throwable
-     * @throws \yii\base\Exception
+     * @throws Throwable
+     * @throws Exception
      */
     public function getRecipients(EmailElement $email, $recipients): SimpleRecipientList
     {
@@ -218,13 +220,14 @@ trait RecipientsTrait
      * @param $listSettings
      *
      * @return array
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
-    public function getRecipientsFromSelectedLists($listSettings): array
+    public function getRecipientsFromSelectedLists($listSettings = null): array
     {
         $listIds = [];
+
         // Convert json format to array
-        if ($listSettings != null AND is_string($listSettings)) {
+        if ($listSettings !== null AND is_string($listSettings)) {
             $listIds = Json::decode($listSettings);
             $listIds = $listIds['listIds'];
         }
@@ -241,6 +244,7 @@ trait RecipientsTrait
             ->all();
 
         $sproutListsRecipientsInfo = [];
+
         if ($listRecords != null) {
             /**
              * @var $listRecord ListElement
@@ -260,6 +264,7 @@ trait RecipientsTrait
 
         // @todo - review what attributes are passed for recipients.
         $listRecipients = [];
+
         if ($sproutListsRecipientsInfo) {
             foreach ($sproutListsRecipientsInfo as $listRecipient) {
                 $recipientModel = new SimpleRecipient();

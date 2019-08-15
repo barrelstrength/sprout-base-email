@@ -21,10 +21,12 @@ class NotificationEmailQuery extends ElementQuery
     protected function beforePrepare(): bool
     {
         $this->joinElementTable('sproutemail_notificationemails');
+
         $this->query->select([
             'sproutemail_notificationemails.viewContext',
             'sproutemail_notificationemails.titleFormat',
             'sproutemail_notificationemails.sendRule',
+            'sproutemail_notificationemails.sendMethod',
             'sproutemail_notificationemails.emailTemplateId',
             'sproutemail_notificationemails.eventId',
             'sproutemail_notificationemails.settings',

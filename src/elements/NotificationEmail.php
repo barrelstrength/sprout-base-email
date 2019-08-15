@@ -96,6 +96,8 @@ class NotificationEmail extends EmailElement
      */
     public $sendRule;
 
+    public $sendMethod;
+
     /**
      * @deprecated - This property is necessary for the migration
      * m180314_161540_craft2_to_craft3. Remove this property once
