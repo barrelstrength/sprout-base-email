@@ -44,10 +44,18 @@ class NotificationEmailQuery extends ElementQuery
             'sproutemail_notificationemails.fieldLayoutId'
         ]);
 
-        $this->viewContext = Craft::$app->request->getBodyParam('criteria.viewContext');
+        /** @deprecated
+         *  We only need the check for console request because we use
+         *  saveNotification m180314_161540_craft2_to_craft3. We can remove
+         *  the check for the console request once we set a minVersionRequired
+         *  and get folks upgraded past that migration.
+         */
+        if (!Craft::$app->getRequest()->getIsConsoleRequest()) {
+            $this->viewContext = Craft::$app->request->getBodyParam('criteria.viewContext');
 
-        if ($this->viewContext !== null && $this->viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT) {
-            $this->query->where(['sproutemail_notificationemails.viewContext' => $this->viewContext]);
+            if ($this->viewContext !== null && $this->viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT) {
+                $this->query->where(['sproutemail_notificationemails.viewContext' => $this->viewContext]);
+            }
         }
 
         return parent::beforePrepare();
