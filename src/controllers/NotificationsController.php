@@ -47,12 +47,13 @@ class NotificationsController extends Controller
     {
         $this->permissions = SproutBase::$app->settings->getPluginPermissions(new Settings(), 'sprout-email');
 
-        $segmentOne = Craft::$app->getRequest()->getSegment(1);
-        $segmentTwo = Craft::$app->getRequest()->getSegment(2);
+        // Only use notificationEmailBaseUrl variable in template routes, segments won't be accurate in action requests
+        if (!Craft::$app->getRequest()->getIsActionRequest()) {
+            $segmentOne = Craft::$app->getRequest()->getSegment(1);
+            $segmentTwo = Craft::$app->getRequest()->getSegment(2);
 
-        $this->notificationEmailBaseUrl = $segmentOne.'/'.$segmentTwo.'/';
-
-        parent::init();
+            $this->notificationEmailBaseUrl = $segmentOne.'/'.$segmentTwo.'/';
+        }
 
         parent::init();
     }
