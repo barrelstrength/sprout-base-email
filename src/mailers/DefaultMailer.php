@@ -393,7 +393,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         $listIds = [];
 
         // Convert json format to array
-        if ($values != null AND is_string($values)) {
+        if ($values !== null AND is_string($values)) {
             $listIds = Json::decode($values);
             $listIds = $listIds['listIds'];
         }
