@@ -49,12 +49,13 @@ class NotificationsController extends Controller
     {
         $this->permissions = SproutBase::$app->settings->getPluginPermissions(new Settings(), 'sprout-email');
 
-        $segmentOne = Craft::$app->getRequest()->getSegment(1);
-        $segmentTwo = Craft::$app->getRequest()->getSegment(2);
+        // Only use notificationEmailBaseUrl variable in template routes, segments won't be accurate in action requests
+        if (!Craft::$app->getRequest()->getIsActionRequest()) {
+            $segmentOne = Craft::$app->getRequest()->getSegment(1);
+            $segmentTwo = Craft::$app->getRequest()->getSegment(2);
 
-        $this->notificationEmailBaseUrl = $segmentOne.'/'.$segmentTwo.'/';
-
-        parent::init();
+            $this->notificationEmailBaseUrl = $segmentOne.'/'.$segmentTwo.'/';
+        }
 
         parent::init();
     }
@@ -131,7 +132,7 @@ class NotificationsController extends Controller
                 return $this->redirect($url);
             }
 
-            throw new Exception(Craft::t('sprout-base-email', 'Unable to create Notification Email'));
+            throw new Exception('Unable to create Notification Email');
         }
 
         if (!$notificationEmail) {
@@ -444,9 +445,7 @@ class NotificationsController extends Controller
         $notificationEmail = Craft::$app->getElements()->getElementById($notificationEmailId, NotificationEmail::class);
 
         if (!$notificationEmail) {
-            throw new InvalidArgumentException(Craft::t('sprout-base-email', 'No Notification Email exists with the ID “{id}”.', [
-                'id' => $notificationEmailId
-            ]));
+            throw new InvalidArgumentException('No Notification Email exists with the ID: '.$notificationEmailId);
         }
 
         if (!SproutBaseEmail::$app->notifications->deleteNotificationEmailById($notificationEmailId)) {
