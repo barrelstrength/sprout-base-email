@@ -54,7 +54,7 @@ class NotificationsController extends Controller
             $segmentOne = Craft::$app->getRequest()->getSegment(1);
             $segmentTwo = Craft::$app->getRequest()->getSegment(2);
 
-            $this->notificationEmailBaseUrl = $segmentOne.'/'.$segmentTwo.'/';
+            $this->notificationEmailBaseUrl = UrlHelper::cpUrl($segmentOne.'/'.$segmentTwo).'/';
         }
 
         parent::init();

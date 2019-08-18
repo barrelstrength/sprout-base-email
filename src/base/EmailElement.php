@@ -35,6 +35,11 @@ abstract class EmailElement extends Element
     public $subjectLine;
 
     /**
+     * @var boolean
+     */
+    public $sendMethod;
+
+    /**
      * A comma, delimited list of recipients (To email)
      *
      * @var string
@@ -110,11 +115,6 @@ abstract class EmailElement extends Element
      * @var EmailTemplates|null
      */
     private $_emailTemplates;
-
-    /**
-     * @var boolean
-     */
-    public $singleEmail;
 
     /**
      * Returns whether this should be treated as a Test Email

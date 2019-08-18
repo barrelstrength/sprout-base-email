@@ -319,7 +319,7 @@ class NotificationEmail extends EmailElement
         $notificationEmailRecord->fromName = $this->fromName;
         $notificationEmailRecord->fromEmail = $this->fromEmail;
         $notificationEmailRecord->replyToEmail = $this->replyToEmail;
-        $notificationEmailRecord->singleEmail = $this->singleEmail;
+        $notificationEmailRecord->sendMethod = $this->sendMethod;
         $notificationEmailRecord->enableFileAttachments = $this->enableFileAttachments;
         $notificationEmailRecord->recipients = $this->recipients;
         $notificationEmailRecord->cc = $this->cc;
