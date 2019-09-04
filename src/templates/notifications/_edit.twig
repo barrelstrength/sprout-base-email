@@ -165,24 +165,25 @@
             required: true
         }) }}
 
-        {{ forms.elementSelectField({
-            label: "Mailing Lists"|t('sprout-base-email'),
-            id: 'lists',
-            name: 'lists[lists]',
-            elementType: 'barrelstrength\\sproutbaselists\\elements\\ListElement',
-            selectionLabel: "Add List"|t('sprout-base-email'),
-            elements: listElements
-        }) }}
+{#        {{ forms.elementSelectField({#}
+{#            label: "Mailing Lists"|t('sprout-base-email'),#}
+{#            id: 'lists',#}
+{#            name: 'lists[lists]',#}
+{#            elementType: 'barrelstrength\\sproutbaselists\\elements\\ListElement',#}
+{#            selectionLabel: "Add List"|t('sprout-base-email'),#}
+{#            elements: listElements#}
+{#        }) }}#}
 
+        {# Filters only viewContext:mailingList from Sprout Reports #}
         {{ forms.elementSelectField({
-            label: "Segments"|t('sprout-base-email'),
-            id: 'segments',
-            name: 'lists[segments]',
+            label: "Mailing Lists <span class='info'>Select one or more Mailing Lists or Segments.</span>"|t('sprout-base-email'),
+            id: 'mailingLists',
+            name: 'lists[mailingLists]',
             elementType: 'barrelstrength\\sproutbasereports\\elements\\Report',
-            selectionLabel: "Add Segment"|t('sprout-base-email'),
-            sources: 'viewContext:segments',
+            selectionLabel: "Add List"|t('sprout-base-email'),
+            sources: 'viewContext:mailingList',
             criteria: {
-                viewContext: 'segments'
+                viewContext: 'mailingList'
             },
             elements: []
         }) }}
