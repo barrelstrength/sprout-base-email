@@ -49,8 +49,10 @@ class m190714_000001_add_notification_email_context_column extends Migration
                 }
             }
 
-            // @todo remove this column on Craft 4
-            #$this->dropColumn($table, 'pluginHandle');
+            // @deprecated remove this column on Craft 4
+            // We have left it in the db for now, because some migrations still require
+            // it to be there even though it has been removed from the Notification Email model
+            // $this->dropColumn($table, 'pluginHandle');
         }
 
         return true;
