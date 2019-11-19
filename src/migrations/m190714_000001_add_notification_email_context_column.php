@@ -49,7 +49,8 @@ class m190714_000001_add_notification_email_context_column extends Migration
                 }
             }
 
-            $this->dropColumn($table, 'pluginHandle');
+            // @todo remove this column on Craft 4
+            #$this->dropColumn($table, 'pluginHandle');
         }
 
         return true;
