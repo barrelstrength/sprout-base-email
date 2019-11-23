@@ -73,6 +73,11 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
     public $sentEmailsLimit;
 
     /**
+     * @var int
+     */
+    public $cleanupProbability = 1000;
+
+    /**
      * @inheritdoc
      */
     public function getSettingsNavItems(): array

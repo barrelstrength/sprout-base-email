@@ -10,7 +10,10 @@ use barrelstrength\sproutcampaigns\SproutCampaign;
 use barrelstrength\sproutemail\elements\SentEmail;
 use barrelstrength\sproutemail\SproutEmail;
 use Craft;
+use craft\errors\SiteNotFoundException;
 use craft\helpers\UrlHelper;
+use yii\base\Exception;
+use yii\base\InvalidConfigException;
 
 class SproutEmailVariable
 {
@@ -34,7 +37,7 @@ class SproutEmailVariable
      * @param $mailer
      *
      * @return Mailer
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function getMailer($mailer): Mailer
     {
@@ -45,7 +48,7 @@ class SproutEmailVariable
      * Returns the value of the displayDateScheduled general config setting
      *
      * @return mixed|null
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getDisplayDateScheduled()
     {
@@ -146,15 +149,5 @@ class SproutEmailVariable
         ];
 
         return $options;
-    }
-
-    /**
-     * Trigger a cleanUpSentEmails Job
-     *
-     * @throws \craft\errors\SiteNotFoundException
-     */
-    public function cleanUpSentEmails()
-    {
-        SproutEmail::$app->sentEmails->cleanUpSentEmails();
     }
 }
