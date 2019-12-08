@@ -6,14 +6,16 @@ use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
-use barrelstrength\sproutbaselists\listtypes\MailingList;
+use barrelstrength\sproutbaselists\listtypes\SubscriberList;
 use barrelstrength\sproutbaselists\SproutBaseLists;
+use barrelstrength\sproutbasereports\SproutBaseReports;
 use barrelstrength\sproutcampaigns\elements\CampaignEmail;
 use barrelstrength\sproutemail\services\SentEmails;
 use barrelstrength\sproutemail\SproutEmail;
 use barrelstrength\sproutforms\fields\formfields\FileUpload;
 use craft\base\Element;
 use craft\base\LocalVolumeInterface;
+use craft\db\Query;
 use craft\elements\Asset;
 use craft\elements\db\AssetQuery;
 use craft\fields\Assets;
@@ -339,6 +341,20 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         return true;
     }
 
+    public function hasLists(): bool
+    {
+        $sproutReportsTableExists = Craft::$app->db->tableExists('{{%sproutreports_reports}}');
+
+        if ($sproutReportsTableExists) {
+            return (new Query())
+                ->select('id')
+                ->from('{{%sproutreports_reports}}')
+                ->where(['not', ['emailColumn' => null]])
+                ->exists();
+        }
+
+        return false;
+    }
     /**
      * @inheritdoc
      *
@@ -346,11 +362,15 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      */
     public function getLists(): array
     {
-        if (empty($this->lists) && Craft::$app->getPlugins()->getPlugin('sprout-lists') !== null) {
-            $listType = SproutBaseLists::$app->lists
-                ->getListType(MailingList::class);
+        if (empty($this->lists)) {
+            // Get all selected Mailing List Reports
+            // Prepare SimpleRecipientList of their data
+            // Assign it to $this->lists and return it...
+            // @todo - how can we attach all fields as arbitrary attributes to be used as personalization in email?
+            // Do we even need this to be a model?
 
-            $this->lists = $listType ? $listType->getLists() : [];
+            // Assign lists
+//            $this->lists = $listType ? $listType->getLists() : [];
         }
 
         return $this->lists;
@@ -360,35 +380,13 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      * @param array $values
      *
      * @return string|null
-     * @throws Exception
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
     public function getListsHtml($values = [])
     {
-        $selected = [];
-        $options = [];
-        $lists = $this->getLists();
-
-        if (empty($lists)) {
-            return '';
-        }
-
-        foreach ($lists as $list) {
-            $listName = $list->name;
-
-            if ($list->count) {
-                $listName .= ' ('.$list->count.')';
-            } else {
-                $listName .= ' (0)';
-            }
-
-            $options[] = [
-                'label' => $listName,
-                'value' => $list->id
-            ];
-        }
+        $selectedElements = [];
 
         $listIds = [];
 
@@ -400,13 +398,12 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
 
         if (!empty($listIds)) {
             foreach ($listIds as $key => $listId) {
-                $selected[] = $listId;
+                $selectedElements[] = Craft::$app->elements->getElementById($listId);
             }
         }
 
         return Craft::$app->getView()->renderTemplate('sprout-base-email/_components/mailers/defaultmailer/lists', [
-            'options' => $options,
-            'values' => $selected,
+            'selectedElements' => $selectedElements,
         ]);
     }
 }

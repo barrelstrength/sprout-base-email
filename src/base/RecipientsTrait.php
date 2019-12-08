@@ -79,11 +79,11 @@ trait RecipientsTrait
     /**
      * Returns whether this Mailer supports mailing lists
      *
-     * @return bool Whether this Mailer supports lists. Default is `true`.
+     * @return bool Whether this Mailer supports lists. Default is `false`.
      */
     public function hasLists(): bool
     {
-        return true;
+        return false;
     }
 
     /**
