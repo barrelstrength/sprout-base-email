@@ -13,6 +13,8 @@ use craft\base\Component;
 use craft\helpers\Html;
 use Craft;
 use craft\mail\Message;
+use Exception;
+use Throwable;
 use yii\base\Model;
 
 /**
@@ -54,9 +56,9 @@ abstract class Mailer extends Component
     /**
      * Returns a short description of this mailer
      *
+     * @return string
      * @example The Sprout Email Mailer uses the Craft API to send emails
      *
-     * @return string
      */
     abstract public function getDescription(): string;
 
@@ -118,7 +120,7 @@ abstract class Mailer extends Component
      * @param EmailElement $email
      *
      * @return Message
-     * @throws \Throwable
+     * @throws Throwable
      * @throws \yii\base\Exception
      */
     public function getMessage(EmailElement $email): Message
@@ -145,7 +147,7 @@ abstract class Mailer extends Component
         try {
             $textBody = $email->getEmailTemplates()->getTextBody();
             $htmlBody = $email->getEmailTemplates()->getHtmlBody();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $email->addError('template', $e->getMessage());
         }
 
@@ -171,13 +173,13 @@ abstract class Mailer extends Component
         // Process the results of the templates once more, to render any dynamic objects used in fields
         try {
             $textBody = Craft::$app->getView()->renderObjectTemplate($textBody, $object);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $email->addError('body', $e->getMessage());
         }
 
         try {
             $htmlBody = Craft::$app->getView()->renderObjectTemplate($htmlBody, $object);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $email->addError('htmlBody', $e->getMessage());
         }
 
@@ -201,13 +203,13 @@ abstract class Mailer extends Component
      * @param              $attribute
      * @param              $object
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function renderObjectTemplateSafely(EmailElement $email, $attribute, $object)
     {
         try {
             $email->{$attribute} = Craft::$app->getView()->renderObjectTemplate($email->{$attribute}, $object);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $email->addError($email->{$attribute}, $e->getMessage());
         }
     }

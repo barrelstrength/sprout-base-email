@@ -3,10 +3,10 @@
 <div class="sproutemail-sentemail-header">
     <div class="btngroup sentemail-btngroup">
         <button data-box="html"
-                class="btn active sentemail-btn">{{ 'HTML'|t('sprout-email') }}
+            class="btn active sentemail-btn">{{ 'HTML'|t('sprout-email') }}
         </button>
         <button data-box="text"
-                class="btn sentemail-btn">{{ 'Text'|t('sprout-email') }}
+            class="btn sentemail-btn">{{ 'Text'|t('sprout-email') }}
         </button>
     </div>
 </div>
@@ -16,7 +16,7 @@
     {% if htmlBody is not empty %}
 
         <iframe width='100%'
-                src="data:text/html;charset=utf-8,{{ htmlBody|raw|url_encode }}"></iframe>
+            src="data:text/html;charset=utf-8,{{ htmlBody|raw|url_encode }}"></iframe>
 
     {% else %}
         <h3>{{ "No HTML content"|t('sprout-email') }}</h3>
@@ -36,18 +36,18 @@
 
 <script type="text/javascript">
 
-    $(".sentemail-btn").click(function() {
+  $(".sentemail-btn").click(function() {
 
-        $(".sentemail-btn").removeClass('active');
-        $(this).addClass('active');
+    $(".sentemail-btn").removeClass('active');
+    $(this).addClass('active');
 
-        var box = $(this).data('box');
-        var boxClass = ".sentemail-" + box;
+    var box = $(this).data('box');
+    var boxClass = ".sentemail-" + box;
 
-        $('.sentemail-pane').removeClass('active');
-        $(boxClass).addClass('active');
+    $('.sentemail-pane').removeClass('active');
+    $(boxClass).addClass('active');
 
-    })
+  })
 </script>
 
 <style type="text/css">

@@ -5,9 +5,9 @@
     <div class="sproutemail-sentemail-header">
         <div class="btngroup sentemail-btngroup">
             <button data-preview-target="html"
-                    class="btn active sentemail-btn preview-html-btn">{{ 'HTML'|t('sprout-base-email') }}</button>
+                class="btn active sentemail-btn preview-html-btn">{{ 'HTML'|t('sprout-base-email') }}</button>
             <button data-preview-target="text"
-                    class="btn sentemail-btn preview-text-btn">{{ 'Text'|t('sprout-base-email') }}</button>
+                class="btn sentemail-btn preview-text-btn">{{ 'Text'|t('sprout-base-email') }}</button>
         </div>
     </div>
 
@@ -24,7 +24,7 @@
 
         {% if htmlBody is not empty %}
             <iframe width='100%'
-                    src="data:text/html;charset=utf-8,{{ htmlBody|raw|url_encode }}"></iframe>
+                src="data:text/html;charset=utf-8,{{ htmlBody|raw|url_encode }}"></iframe>
 
         {% else %}
             <iframe id="preview-html" src="{{ emailUrl }}"></iframe>

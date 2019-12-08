@@ -13,7 +13,6 @@ use craft\base\Component;
 use Craft;
 use craft\helpers\ElementHelper;
 
-use craft\helpers\UrlHelper;
 use craft\base\ElementInterface;
 use craft\models\FieldLayout;
 use Exception;
@@ -21,7 +20,6 @@ use Throwable;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-use Twig_Error_Loader;
 use yii\base\ExitException;
 
 /**
@@ -126,9 +124,11 @@ class NotificationEmails extends Component
      * @param      $notificationId
      * @param null $type
      *
-     * @throws Twig_Error_Loader
-     * @throws \yii\base\Exception
      * @throws ExitException
+     * @throws LoaderError
+     * @throws SyntaxError
+     * @throws \yii\base\Exception
+     * @throws RuntimeError
      */
     public function getPreviewNotificationEmailById($notificationId, $type = null)
     {
@@ -177,9 +177,9 @@ class NotificationEmails extends Component
      *
      * @throws ExitException
      * @throws LoaderError
-     * @throws RuntimeError
      * @throws SyntaxError
      * @throws \yii\base\Exception
+     * @throws RuntimeError
      */
     public function showPreviewEmail(NotificationEmail $email, $fileExtension = 'html')
     {

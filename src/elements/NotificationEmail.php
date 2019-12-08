@@ -5,7 +5,6 @@ namespace barrelstrength\sproutbaseemail\elements;
 use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\SenderTrait;
 use barrelstrength\sproutbaseemail\elements\actions\DeleteNotification;
-use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbaseemail\web\assets\base\NotificationAsset;
 use barrelstrength\sproutbaseemail\elements\db\NotificationEmailQuery;
@@ -32,6 +31,7 @@ use yii\base\InvalidConfigException;
  * @mixin FieldLayoutBehavior
  *
  * @property mixed $options
+ * @property array $sendRuleOptions
  * @property array $statuses
  */
 class NotificationEmail extends EmailElement
@@ -247,7 +247,7 @@ class NotificationEmail extends EmailElement
                     'notificationId' => $this->id,
                 ]);
             }
-            $viewContext = Craft::$app->request->getBodyParam('criteria.viewContext') ?: NotificationEmails::DEFAULT_VIEW_CONTEXT;
+
             $notificationEmailBaseUrl = Craft::$app->request->getBodyParam('criteria.notificationEmailBaseUrl');
 
             return Craft::$app->getView()->renderTemplate('sprout-base-email/_components/elementindex/NotificationEmail/preview-links', [
@@ -379,7 +379,7 @@ class NotificationEmail extends EmailElement
             throw new Exception('Invalid integration. No viewContext specified');
         }
 
-        // @TODO - need to udpate to base URL
+        // @TODO - need to update to base URL
         return $this->viewContext.'/{slug}';
     }
 
@@ -391,7 +391,7 @@ class NotificationEmail extends EmailElement
     public function getUrl()
     {
         if ($this->uri !== null) {
-            return UrlHelper::siteUrl($this->uri, null, null);
+            return UrlHelper::siteUrl($this->uri);
         }
 
         return null;
@@ -469,7 +469,7 @@ class NotificationEmail extends EmailElement
      */
     public function getOptions()
     {
-        return Json::decode($this->settings, true);
+        return Json::decode($this->settings);
     }
 
     /**
@@ -487,7 +487,6 @@ class NotificationEmail extends EmailElement
 
     /**
      * @return array
-     * @throws InvalidConfigException
      */
     final public function getSendRuleOptions(): array
     {

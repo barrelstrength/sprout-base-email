@@ -120,22 +120,22 @@ class SproutBaseEmail extends Module
         });
 
         // Setup Variables
-        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, static function(Event $event) {
             $event->sender->set('sproutEmail', SproutEmailVariable::class);
         });
 
         // Register Sprout Email Events
-        Event::on(Application::class, Application::EVENT_INIT, function() {
+        Event::on(Application::class, Application::EVENT_INIT, static function() {
             SproutBaseEmail::$app->notificationEvents->registerNotificationEmailEventHandlers();
         });
 
         // Register Sprout Email Mailers
-        Event::on(Mailers::class, Mailers::EVENT_REGISTER_MAILER_TYPES, function(RegisterMailersEvent $event) {
+        Event::on(Mailers::class, Mailers::EVENT_REGISTER_MAILER_TYPES, static function(RegisterMailersEvent $event) {
             $event->mailers[] = new DefaultMailer();
         });
 
         // Register Sprout Email Templates
-        Event::on(EmailTemplates::class, EmailTemplates::EVENT_REGISTER_EMAIL_TEMPLATES, function(RegisterComponentTypesEvent $event) {
+        Event::on(EmailTemplates::class, EmailTemplates::EVENT_REGISTER_EMAIL_TEMPLATES, static function(RegisterComponentTypesEvent $event) {
             $event->types[] = BasicTemplates::class;
         });
 

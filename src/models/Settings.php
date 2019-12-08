@@ -127,11 +127,11 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
      * Shared permissions they may be prefixed by another plugin. Before checking
      * these permissions the plugin name will be determined from the URL and appended.
      *
+     * @return array
      * @example
      * /admin/sprout-reports/page => sproutReports-viewReports
      * /admin/sprout-forms/page => sproutForms-viewReports
      *
-     * @return array
      */
     public function getSharedPermissions(): array
     {

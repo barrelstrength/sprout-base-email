@@ -40,7 +40,7 @@ class EmailTemplates extends Component
             $templates[$templateType] = new $templateType();
         }
 
-        uasort($templates, function($a, $b) {
+        uasort($templates, static function($a, $b) {
             /**
              * @var BaseEmailTemplates $a
              * @var BaseEmailTemplates $b

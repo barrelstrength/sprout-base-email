@@ -13,41 +13,41 @@ var SproutModal = function() {
  * @returns {SproutModal}
  */
 SproutModal.prototype.init = function() {
-    var self = this;
+  var self = this;
 
-    self.initEmailPreview();
+  self.initEmailPreview();
 
-    $(".prepare").on("click", function(e) {
-        e.preventDefault();
+  $(".prepare").on("click", function(e) {
+    e.preventDefault();
 
-        var $t = $(e.target);
+    var $t = $(e.target);
 
-        var modalLoader = null;
+    var modalLoader = null;
 
-        if ($t.data('mailer') === 'copypaste') {
-            modalLoader = self.createLoadingModal();
-        }
+    if ($t.data('mailer') === 'copypaste') {
+      modalLoader = self.createLoadingModal();
+    }
 
-        self.postToControllerAction($t.data(), function handle(error, response) {
-            if (error) {
-                return self.createErrorModal(error);
-            }
+    self.postToControllerAction($t.data(), function handle(error, response) {
+      if (error) {
+        return self.createErrorModal(error);
+      }
 
-            if (!response.success) {
-                return self.createErrorModal(response.message);
-            }
+      if (!response.success) {
+        return self.createErrorModal(response.message);
+      }
 
-            // Close error loading modal if no error on request
-            if (modalLoader != null) {
-                modalLoader.hide();
-                modalLoader.destroy();
-            }
+      // Close error loading modal if no error on request
+      if (modalLoader != null) {
+        modalLoader.hide();
+        modalLoader.destroy();
+      }
 
-            self.create(response.content);
-        });
+      self.create(response.content);
     });
+  });
 
-    return this;
+  return this;
 };
 
 /**
@@ -64,25 +64,25 @@ SproutModal.prototype.init = function() {
  * @param function callback
  */
 SproutModal.prototype.postToControllerAction = function runControllerAction(payload, callback) {
-    var request = {
-        url: window.location,
-        type: "POST",
-        data: payload,
-        cache: false,
-        dataType: "json",
+  var request = {
+    url: window.location,
+    type: "POST",
+    data: payload,
+    cache: false,
+    dataType: "json",
 
-        error: function handleFailedRequest(xhr, status, error) {
-            callback(error);
-        },
+    error: function handleFailedRequest(xhr, status, error) {
+      callback(error);
+    },
 
-        success: function handleSuccessfulRequest(response) {
-            callback(null, response);
-        }
-    };
+    success: function handleSuccessfulRequest(response) {
+      callback(null, response);
+    }
+  };
 
-    request.data[Craft.csrfTokenName] = Craft.csrfTokenValue;
+  request.data[Craft.csrfTokenName] = Craft.csrfTokenValue;
 
-    $.ajax(request);
+  $.ajax(request);
 };
 
 /**
@@ -92,138 +92,138 @@ SproutModal.prototype.postToControllerAction = function runControllerAction(payl
  * @returns {Garnish.Modal}
  */
 SproutModal.prototype.create = function(content) {
-    // For later reference within different scopes
-    var self = this;
+  // For later reference within different scopes
+  var self = this;
 
-    // Modal setup
-    var $modal = $("#sproutmodal").clone();
-    var $content = $modal.html(content);
-    var $spinner = $(".spinner", $modal);
-    var $actions = $(".actions", $modal);
+  // Modal setup
+  var $modal = $("#sproutmodal").clone();
+  var $content = $modal.html(content);
+  var $spinner = $(".spinner", $modal);
+  var $actions = $(".actions", $modal);
 
-    // Gives mailers a chance to add their own event handlers
-    $(document).trigger("sproutModalBeforeRender", $content);
+  // Gives mailers a chance to add their own event handlers
+  $(document).trigger("sproutModalBeforeRender", $content);
 
-    $modal.removeClass("hidden");
+  $modal.removeClass("hidden");
 
-    // Instantiate and show
-    var modal = new Garnish.Modal($modal);
+  // Instantiate and show
+  var modal = new Garnish.Modal($modal);
 
-    self.initEmailPreview();
+  self.initEmailPreview();
 
-    $("#close", $modal).on("click", function() {
-        Craft.elementIndex.updateElements();
+  $("#close", $modal).on("click", function() {
+    Craft.elementIndex.updateElements();
 
-        modal.hide();
-        modal.destroy();
+    modal.hide();
+    modal.destroy();
+  });
+
+  $("#cancel", $modal).on("click", function() {
+    Craft.elementIndex.updateElements();
+
+    modal.hide();
+    modal.destroy();
+  });
+
+  $actions.on("click", function(e) {
+    e.preventDefault();
+
+    var $self = $(e.target);
+
+    if ($self.hasClass('preventAction')) {
+      $self.removeClass('preventAction');
+
+      return;
+    }
+
+    $spinner.removeClass("hidden");
+
+    var data = $self.data();
+
+    if ($("#recipients").val() !== "") {
+      var recipients = {recipients: $("#recipients").val()};
+
+      data = $.extend(data, recipients);
+    }
+    $spin = $self.parents('.footer').find('.send-spinner');
+    $spin.show();
+    self.postToControllerAction(data, function handleResponse(error, response) {
+      $spin.hide();
+
+      // Close previous modal
+      modal.hide();
+      modal.destroy();
+
+      if (error) {
+        return self.createErrorModal(error);
+      }
+
+      if (!response.success) {
+        return self.createErrorModal(response.message);
+      }
+
+      $spinner.addClass("hidden");
+
+      modal = self.create(response.content);
+
+      modal.updateSizeAndPosition();
     });
+  });
 
-    $("#cancel", $modal).on("click", function() {
-        Craft.elementIndex.updateElements();
-
-        modal.hide();
-        modal.destroy();
-    });
-
-    $actions.on("click", function(e) {
-        e.preventDefault();
-
-        var $self = $(e.target);
-
-        if ($self.hasClass('preventAction')) {
-            $self.removeClass('preventAction');
-
-            return;
-        }
-
-        $spinner.removeClass("hidden");
-
-        var data = $self.data();
-
-        if ($("#recipients").val() !== "") {
-            var recipients = {recipients: $("#recipients").val()};
-
-            data = $.extend(data, recipients);
-        }
-        $spin = $self.parents('.footer').find('.send-spinner');
-        $spin.show();
-        self.postToControllerAction(data, function handleResponse(error, response) {
-            $spin.hide();
-
-            // Close previous modal
-            modal.hide();
-            modal.destroy();
-
-            if (error) {
-                return self.createErrorModal(error);
-            }
-
-            if (!response.success) {
-                return self.createErrorModal(response.message);
-            }
-
-            $spinner.addClass("hidden");
-
-            modal = self.create(response.content);
-
-            modal.updateSizeAndPosition();
-        });
-    });
-
-    return modal;
+  return modal;
 };
 
 SproutModal.prototype.createErrorModal = function(error) {
-    var $content = $('#sproutmodal-error').clone();
+  var $content = $('#sproutmodal-error').clone();
 
-    $('.innercontent', $content).html(error);
+  $('.innercontent', $content).html(error);
 
-    var modal = new SproutModal();
+  var modal = new SproutModal();
 
-    modal.create($content.html());
+  modal.create($content.html());
 };
 
 SproutModal.prototype.createLoadingModal = function() {
-    var $content = $('#sproutmodal-loading').clone();
+  var $content = $('#sproutmodal-loading').clone();
 
-    $('.innercontent', $content);
+  $('.innercontent', $content);
 
-    var modal = new SproutModal();
+  var modal = new SproutModal();
 
-    return modal.create($content.html());
+  return modal.create($content.html());
 
 };
 
 SproutModal.prototype.initEmailPreview = function() {
-    $('.email-preview').on('click', function(e) {
+  $('.email-preview').on('click', function(e) {
 
-        e.preventDefault();
+    e.preventDefault();
 
-        $this = $(e.target);
-        $previewUrl = $this.data('preview-url');
+    $this = $(e.target);
+    $previewUrl = $this.data('preview-url');
 
-        window.open($previewUrl, 'newwindow', 'width=920, height=600');
+    window.open($previewUrl, 'newwindow', 'width=920, height=600');
 
-        return false;
-    });
+    return false;
+  });
 };
 
 $(document).on('sproutModalBeforeRender', function(event, content) {
 
-    $('.btnSelectAll', content).off().on('click', function(event) {
+  $('.btnSelectAll', content).off().on('click', function(event) {
 
-        event.preventDefault();
+    event.preventDefault();
 
-        $this = $(event.target);
-        $target = '#' + $this.data('clipboard-target-id');
-        $message = $this.data('success-message');
+    $this = $(event.target);
+    $target = '#' + $this.data('clipboard-target-id');
+    $message = $this.data('success-message');
 
-        $content = $($target).select();
+    $content = $($target).select();
 
-        // Copy our selected text to the clipboard
-        document.execCommand("copy");
+    // Copy our selected text to the clipboard
+    document.execCommand("copy");
 
-        Craft.cp.displayNotice($message);
-    });
+    Craft.cp.displayNotice($message);
+  });
 
 });

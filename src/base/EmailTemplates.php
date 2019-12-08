@@ -4,6 +4,9 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use Craft;
 use League\HTMLToMarkdown\HtmlConverter;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * Class EmailTemplates
@@ -59,8 +62,9 @@ abstract class EmailTemplates
 
     /**
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function getHtmlBody(): string
     {
@@ -73,8 +77,9 @@ abstract class EmailTemplates
 
     /**
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function getTextBody(): string
     {
@@ -86,8 +91,9 @@ abstract class EmailTemplates
     }
 
     /**
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     protected function processEmailTemplates()
     {

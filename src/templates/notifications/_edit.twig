@@ -165,16 +165,6 @@
             required: true
         }) }}
 
-{#        {{ forms.elementSelectField({#}
-{#            label: "Mailing Lists"|t('sprout-base-email'),#}
-{#            id: 'lists',#}
-{#            name: 'lists[lists]',#}
-{#            elementType: 'barrelstrength\\sproutbaselists\\elements\\ListElement',#}
-{#            selectionLabel: "Add List"|t('sprout-base-email'),#}
-{#            elements: listElements#}
-{#        }) }}#}
-
-        {# Filters only viewContext:mailingList from Sprout Reports #}
         {{ forms.elementSelectField({
             label: "Mailing Lists <span class='info'>Select one or more Mailing List.</span>"|t('sprout-base-email'),
             id: 'mailingLists',
@@ -187,10 +177,6 @@
             },
             elements: []
         }) }}
-        {#            sources: ['viewContext:segments'],#}
-        {#        criteria: {#}
-        {#        viewContext: 'segments'#}
-        {#        },#}
 
         {# {% if (mailer is not null and mailer.getLists()|length) %}
             <div class="field mailing-lists">

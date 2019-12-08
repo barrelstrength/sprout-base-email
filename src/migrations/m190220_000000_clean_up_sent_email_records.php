@@ -4,12 +4,13 @@ namespace barrelstrength\sproutbaseemail\migrations;
 
 use craft\db\Migration;
 use craft\db\Query;
+use yii\db\Exception;
 
 class m190220_000000_clean_up_sent_email_records extends Migration
 {
     /**
      * @return bool
-     * @throws \yii\db\Exception
+     * @throws Exception
      */
     public function safeUp(): bool
     {

@@ -9,11 +9,9 @@ use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaselists\listtypes\MailingList;
 use barrelstrength\sproutbaselists\SproutBaseLists;
 use barrelstrength\sproutcampaigns\elements\CampaignEmail;
-use barrelstrength\sproutcampaigns\models\CampaignType;
 use barrelstrength\sproutemail\services\SentEmails;
 use barrelstrength\sproutemail\SproutEmail;
 use barrelstrength\sproutforms\fields\formfields\FileUpload;
-use barrelstrength\sproutbaselists\listtypes\SubscriberListType;
 use craft\base\Element;
 use craft\base\LocalVolumeInterface;
 use craft\elements\Asset;
@@ -29,7 +27,7 @@ use Throwable;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-use Twig_Error_Loader;
+use Twig\Markup;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 
@@ -67,10 +65,14 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
     /**
      * @inheritdoc
      *
-     * @throws Exception
-     * @throws Twig_Error_Loader
+     * @param array $settings
+     *
+     * @return Markup
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function getSettingsHtml(array $settings = [])
+    public function getSettingsHtml(array $settings = []): Markup
     {
         /** @noinspection NullCoalescingOperatorCanBeUsedInspection */
         $settings = isset($settings['settings']) ? $settings['settings'] : $this->getSettings();
@@ -108,17 +110,17 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         $object = $notificationEmail->getEventObject();
 
         // Adds support for attachments
-        if ($notificationEmail->enableFileAttachments) {
-            if ($object instanceof Element && method_exists($object, 'getFieldLayout')) {
-                foreach ($object->getFieldLayout()->getFields() as $field) {
-                    if (get_class($field) === FileUpload::class OR get_class($field) === Assets::class) {
-                        $query = $object->{$field->handle};
+        if ($notificationEmail->enableFileAttachments &&
+            $object instanceof Element &&
+            method_exists($object, 'getFieldLayout')) {
+            foreach ($object->getFieldLayout()->getFields() as $field) {
+                if (get_class($field) === FileUpload::class OR get_class($field) === Assets::class) {
+                    $query = $object->{$field->handle};
 
-                        if ($query instanceof AssetQuery) {
-                            $assets = $query->all();
+                    if ($query instanceof AssetQuery) {
+                        $assets = $query->all();
 
-                            $this->attachAssetFilesToEmailModel($message, $assets, $externalPaths);
-                        }
+                        $this->attachAssetFilesToEmailModel($message, $assets, $externalPaths);
                     }
                 }
             }
@@ -178,7 +180,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         $prepareRecipients = [];
         $mailer = Craft::$app->getMailer();
 
-        if ($emailElement->singleEmail) {
+        if ($emailElement->sendMethod === 'singleEmail') {
             /*
              * Assigning email with name array does not work on craft
              * [$recipient->email => $recipient->name]
@@ -226,7 +228,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      * @throws Exception
      * @throws Throwable
      */
-    public function sendTestCampaignEmail(CampaignEmail $campaignEmail)
+    public function sendTestCampaignEmail(CampaignEmail $campaignEmail): bool
     {
         $message = $this->getMessage($campaignEmail);
 
@@ -308,8 +310,6 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
     /**
      * @inheritdoc
      *
-     * @throws Exception
-     * @throws Twig_Error_Loader
      */
     public function getPrepareModalHtml(EmailElement $email): string
     {

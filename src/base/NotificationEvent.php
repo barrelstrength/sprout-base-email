@@ -6,7 +6,6 @@ use barrelstrength\sproutbase\base\BaseSproutTrait;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use craft\base\SavableComponent;
-use Craft;
 
 use yii\base\Event;
 
@@ -68,10 +67,10 @@ abstract class NotificationEvent extends SavableComponent
      *
      * This value is used for the Event::on $class parameter
      *
-     * @see     \yii\base\Event
+     * @return string|null
      * @example Event::on($class, $name, function($handler) { ... });
      *
-     * @return string|null
+     * @see     \yii\base\Event
      */
     abstract public function getEventClassName();
 
@@ -80,10 +79,10 @@ abstract class NotificationEvent extends SavableComponent
      *
      * This value is used for the Event::on $name parameter
      *
-     * @see     \yii\base\Event
+     * @return string|null
      * @example Event::on($class, $name, function($handler) { ... });
      *
-     * @return string|null
+     * @see     \yii\base\Event
      */
     abstract public function getEventName();
 
@@ -92,32 +91,32 @@ abstract class NotificationEvent extends SavableComponent
      *
      * This value is used for the Event::on $handler parameter
      *
-     * @see     \yii\base\Event
+     * @return string|null
      * @example Event::on($class, $name, function($handler) { ... });
      *
-     * @return string|null
+     * @see     \yii\base\Event
      */
     abstract public function getEventHandlerClassName();
 
     /**
      * Returns the name of the event
      *
+     * @return string
      * @example
      *
      * - When an Entry is saved
      * - When a User is activated
      * - When a Sprout Forms Entry is saved
      *
-     * @return string
      */
     abstract public function getName(): string;
 
     /**
      * Returns a short description of this event
      *
+     * @return string
      * @example Triggers when an entry is saved
      *
-     * @return string
      */
     public function getDescription(): string
     {
@@ -127,13 +126,13 @@ abstract class NotificationEvent extends SavableComponent
     /**
      * Returns a rendered html string to use for capturing user input
      *
+     * @return string
      * @example
      * <h3>Select Sections</h3>
      * <p>Please select what Sections should trigger the save entry event</p>
      * <input type="checkbox" id="sectionIds[]" value="1">
      * <input type="checkbox" id="sectionsIds[]" value="2">
      *
-     * @return string
      */
     public function getSettingsHtml(): string
     {
@@ -144,11 +143,11 @@ abstract class NotificationEvent extends SavableComponent
      * Returns the object that represents the event. The object returned will be passed to renderObjectTemplate
      * and be available to output in the Notification Email templates via Craft Object Syntax:
      *
-     * @example - Usage in Notification Email Templates
+     * @return mixed
+     * @example   - Usage in Notification Email Templates
      *            If getEventObject returns a craft\elements\Entry model, the Notification Email Templates
      *            can output data from that model such as {title} OR {{ object.title }}
      *
-     * @return mixed
      */
     public function getEventObject()
     {

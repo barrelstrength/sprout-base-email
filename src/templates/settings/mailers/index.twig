@@ -24,7 +24,7 @@
             <td>
                 {% if mailer.getCpSettingsUrl() != null %}
                     <a href="{{ mailer.getCpSettingsUrl() }}"
-                       title="{{ mailer.displayName() }}">{{ "Settings"|t('sprout-email') }}</a>
+                        title="{{ mailer.displayName() }}">{{ "Settings"|t('sprout-email') }}</a>
                 {% endif %}
             </td>
             <td>{{ mailer.getDescription()|md }}</td>

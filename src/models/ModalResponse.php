@@ -5,6 +5,9 @@ namespace barrelstrength\sproutbaseemail\models;
 use barrelstrength\sproutfields\fields\Email;
 use craft\base\Model;
 use Craft;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * Class Response
@@ -42,8 +45,9 @@ class ModalResponse extends Model
      * @param array  $variables
      *
      * @return ModalResponse
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public static function createModalResponse($template = '', array $variables = []): ModalResponse
     {
@@ -68,8 +72,9 @@ class ModalResponse extends Model
      * @param array $variables
      *
      * @return ModalResponse
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public static function createErrorModalResponse($template = null, array $variables = []): ModalResponse
     {

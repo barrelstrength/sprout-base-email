@@ -4,6 +4,7 @@ namespace barrelstrength\sproutbaseemail\migrations;
 
 use craft\db\Migration;
 use Craft;
+use Exception;
 
 class m190212_000004_add_sent_email_foreign_key extends Migration
 {
@@ -21,7 +22,7 @@ class m190212_000004_add_sent_email_foreign_key extends Migration
             try {
                 $this->addForeignKey(null, $this->sentEmailTable,
                     ['id'], '{{%elements}}', ['id'], 'CASCADE');
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Craft::info('Foreign Key already exists', __METHOD__);
             }
         }

@@ -11,6 +11,7 @@ use craft\base\Component;
 use Craft;
 
 use craft\helpers\Json;
+use Throwable;
 use yii\base\Event;
 
 /**
@@ -34,15 +35,15 @@ class NotificationEmailEvents extends Component
     const EVENT_SEND_NOTIFICATION_EMAIL = 'onSendNotificationEmail';
 
     /**
-     * @var \Callable[] Events that notifications have subscribed to
+     * @var Callable[] Events that notifications have subscribed to
      */
     protected $registeredEvents = [];
 
     /**
      * Registers an event listener to be trigger dynamically
      *
-     * @param string    $eventId
-     * @param \Callable $callback
+     * @param string   $eventId
+     * @param Callable $callback
      */
     public function registerEvent($eventId, $callback)
     {
@@ -54,11 +55,11 @@ class NotificationEmailEvents extends Component
      *
      * @param string $eventId
      *
-     * @return \Callable
+     * @return Callable
      */
     public function getRegisteredEvent($eventId): callable
     {
-        return $this->registeredEvents[$eventId] ?? function() {
+        return $this->registeredEvents[$eventId] ?? static function() {
             };
     }
 
@@ -116,7 +117,7 @@ class NotificationEmailEvents extends Component
                 /** @noinspection PhpUnusedLocalVariableInspection */
                 $eventHandlerClassName = $notificationEmailEvent->getEventHandlerClassName();
 
-                Event::on($eventClassName, $event, function($eventHandlerClassName)
+                Event::on($eventClassName, $event, static function($eventHandlerClassName)
                 use ($self, $notificationEmailEventClassName, $notificationEmailEvent) {
                     return call_user_func($self->getRegisteredEvent($notificationEmailEventClassName),
                         $notificationEmailEventClassName, $eventHandlerClassName, $notificationEmailEvent);
@@ -135,6 +136,7 @@ class NotificationEmailEvents extends Component
      * This closure allows us to avoid having to register for every possible event via Event::on
      * This closure allows us to know the current event being triggered dynamically
      *
+     * @return Callable
      * @example - An overview of how this works. When the sproutemail is initialized...
      *
      * 1. We check which events we need to register for via Event::on
@@ -142,13 +144,12 @@ class NotificationEmailEvents extends Component
      * 3. This closure gets called with the name of the event and the event itself
      * 4. This closure executes as real event handler for the triggered event
      *
-     * @return \Callable
      */
     public function getDynamicEventHandler(): callable
     {
         $self = $this;
 
-        return function($notificationEmailEventClassName, Event $event, NotificationEvent $eventHandlerClass) use ($self) {
+        return static function($notificationEmailEventClassName, Event $event, NotificationEvent $eventHandlerClass) use ($self) {
             return $self->handleDynamicEvent($notificationEmailEventClassName, $event, $eventHandlerClass);
         };
     }
@@ -161,7 +162,7 @@ class NotificationEmailEvents extends Component
      * @param NotificationEvent     $eventHandlerClass
      *
      * @return bool
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handleDynamicEvent($notificationEmailEventClassName, Event $event, NotificationEvent $eventHandlerClass): bool
     {
@@ -207,7 +208,6 @@ class NotificationEmailEvents extends Component
                 ]);
 
                 $this->trigger(self::EVENT_SEND_NOTIFICATION_EMAIL, $sendNotificationEmailEvent);
-
             }
         }
 
@@ -246,7 +246,7 @@ class NotificationEmailEvents extends Component
 
         foreach ($notificationEmailEventTypes as $notificationEmailEventClass) {
             if ($notificationEmail->eventId === $notificationEmailEventClass) {
-                $settings = Json::decode($notificationEmail->settings, true);
+                $settings = Json::decode($notificationEmail->settings);
                 return new $notificationEmailEventClass($settings);
             }
         }
@@ -270,7 +270,7 @@ class NotificationEmailEvents extends Component
         if (!empty($notificationEmailEventTypes)) {
             foreach ($notificationEmailEventTypes as $notificationEmailEventClass) {
 
-                $settings = Json::decode($notificationEmail->settings, true);
+                $settings = Json::decode($notificationEmail->settings);
                 if ($notificationEmailEventClass === $notificationEmail->eventId) {
                     // If the Event matches are current selected event, initialize the NotificationEvent class with the Event settings
                     $event = new $notificationEmailEventClass($settings);
@@ -282,7 +282,7 @@ class NotificationEmailEvents extends Component
             }
         }
 
-        uasort($events, function($a, $b) {
+        uasort($events, static function($a, $b) {
             /**
              * @var $a NotificationEvent
              * @var $b NotificationEvent

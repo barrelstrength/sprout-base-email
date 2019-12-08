@@ -4,6 +4,8 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutbaseemail\models\ModalResponse;
 use Craft;
+use Exception;
+use Throwable;
 
 trait ModalWorkflowTrait
 {
@@ -23,11 +25,11 @@ trait ModalWorkflowTrait
     /**
      * Gives a mailer the ability to register an action to post to when a [prepare] modal is launched.
      *
+     * @return string
      * @example
      *
      * The Copy/Paste mailer uses this to handle the Copy/Paste workflow instead of a Send workflow
      *
-     * @return string
      */
     public function getActionForPrepareModal(): string
     {
@@ -38,7 +40,7 @@ trait ModalWorkflowTrait
      * @param EmailElement $email
      *
      * @return ModalResponse
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function getPrepareModal(EmailElement $email): ModalResponse
     {
@@ -49,7 +51,7 @@ trait ModalWorkflowTrait
             $response->content = $this->getPrepareModalHtml($email);
 
             return $response;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $response->success = false;
             $response->message = $e->getMessage();
 
@@ -61,9 +63,7 @@ trait ModalWorkflowTrait
      * @param EmailElement $email
      *
      * @return string
-     * @throws \Throwable
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
+     * @throws Throwable
      */
     public function getPrepareModalHtml(EmailElement $email): string
     {

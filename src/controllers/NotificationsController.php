@@ -15,7 +15,6 @@ use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasefields\SproutBaseFields;
 use barrelstrength\sproutbaseemail\models\Settings;
 use barrelstrength\sproutbaselists\elements\ListElement;
-use barrelstrength\sproutbaselists\SproutBaseLists;
 use craft\errors\MissingComponentException;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
@@ -25,7 +24,9 @@ use Craft;
 use craft\base\Plugin;
 use InvalidArgumentException;
 use Throwable;
-use Twig_Error_Loader;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use yii\base\Exception;
 use yii\base\ExitException;
 use yii\base\InvalidConfigException;
@@ -207,7 +208,7 @@ class NotificationsController extends Controller
         return $this->renderTemplate('sprout-base-email/notifications/_edit', [
             'notificationEmail' => $notificationEmail,
             'events' => $events,
-            'lists' =>  '',
+            'lists' => '',
             'listElements' => $listElements,
             'tabs' => $tabs,
             'showPreviewBtn' => $showPreviewBtn,
@@ -268,7 +269,7 @@ class NotificationsController extends Controller
         $notificationEmail->replyToEmail = Craft::$app->getRequest()->getBodyParam('replyToEmail');
         $notificationEmail->titleFormat = Craft::$app->getRequest()->getBodyParam('titleFormat');
         $notificationEmail->slug = Craft::$app->getRequest()->getBodyParam('slug');
-        $notificationEmail->singleEmail = Craft::$app->getRequest()->getBodyParam('singleEmail');
+        $notificationEmail->sendMethod = Craft::$app->getRequest()->getBodyParam('sendMethod');
         $notificationEmail->enableFileAttachments = Craft::$app->getRequest()->getBodyParam('enableFileAttachments');
         $notificationEmail->enabled = Craft::$app->getRequest()->getBodyParam('enabled');
         $notificationEmail->eventId = Craft::$app->getRequest()->getBodyParam('eventId');
@@ -322,7 +323,7 @@ class NotificationsController extends Controller
 
             $notificationEmail->setEventObject($event->getMockEventObject());
 
-            if (is_null($event->getSettingsHtml()) || $event->getSettingsHtml() == ''){
+            if ($event->getSettingsHtml() === null || $event->getSettingsHtml() == '') {
                 $notificationEmail->settings = null;
             }
         }
@@ -481,7 +482,6 @@ class NotificationsController extends Controller
      * @return Response
      * @throws Exception
      * @throws Throwable
-     * @throws Twig_Error_Loader
      * @throws BadRequestHttpException
      */
     public function actionSendTestNotificationEmail(): Response
@@ -605,10 +605,12 @@ class NotificationsController extends Controller
      * @param null $notificationId
      * @param null $type
      *
-     * @throws Exception
-     * @throws Twig_Error_Loader
-     * @throws ExitException
      * @throws BadRequestHttpException
+     * @throws Exception
+     * @throws ExitException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function actionViewSharedNotificationEmail($notificationId = null, $type = null)
     {
@@ -622,8 +624,10 @@ class NotificationsController extends Controller
      * Renders a Notification Email for Live Preview
      *
      * @throws Exception
-     * @throws Twig_Error_Loader
      * @throws ExitException
+     * @throws LoaderError
+     * @throws SyntaxError
+     * @throws RuntimeError
      */
     public function actionLivePreviewNotificationEmail()
     {

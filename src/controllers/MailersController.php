@@ -5,7 +5,9 @@ namespace barrelstrength\sproutbaseemail\controllers;
 use barrelstrength\sproutbaseemail\base\EmailElement;
 use craft\web\Controller;
 use Craft;
+use Throwable;
 use yii\base\InvalidArgumentException;
+use yii\web\BadRequestHttpException;
 use yii\web\Response;
 
 class MailersController extends Controller
@@ -14,8 +16,8 @@ class MailersController extends Controller
      * Provides a way for mailers to render content to perform actions inside a a modal window
      *
      * @return Response
-     * @throws \Throwable
-     * @throws \yii\web\BadRequestHttpException
+     * @throws Throwable
+     * @throws BadRequestHttpException
      */
     public function actionGetPrepareModal(): Response
     {

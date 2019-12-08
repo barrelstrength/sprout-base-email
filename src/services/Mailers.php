@@ -8,7 +8,6 @@ use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use craft\base\Component;
 
 
-use Craft;
 use yii\base\Exception;
 
 class Mailers extends Component

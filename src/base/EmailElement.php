@@ -9,15 +9,16 @@ use barrelstrength\sproutbaseemail\models\Settings;
 use craft\base\Element;
 use Craft;
 use craft\base\Field;
+use yii\base\Exception;
 
 /**
  *
- * @property bool                                                                                                                                                                             $isTest
- * @property null|object                                                                                                                                                                      $eventObject
- * @property int                                                                                                                                                                              $emailTemplateId
- * @property \barrelstrength\sproutbaseemail\base\Mailer                                                                                                                                      $mailer
- * @property array                                                                                                                                                                            $fieldLayoutTabs
- * @property \barrelstrength\sproutbaseemail\base\EmailTemplates|\barrelstrength\sproutbaseemail\emailtemplates\CustomTemplates|\barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates $emailTemplates
+ * @property bool                                          $isTest
+ * @property null|object                                   $eventObject
+ * @property int                                           $emailTemplateId
+ * @property Mailer                                        $mailer
+ * @property array                                         $fieldLayoutTabs
+ * @property EmailTemplates|CustomTemplates|BasicTemplates $emailTemplates
  */
 abstract class EmailElement extends Element
 {
@@ -173,7 +174,7 @@ abstract class EmailElement extends Element
 
     /**
      * @return EmailTemplates|BasicTemplates|CustomTemplates
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function getEmailTemplates()
     {

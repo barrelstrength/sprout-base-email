@@ -4,6 +4,9 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutcampaigns\elements\CampaignEmail;
 use Craft;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 trait SenderTrait
 {
@@ -28,8 +31,9 @@ trait SenderTrait
      * @param CampaignEmail $campaignEmail
      *
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \yii\base\Exception
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function getSenderHtml(CampaignEmail $campaignEmail): string
     {
