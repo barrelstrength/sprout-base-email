@@ -4,8 +4,7 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutbaseemail\models\SimpleRecipient;
 use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
-use barrelstrength\sproutbaselists\records\ListElement as ListElementRecord;
-use barrelstrength\sproutbaselists\records\ListElement;
+use barrelstrength\sproutbasereports\SproutBaseReports;
 use Craft;
 use craft\helpers\Json;
 use Egulias\EmailValidator\EmailValidator;
@@ -235,45 +234,69 @@ trait RecipientsTrait
             return [];
         }
 
-        // Get all subscribers by list IDs from the Subscriber ListType
-        $listRecords = ListElementRecord::find()
-            ->where([
-                'id' => $listIds
-            ])
-            ->all();
-
-        $sproutListsRecipientsInfo = [];
-
-        if ($listRecords != null) {
-            /**
-             * @var $listRecord ListElement
-             */
-            foreach ($listRecords as $listRecord) {
-
-                $items = $listRecord->getSubscribers()->all();
-                if (count($items)) {
-                    /** @var SimpleRecipient $item */
-                    foreach ($items as $item) {
-                        // Assign email as key to not repeat subscriber
-                        $sproutListsRecipientsInfo[$item->email] = $item->getAttributes();
-                    }
-                }
-            }
-        }
-
-        // @todo - review what attributes are passed for recipients.
         $listRecipients = [];
+        $emailsOnList = [];
 
-        if ($sproutListsRecipientsInfo) {
-            foreach ($sproutListsRecipientsInfo as $listRecipient) {
+        foreach ($listIds as $reportId) {
+
+            $report = SproutBaseReports::$app->reports->getReport($reportId);
+
+            // @todo - handle errors better
+            if (!$report) {
+                throw new NotFoundHttpException('Report not found.');
+            }
+
+            $dataSource = $report->getDataSource();
+
+            // @todo - handle errors better
+            if (!$dataSource) {
+                throw new NotFoundHttpException('Data Source not found.');
+            }
+
+            $labels = $dataSource->getDefaultLabels($report);
+            $values = $dataSource->getResults($report);
+
+            if (empty($labels) && !empty($values)) {
+                $firstItemInArray = reset($values);
+                $labels = array_keys($firstItemInArray);
+            }
+
+            $cleanLabels = array_map(static function($value) {
+                // Replace any non-word characters with an underscore
+                $value = preg_replace('/[\W]/', '_', $value);
+
+                // Replaces multiple underscores with a single underscore
+                return preg_replace('/_+/', '_', $value);
+            }, $labels);
+
+            $emailColumn = $report->emailColumn;
+
+            foreach ($values as $value) {
+                // Match our recipient with the updated, clean version of the array keys that can be used in templates
+                $recipientArray = array_combine($cleanLabels, $value);
+
                 $recipientModel = new SimpleRecipient();
 
-                $firstName = $listRecipient['firstName'] ?? '';
-                $lastName = $listRecipient['lastName'] ?? '';
-                $name = $firstName.' '.$lastName;
+//                $firstName = $listRecipient['firstName'] ?? '';
+//                $lastName = $listRecipient['lastName'] ?? '';
+//                $name = $firstName.' '.$lastName;
+//                $recipientModel->name = trim($name);
 
-                $recipientModel->name = trim($name);
-                $recipientModel->email = $listRecipient['email'] ?? null;
+                $email = $recipientArray[$emailColumn] ?? null;
+
+                // Skip duplicate emails, only process the first email found
+                if (in_array($email, $emailsOnList, true)) {
+                    continue;
+                }
+
+                $recipientModel->email = $email;
+
+                // Track the emails we have added to the list so we can check for duplicates
+                $emailsOnList[] = $email;
+
+                unset($recipientArray[$emailColumn]);
+
+                $recipientModel->setCustomFields($recipientArray);
 
                 $listRecipients[] = $recipientModel;
             }
