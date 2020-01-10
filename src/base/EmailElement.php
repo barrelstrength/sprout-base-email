@@ -36,11 +36,6 @@ abstract class EmailElement extends Element
     public $subjectLine;
 
     /**
-     * @var boolean
-     */
-    public $sendMethod;
-
-    /**
      * A comma, delimited list of recipients (To email)
      *
      * @var string

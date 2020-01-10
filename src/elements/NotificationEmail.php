@@ -96,6 +96,9 @@ class NotificationEmail extends EmailElement
      */
     public $sendRule;
 
+    /**
+     * @var string
+     */
     public $sendMethod;
 
     /**
