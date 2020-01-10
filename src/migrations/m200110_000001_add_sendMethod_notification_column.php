@@ -7,9 +7,9 @@ use craft\db\Query;
 use yii\base\NotSupportedException;
 
 /**
- * m190818_000001_add_sendMethod_notification_column migration.
+ * m200110_000001_add_sendMethod_notification_column migration.
  */
-class m190818_000001_add_sendMethod_notification_column extends Migration
+class m200110_000001_add_sendMethod_notification_column extends Migration
 {
     /**
      * @return bool
@@ -23,20 +23,26 @@ class m190818_000001_add_sendMethod_notification_column extends Migration
             $this->addColumn($table, 'sendMethod', $this->text()->after('singleEmail'));
         }
 
-        $notifications = (new Query())
+        $query = (new Query())
             ->select([
                 'id',
                 'recipients',
                 'cc',
                 'bcc',
-                'singleEmail'
             ])
-            ->from(['{{%sproutemail_notificationemails}}'])
-            ->all();
+            ->from(['{{%sproutemail_notificationemails}}']);
+
+        if ($this->db->columnExists($table, 'singleEmail')) {
+            $query->addSelect(['singleEmail']);
+        }
+
+        $notifications = $query->all();
 
         foreach ($notifications as $notification) {
             // Determine the value for the sendMethod column
-            $sendMethod = $notification['singleEmail'] === 1 ? 'singleEmail' : 'emailList';
+            $sendMethod = isset($notification['singleEmail']) && $notification['singleEmail'] === 1
+                ? 'singleEmail'
+                : 'emailList';
 
             $this->update(
                 '{{%sproutemail_notificationemails}}', ['sendMethod' => $sendMethod], ['id' => $notification['id']], [], false);
@@ -76,7 +82,7 @@ class m190818_000001_add_sendMethod_notification_column extends Migration
      */
     public function safeDown(): bool
     {
-        echo "m190818_000001_add_sendMethod_notification_column cannot be reverted.\n";
+        echo "m200110_000001_add_sendMethod_notification_column cannot be reverted.\n";
         return false;
     }
 }
