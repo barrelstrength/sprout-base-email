@@ -62,7 +62,7 @@ class NotificationEmail extends EmailElement
     /**
      * The Email Template integration handle or folder path of the email templates that should be used when rendering this Notification Email.
      *
-     * @var int
+     * @var string
      */
     public $emailTemplateId;
 

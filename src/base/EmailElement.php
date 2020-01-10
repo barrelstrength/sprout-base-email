@@ -215,7 +215,7 @@ abstract class EmailElement extends Element
         }
 
         $isCustom = false;
-        $emailTemplateId = $this->getEmailTemplateId() ?? null;
+        $emailTemplateId = $this->getEmailTemplateId() ?? '';
 
         // Allow our email Element to override our settings
         if ($emailTemplateId && class_exists($emailTemplateId)) {

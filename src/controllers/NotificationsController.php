@@ -14,7 +14,6 @@ use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasefields\SproutBaseFields;
 use barrelstrength\sproutbaseemail\models\Settings;
-use barrelstrength\sproutbaselists\elements\ListElement;
 use craft\errors\MissingComponentException;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
@@ -189,12 +188,6 @@ class NotificationsController extends Controller
             $notificationEmail->emailTemplateId = $defaultEmailTemplate;
         }
 
-
-        $lists = Json::decode($notificationEmail->listSettings) ?? [];
-        $listElements = isset($lists['lists'])
-            ? ListElement::find()->id($lists['lists'])->all()
-            : [];
-
         $tabs = [
             [
                 'label' => 'Message',
@@ -208,8 +201,6 @@ class NotificationsController extends Controller
         return $this->renderTemplate('sprout-base-email/notifications/_edit', [
             'notificationEmail' => $notificationEmail,
             'events' => $events,
-            'lists' => '',
-            'listElements' => $listElements,
             'tabs' => $tabs,
             'showPreviewBtn' => $showPreviewBtn,
             'shareUrl' => $shareUrl,

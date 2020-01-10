@@ -115,14 +115,12 @@ return [
      for more info.' => 'An error occurred while sending your campaign. Please review the Craft logs
      for more info.',
     'General Settings' => 'General Settings',
-    'Mailing Lists <span class=\'info\'>Select one or more Mailing Lists or Segments.</span>' => 'Mailing Lists <span class=\'info\'>Select one or more Mailing Lists or Segments.</span>',
     '**&#42;&#42;bold&#42;&#42;**&nbsp;&nbsp;_&#95;italics&#95;_&nbsp;&nbsp;&#91;Link Name&#93;(https&#58;//website.com)' => '**&#42;&#42;bold&#42;&#42;**&nbsp;&nbsp;_&#95;italics&#95;_&nbsp;&nbsp;&#91;Link Name&#93;(https&#58;//website.com)',
     'Custom Rule' => 'Custom Rule',
     'Send Method  <span class=\'info\'>The List method will send an individual email to each email identified in your Recipients. The Single Email method will send one email to all Recipients together.</span>' => 'Send Method  <span class=\'info\'>The List method will send an individual email to each email identified in your Recipients. The Single Email method will send one email to all Recipients together.</span>',
     'Single Email' => 'Single Email',
     'Cleanup Probability' => 'Cleanup Probability',
     'Add a message for your Basic Notification template. Leave blank if no message is desired.' => 'Add a message for your Basic Notification template. Leave blank if no message is desired.',
-    'Mailing Lists' => 'Mailing Lists',
     'Add a message to your recipients for when your selected event is triggered. Leave this field blank if no message is desired. Format: **&#42;&#42;bold&#42;&#42;** _&#95;italics&#95;_ &#91;Website&#93;(https&#58;//website.com)' => 'Add a message to your recipients for when your selected event is triggered. Leave this field blank if no message is desired. Format: **&#42;&#42;bold&#42;&#42;** _&#95;italics&#95;_ &#91;Website&#93;(https&#58;//website.com)',
     'Mailing Lists <span class=\'info\'>Select one or more Mailing List.</span>' => 'Mailing Lists <span class=\'info\'>Select one or more Mailing List.</span>',
     'The probability that the Sent Emails cleanup task will run each time a Sent Email is tracked. A lower probability will trigger a cleanup task less often and the number of Sent Emails stored in the database may be higher than the Sent Emails Limit target until the cleanup task is triggered.' => 'The probability that the Sent Emails cleanup task will run each time a Sent Email is tracked. A lower probability will trigger a cleanup task less often and the number of Sent Emails stored in the database may be higher than the Sent Emails Limit target until the cleanup task is triggered.',
@@ -130,5 +128,6 @@ return [
     'Add List' => 'Add List',
     'List' => 'List',
     'Always' => 'Always',
-    'Send Rule <span class=\'info\'>Defines how to check a form submission to determine if a user has opted in to have data sent to this Integration. The Integration will be sent if the setting is set to \'Always\'; if the Custom Rule is used and evaluates to \'1\', \'true\', \'on\', or \'yes\'. If none of those conditions are met, the Event will not be sent.</span>' => 'Send Rule <span class=\'info\'>Defines how to check a form submission to determine if a user has opted in to have data sent to this Integration. The Integration will be sent if the setting is set to \'Always\'; if the Custom Rule is used and evaluates to \'1\', \'true\', \'on\', or \'yes\'. If none of those conditions are met, the Event will not be sent.</span>'
+    'Send Rule <span class=\'info\'>Defines how to check a form submission to determine if a user has opted in to have data sent to this Integration. The Integration will be sent if the setting is set to \'Always\'; if the Custom Rule is used and evaluates to \'1\', \'true\', \'on\', or \'yes\'. If none of those conditions are met, the Event will not be sent.</span>' => 'Send Rule <span class=\'info\'>Defines how to check a form submission to determine if a user has opted in to have data sent to this Integration. The Integration will be sent if the setting is set to \'Always\'; if the Custom Rule is used and evaluates to \'1\', \'true\', \'on\', or \'yes\'. If none of those conditions are met, the Event will not be sent.</span>',
+    'Cleaning up Sent Email' => 'Cleaning up Sent Email'
 ];

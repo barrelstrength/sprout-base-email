@@ -12,7 +12,7 @@ use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Throwable;
 use yii\base\Exception;
-use yii\base\InvalidConfigException;
+use yii\web\NotFoundHttpException;
 
 trait RecipientsTrait
 {
@@ -218,7 +218,7 @@ trait RecipientsTrait
      * @param $listSettings
      *
      * @return array
-     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
      */
     public function getRecipientsFromSelectedLists($listSettings = null): array
     {

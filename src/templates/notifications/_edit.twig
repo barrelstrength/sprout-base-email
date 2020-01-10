@@ -13,9 +13,6 @@
 
 {% set crumbs = [
     { label: "Notifications"|t('sprout-base-email'), url: cpUrl(notificationEmailBaseUrl) },
-
-
-
     { label: "Settings"|t('sprout-base-email'), url: cpUrl(notificationEmailBaseUrl ~ 'settings/edit/' ~ notificationId) },
 ] %}
 
@@ -165,7 +162,6 @@
             required: true
         }) }}
 
-        {# @todo - should we check if any lists exist? Make sure that case is handled nicely in the UI. #}
         {% if mailer.hasLists() %}
             {% namespace 'lists' %}
                 {{ mailer.getListsHtml(notificationEmail.listSettings)|raw }}
@@ -201,31 +197,6 @@
             value: notificationEmail is defined ? notificationEmail.bcc : "",
             errors: notificationEmail is defined ? notificationEmail.getErrors('bcc')
         }) }}
-
-        {#          {% if (mailer is not null and mailer.getLists()|length) %}#}
-        {#            <div class="field mailing-lists">#}
-        {#                <div class="heading">#}
-        {#                    Lists#}
-        {#                </div>#}
-        {#                <div class="input">#}
-        {#                    {% namespace 'lists' %}#}
-        {#                        {{ mailer.getListsHtml(notificationEmail.listSettings)|raw }}#}
-        {#                    {% endnamespace %}#}
-        {#                </div>#}
-        {#            </div>#}
-        {#        {% endif %}#}
-
-        {#        <div class="field mailing-lists">#}
-        {#            <div class="heading">#}
-        {#                Segments#}
-        {#            </div>#}
-        {#            <div class="input">#}
-        {#                {% namespace 'lists' %}#}
-        {#                    {{ mailer.getListsHtml(notificationEmail.listSettings)|raw }}#}
-        {#                {% endnamespace %}#}
-        {#            </div>#}
-        {#        </div>#}
-
     </div>
 
     <hr>

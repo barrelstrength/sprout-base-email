@@ -6,9 +6,6 @@ use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
-use barrelstrength\sproutbaselists\listtypes\SubscriberList;
-use barrelstrength\sproutbaselists\SproutBaseLists;
-use barrelstrength\sproutbasereports\SproutBaseReports;
 use barrelstrength\sproutcampaigns\elements\CampaignEmail;
 use barrelstrength\sproutemail\services\SentEmails;
 use barrelstrength\sproutemail\SproutEmail;
@@ -114,7 +111,9 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         // Adds support for attachments
         if ($notificationEmail->enableFileAttachments &&
             $object instanceof Element &&
-            method_exists($object, 'getFieldLayout')) {
+            method_exists($object, 'getFieldLayout') &&
+            $object->getFieldLayout()) {
+
             foreach ($object->getFieldLayout()->getFields() as $field) {
                 if (get_class($field) === FileUpload::class OR get_class($field) === Assets::class) {
                     $query = $object->{$field->handle};
@@ -355,10 +354,10 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
 
         return false;
     }
+
     /**
      * @inheritdoc
      *
-     * @throws Exception
      */
     public function getLists(): array
     {
