@@ -6,6 +6,14 @@
     align-self: flex-start;
 }
 
+.field.event-options > .input {
+    max-height: 280px;
+    overflow-y: auto;
+    padding-left: 1px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
 .sentemail-btngroup .btn {
     outline: none;
 }
