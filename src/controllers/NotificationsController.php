@@ -330,9 +330,8 @@ class NotificationsController extends Controller
 
             Craft::$app->getSession()->setError(Craft::t('sprout-base-email', 'Unable to save notification.'));
 
-            $errorMessage = SproutBaseFields::$app->utilities->formatErrors();
-
-            SproutBase::error($errorMessage);
+//            $errorMessage = $this->formatErrors();
+//            SproutBase::error($errorMessage);
 
             // Set the previous cp path to avoid not found template when showing errors
             if ($cpPath) {
@@ -365,7 +364,9 @@ class NotificationsController extends Controller
             $errorMessage = 'Dynamic variables on your template does not exist. '.$e->getMessage();
             $notificationEmail->addError('emailTemplateId', $errorMessage);
 
-            SproutBaseFields::$app->utilities->addError('template', $errorMessage);
+            // @todo add template errors to notificationEmail model
+            // Don't use utilities class
+            // SproutBaseFields::$app->utilities->addError('template', $errorMessage);
 
             return false;
         }
@@ -405,9 +406,8 @@ class NotificationsController extends Controller
 
             Craft::$app->getSession()->setError(Craft::t('sprout-base-email', 'Unable to save notification.'));
 
-            $errorMessage = SproutBaseFields::$app->utilities->formatErrors();
-
-            SproutBase::error($errorMessage);
+//            $errorMessage = $this->formatErrors();
+//            SproutBase::error($errorMessage);
 
             return Craft::$app->getUrlManager()->setRouteParams([
                 'notificationEmail' => $notificationEmail
@@ -625,5 +625,28 @@ class NotificationsController extends Controller
         $notificationId = Craft::$app->getRequest()->getBodyParam('notificationId');
 
         SproutBaseEmail::$app->notifications->getPreviewNotificationEmailById($notificationId);
+    }
+
+    /**
+     * @return string
+     */
+    public function formatErrors(): string
+    {
+        $errors = $this->getErrors();
+
+        $text = '';
+        if (!empty($errors)) {
+            $text .= '<ul>';
+            foreach ($errors as $key => $error) {
+                if (is_array($error)) {
+                    foreach ($error as $desc) {
+                        $text .= '<li>'.$desc.'</li>';
+                    }
+                }
+            }
+            $text .= '</ul>';
+        }
+
+        return $text;
     }
 }
