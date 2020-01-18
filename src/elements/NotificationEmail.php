@@ -112,6 +112,14 @@ class NotificationEmail extends EmailElement
     }
 
     /**
+     * @return string
+     */
+    public static function pluralDisplayName(): string
+    {
+        return Craft::t('sprout-base-email', 'Notification Emails');
+    }
+
+    /**
      * @inheritdoc
      */
     public static function refHandle()
