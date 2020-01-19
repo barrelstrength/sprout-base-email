@@ -172,7 +172,6 @@
             label: "To <span class='info'>A comma separated list of email addresses.</span>"|t('sprout-base-email'),
             placeholder: "user@domain.com, other@domain.com"|t('sprout-base-email'),
             name: "recipients",
-            fieldClass: 'field-border-top',
             class: "code",
             value: notificationEmail is defined ? notificationEmail.recipients : "",
             errors: notificationEmail is defined ? notificationEmail.getErrors('recipients')
@@ -182,7 +181,7 @@
             label: "CC <span class='info'>A comma separated list of email addresses.</span>"|t('sprout-base-email'),
             placeholder: "user@domain.com, other@domain.com"|t('sprout-base-email'),
             name: "cc",
-            fieldClass: 'field-border-top send-method-singlemail',
+            fieldClass: 'send-method-singlemail',
             class: "code",
             value: notificationEmail is defined ? notificationEmail.cc : "",
             errors: notificationEmail is defined ? notificationEmail.getErrors('cc')
@@ -192,7 +191,7 @@
             label: "BCC <span class='info'>A comma separated list of email addresses.</span>"|t('sprout-base-email'),
             placeholder: "user@domain.com, other@domain.com"|t('sprout-base-email'),
             name: "bcc",
-            fieldClass: 'field-border-top send-method-singlemail',
+            fieldClass: 'send-method-singlemail',
             class: "code",
             value: notificationEmail is defined ? notificationEmail.bcc : "",
             errors: notificationEmail is defined ? notificationEmail.getErrors('bcc')
@@ -225,7 +224,6 @@
                 id: "notificationEvent",
                 name: "eventId",
                 label: "Event <span class='info'>The event that will trigger your notification.</span>"|t('sprout-base-email'),
-                fieldClass: 'field-border-top',
                 options: eventOptions,
                 value: notificationEmail.eventId is defined ? notificationEmail.eventId : null,
                 required: true
