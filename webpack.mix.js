@@ -11,10 +11,14 @@ mix
     'src/web/assets/email/src/scss/sproutemail.scss',
     'src/web/assets/email/dist/css/sproutemail.css')
   .js([
-    'src/web/assets/email/src/js/notification.js',
-    'src/web/assets/email/src/js/sent-email-editor.js',
+    'src/web/assets/email/src/js/notification.js'
+  ], 'src/web/assets/email/dist/js/notification.js')
+  .js([
+    'src/web/assets/email/src/js/sent-email-editor.js'
+  ], 'src/web/assets/email/dist/js/sent-email-editor.js')
+  .js([
     'src/web/assets/email/src/js/sprout-modal.js'
-  ], 'src/web/assets/email/dist/js/sprout-email.js')
+  ], 'src/web/assets/email/dist/js/sprout-modal.js')
   .copy('src/web/assets/email/src/images',
     'src/web/assets/email/dist/images');
 

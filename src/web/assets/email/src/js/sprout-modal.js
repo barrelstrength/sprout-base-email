@@ -1,229 +1,224 @@
-/**
- * Defines the SproutModal constructor
- *
- * @constructor
- */
+/* global Craft */
 
-var SproutModal = function() {
-};
+class SproutModal {
 
-/**
- * Gives us the ability to augment the object in the future
- *
- * @returns {SproutModal}
- */
-SproutModal.prototype.init = function() {
-  var self = this;
+  constructor() {
+    let self = this;
 
-  self.initEmailPreview();
+    self.initEventListeners();
+    self.initEmailPreview();
 
-  $(".prepare").on("click", function(e) {
-    e.preventDefault();
+    $(".prepare").on("click", function(e) {
+      e.preventDefault();
 
-    var $t = $(e.target);
+      let $t = $(e.target);
 
-    var modalLoader = null;
+      let modalLoader = null;
 
-    if ($t.data('mailer') === 'copypaste') {
-      modalLoader = self.createLoadingModal();
-    }
-
-    self.postToControllerAction($t.data(), function handle(error, response) {
-      if (error) {
-        return self.createErrorModal(error);
+      if ($t.data('mailer') === 'copypaste') {
+        modalLoader = self.createLoadingModal();
       }
 
-      if (!response.success) {
-        return self.createErrorModal(response.message);
-      }
+      self.postToControllerAction($t.data(), function handle(error, response) {
+        if (error) {
+          return self.createErrorModal(error);
+        }
 
-      // Close error loading modal if no error on request
-      if (modalLoader != null) {
-        modalLoader.hide();
-        modalLoader.destroy();
-      }
+        if (!response.success) {
+          return self.createErrorModal(response.message);
+        }
 
-      self.create(response.content);
+        // Close error loading modal if no error on request
+        if (modalLoader != null) {
+          modalLoader.hide();
+          modalLoader.destroy();
+        }
+
+        self.create(response.content);
+      });
     });
-  });
 
-  return this;
-};
+    // return this;
+  }
 
-/**
- * Gives us the ability to post to a controller action and register a callback a la NodeJS
- *
- * @example
- * var payload = {action: 'plugin/controller/action'};
- * var callback = function(error, data) {};
- *
- * @note
- * The action is required and must be provided in the payload
- *
- * @param object payload
- * @param function callback
- */
-SproutModal.prototype.postToControllerAction = function runControllerAction(payload, callback) {
-  var request = {
-    url: window.location,
-    type: "POST",
-    data: payload,
-    cache: false,
-    dataType: "json",
+  /**
+   * Gives us the ability to post to a controller action and register a callback a la NodeJS
+   *
+   * @example
+   * var payload = {action: 'plugin/controller/action'};
+   * var callback = function(error, data) {};
+   *
+   * @note
+   * The action is required and must be provided in the payload
+   *
+   * @param object payload
+   * @param function callback
+   */
+  postToControllerAction(payload, callback) {
+    let request = {
+      url: window.location,
+      type: "POST",
+      data: payload,
+      cache: false,
+      dataType: "json",
 
-    error: function handleFailedRequest(xhr, status, error) {
-      callback(error);
-    },
+      error: function handleFailedRequest(xhr, status, error) {
+        callback(error);
+      },
 
-    success: function handleSuccessfulRequest(response) {
-      callback(null, response);
-    }
-  };
+      success: function handleSuccessfulRequest(response) {
+        callback(null, response);
+      }
+    };
 
-  request.data[Craft.csrfTokenName] = Craft.csrfTokenValue;
+    request.data[Craft.csrfTokenName] = Craft.csrfTokenValue;
 
-  $.ajax(request);
-};
+    $.ajax(request);
+  }
 
-/**
- * Creates a modal window instance from content returned from server and does so recursively
- *
- * @param string content
- * @returns {Garnish.Modal}
- */
-SproutModal.prototype.create = function(content) {
-  // For later reference within different scopes
-  var self = this;
+  /**
+   * Creates a modal window instance from content returned from server and does so recursively
+   *
+   * @param string content
+   * @returns {Garnish.Modal}
+   */
+  create(content) {
+    // For later reference within different scopes
+    let self = this;
 
-  // Modal setup
-  var $modal = $("#sproutmodal").clone();
-  var $content = $modal.html(content);
-  var $spinner = $(".spinner", $modal);
-  var $actions = $(".actions", $modal);
+    // Modal setup
+    let $modal = $("#sproutmodal").clone();
+    let $content = $modal.html(content);
+    let $spinner = $(".spinner", $modal);
+    let $actions = $(".actions", $modal);
 
-  // Gives mailers a chance to add their own event handlers
-  $(document).trigger("sproutModalBeforeRender", $content);
+    // Gives mailers a chance to add their own event handlers
+    $(document).trigger("sproutModalBeforeRender", $content);
 
-  $modal.removeClass("hidden");
+    $modal.removeClass("hidden");
 
-  // Instantiate and show
-  var modal = new Garnish.Modal($modal);
+    // Instantiate and show
+    let modal = new Garnish.Modal($modal);
 
-  self.initEmailPreview();
+    self.initEmailPreview();
 
-  $("#close", $modal).on("click", function() {
-    Craft.elementIndex.updateElements();
+    $("#close", $modal).on("click", function() {
+      Craft.elementIndex.updateElements();
 
-    modal.hide();
-    modal.destroy();
-  });
-
-  $("#cancel", $modal).on("click", function() {
-    Craft.elementIndex.updateElements();
-
-    modal.hide();
-    modal.destroy();
-  });
-
-  $actions.on("click", function(e) {
-    e.preventDefault();
-
-    var $self = $(e.target);
-
-    if ($self.hasClass('preventAction')) {
-      $self.removeClass('preventAction');
-
-      return;
-    }
-
-    $spinner.removeClass("hidden");
-
-    var data = $self.data();
-
-    if ($("#recipients").val() !== "") {
-      var recipients = {recipients: $("#recipients").val()};
-
-      data = $.extend(data, recipients);
-    }
-    $spin = $self.parents('.footer').find('.send-spinner');
-    $spin.show();
-    self.postToControllerAction(data, function handleResponse(error, response) {
-      $spin.hide();
-
-      // Close previous modal
       modal.hide();
       modal.destroy();
-
-      if (error) {
-        return self.createErrorModal(error);
-      }
-
-      if (!response.success) {
-        return self.createErrorModal(response.message);
-      }
-
-      $spinner.addClass("hidden");
-
-      modal = self.create(response.content);
-
-      modal.updateSizeAndPosition();
     });
-  });
 
-  return modal;
-};
+    $("#cancel", $modal).on("click", function() {
+      Craft.elementIndex.updateElements();
 
-SproutModal.prototype.createErrorModal = function(error) {
-  var $content = $('#sproutmodal-error').clone();
+      modal.hide();
+      modal.destroy();
+    });
 
-  $('.innercontent', $content).html(error);
+    $actions.on("click", function(e) {
+      e.preventDefault();
 
-  var modal = new SproutModal();
+      var $self = $(e.target);
 
-  modal.create($content.html());
-};
+      if ($self.hasClass('preventAction')) {
+        $self.removeClass('preventAction');
 
-SproutModal.prototype.createLoadingModal = function() {
-  var $content = $('#sproutmodal-loading').clone();
+        return;
+      }
 
-  $('.innercontent', $content);
+      $spinner.removeClass("hidden");
 
-  var modal = new SproutModal();
+      let data = $self.data();
 
-  return modal.create($content.html());
+      if ($("#recipients").val() !== "") {
+        let recipients = {recipients: $("#recipients").val()};
 
-};
+        data = $.extend(data, recipients);
+      }
+      $spin = $self.parents('.footer').find('.send-spinner');
+      $spin.show();
+      self.postToControllerAction(data, function handleResponse(error, response) {
+        $spin.hide();
 
-SproutModal.prototype.initEmailPreview = function() {
-  $('.email-preview').on('click', function(e) {
+        // Close previous modal
+        modal.hide();
+        modal.destroy();
 
-    e.preventDefault();
+        if (error) {
+          return self.createErrorModal(error);
+        }
 
-    $this = $(e.target);
-    $previewUrl = $this.data('preview-url');
+        if (!response.success) {
+          return self.createErrorModal(response.message);
+        }
 
-    window.open($previewUrl, 'newwindow', 'width=920, height=600');
+        $spinner.addClass("hidden");
 
-    return false;
-  });
-};
+        modal = self.create(response.content);
 
-$(document).on('sproutModalBeforeRender', function(event, content) {
+        modal.updateSizeAndPosition();
+      });
+    });
 
-  $('.btnSelectAll', content).off().on('click', function(event) {
+    return modal;
+  }
 
-    event.preventDefault();
+  createErrorModal(error) {
+    let $content = $('#sproutmodal-error').clone();
 
-    $this = $(event.target);
-    $target = '#' + $this.data('clipboard-target-id');
-    $message = $this.data('success-message');
+    $('.innercontent', $content).html(error);
 
-    $content = $($target).select();
+    let modal = new SproutModal();
 
-    // Copy our selected text to the clipboard
-    document.execCommand("copy");
+    modal.create($content.html());
+  }
 
-    Craft.cp.displayNotice($message);
-  });
+  createLoadingModal() {
+    let $content = $('#sproutmodal-loading').clone();
 
-});
+    $('.innercontent', $content);
+
+    let modal = new SproutModal();
+
+    return modal.create($content.html());
+
+  }
+
+  initEventListeners() {
+    document.addEventListener('sproutModalBeforeRender', function(event, content) {
+
+      alert('registering sproutModalBeforeRender');
+      $('.btnSelectAll', content).off().on('click', function(event) {
+        event.preventDefault();
+
+        $this = $(event.target);
+        $target = '#' + $this.data('clipboard-target-id');
+        $message = $this.data('success-message');
+
+        $content = $($target).select();
+
+        // Copy our selected text to the clipboard
+        document.execCommand("copy");
+
+        Craft.cp.displayNotice($message);
+      });
+    });
+  }
+
+  initEmailPreview() {
+    $('.email-preview').on('click', function(e) {
+
+      e.preventDefault();
+
+      $this = $(e.target);
+      $previewUrl = $this.data('preview-url');
+
+      window.open($previewUrl, 'newwindow', 'width=920, height=600');
+
+      return false;
+    });
+  }
+}
+
+window.SproutModal = SproutModal;

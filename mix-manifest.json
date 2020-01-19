@@ -1,6 +1,8 @@
 {
-    "/src/web/assets/email/dist/js/sprout-email.js": "/src/web/assets/email/dist/js/sprout-email.js",
+    "/src/web/assets/email/dist/js/notification.js": "/src/web/assets/email/dist/js/notification.js",
     "/src/web/assets/email/dist/css/charts-explorer.css": "/src/web/assets/email/dist/css/charts-explorer.css",
     "/src/web/assets/email/dist/css/modal.css": "/src/web/assets/email/dist/css/modal.css",
-    "/src/web/assets/email/dist/css/sproutemail.css": "/src/web/assets/email/dist/css/sproutemail.css"
+    "/src/web/assets/email/dist/css/sproutemail.css": "/src/web/assets/email/dist/css/sproutemail.css",
+    "/src/web/assets/email/dist/js/sent-email-editor.js": "/src/web/assets/email/dist/js/sent-email-editor.js",
+    "/src/web/assets/email/dist/js/sprout-modal.js": "/src/web/assets/email/dist/js/sprout-modal.js"
 }

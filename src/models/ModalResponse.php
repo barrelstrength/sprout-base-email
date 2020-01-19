@@ -8,6 +8,7 @@ use Craft;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use yii\base\Exception;
 
 /**
  * Class Response
@@ -48,6 +49,7 @@ class ModalResponse extends Model
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws Exception
      */
     public static function createModalResponse($template = '', array $variables = []): ModalResponse
     {
@@ -72,6 +74,7 @@ class ModalResponse extends Model
      * @param array $variables
      *
      * @return ModalResponse
+     * @throws Exception
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
