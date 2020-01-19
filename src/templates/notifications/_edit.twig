@@ -230,7 +230,6 @@
             }) }}
 
             {% for type, event in events %}
-
                 <div class="field event-options {{ event.getEventId() }}">
                     <div class="heading">
                         Settings
@@ -324,7 +323,6 @@
 
 {% do view.registerAssetBundle("barrelstrength\\sproutbase\\web\\assets\\cp\\CpAsset") %}
 {% do view.registerAssetBundle("craft\\web\\assets\\fields\\FieldsAsset") %}
-{% do view.registerAssetBundle("barrelstrength\\sproutbaseemail\\web\\assets\\base\\NotificationAsset") %}
 {% do view.registerAssetBundle("barrelstrength\\sproutbaseemail\\web\\assets\\email\\EmailAsset") %}
 
 {% if not notificationEmail.slug %}
@@ -333,12 +331,13 @@
     {% endjs %}
 {% endif %}
 
-{% js %}
-    $(document).ready(function() {
+{% js on ready %}
+
+    new SproutEmailNotificationEventToggle();
 
     // add support for select other field
     if (Craft.SproutFields != null) {
-    Craft.SproutFields.initFields($("#details"));
+        Craft.SproutFields.initFields($("#details"));
     }
 
     {% if notificationEmail.sendMethod == 'emailList' %}
@@ -352,5 +351,5 @@
     $('.send-method-singlemail').hide();
     }
     });
-    });
+
 {% endjs %}

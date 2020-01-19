@@ -1,24 +1,25 @@
+/* global Craft */
+
 if (typeof Craft.SproutEmail === typeof undefined) {
   Craft.SproutEmail = {};
 }
-
 
 Craft.SproutEmail.SentEmailElementEditor = Craft.BaseElementEditor.extend({
   showHud: function(response, textStatus) {
     this.onEndLoading();
 
     if (textStatus === 'success') {
-      var $hudContents = $();
+      let $hudContents = $();
 
       if (response.sites) {
-        var $header = $('<div class="hud-header"/>'),
+        let $header = $('<div class="hud-header"/>'),
           $siteSelectContainer = $('<div class="select"/>').appendTo($header);
 
         this.$siteSelect = $('<select/>').appendTo($siteSelectContainer);
         this.$siteSpinner = $('<div class="spinner hidden"/>').appendTo($header);
 
-        for (var i = 0; i < response.sites.length; i++) {
-          var siteInfo = response.sites[i];
+        for (let i = 0; i < response.sites.length; i++) {
+          let siteInfo = response.sites[i];
           $('<option value="' + siteInfo.id + '"' + (siteInfo.id === response.siteId ? ' selected="selected"' : '') + '>' + siteInfo.name + '</option>').appendTo(this.$siteSelect);
         }
 
@@ -34,7 +35,7 @@ Craft.SproutEmail.SentEmailElementEditor = Craft.BaseElementEditor.extend({
 
       this.onCreateForm(this.$form);
 
-      var $footer = $('<div class="hud-footer"/>').appendTo(this.$form),
+      let $footer = $('<div class="hud-footer"/>').appendTo(this.$form),
         $buttonsContainer = $('<div class="buttons right"/>').appendTo($footer);
       this.$cancelBtn = $('<div class="btn">' + Craft.t('app', 'Cancel') + '</div>').appendTo($buttonsContainer);
       this.$spinner = $('<div class="spinner hidden"/>').appendTo($buttonsContainer);
@@ -42,7 +43,7 @@ Craft.SproutEmail.SentEmailElementEditor = Craft.BaseElementEditor.extend({
       $hudContents = $hudContents.add(this.$form);
 
       if (!this.hud) {
-        var hudTrigger = (this.settings.hudTrigger || this.$element);
+        let hudTrigger = (this.settings.hudTrigger || this.$element);
 
         this.hud = new Garnish.HUD(hudTrigger, $hudContents, {
           bodyClass: 'body elementeditor',

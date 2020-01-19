@@ -6,9 +6,9 @@ use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\SenderTrait;
 use barrelstrength\sproutbaseemail\elements\actions\DeleteNotification;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
-use barrelstrength\sproutbaseemail\web\assets\base\NotificationAsset;
 use barrelstrength\sproutbaseemail\elements\db\NotificationEmailQuery;
 use barrelstrength\sproutbaseemail\records\NotificationEmail as NotificationEmailRecord;
+use barrelstrength\sproutbaseemail\web\assets\email\EmailAsset;
 use Craft;
 use craft\behaviors\FieldLayoutBehavior;
 use craft\elements\db\ElementQueryInterface;
@@ -360,7 +360,7 @@ class NotificationEmail extends EmailElement
     ): string {
         $html = parent::indexHtml($elementQuery, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, true);
 
-        Craft::$app->getView()->registerAssetBundle(NotificationAsset::class);
+        Craft::$app->getView()->registerAssetBundle(EmailAsset::class);
         Craft::$app->getView()->registerJs('var sproutModalInstance = new SproutModal(); sproutModalInstance.init();');
         SproutBaseEmail::$app->mailers->includeMailerModalResources();
 
