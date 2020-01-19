@@ -28,12 +28,19 @@
     criteria.viewContext = '{{ viewContext }}';
     criteria.notificationEmailBaseUrl = '{{ notificationEmailBaseUrl }}';
 
-    Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#main'), {
-    context:        '{{ context }}',
-    storageKey:     'elementindex.{{ elementType|e("js") }}',
-    criteria:       criteria,
-    hideSidebar:    '{{ hideSidebar ?? false }}'
+    Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#page-container'), {
+    elementTypeName: '{{ elementInstance.displayName()|e("js") }}',
+    elementTypePluralName: '{{ elementInstance.pluralDisplayName()|e("js") }}',
+    context: '{{ context }}',
+    storageKey: 'elementindex.{{ elementType|e("js") }}',
+    criteria: criteria,
+    toolbarSelector: '#toolbar',
+    hideSidebar: '{{ hideSidebar ?? false }}'
     });
 
-    $('#main-content').removeClass('has-sidebar');
+    {% if hideSidebar %}
+        $('#sidebar-toggle-container').remove();
+        $('#sidebar-container').remove();
+    {% endif %}
+
 {% endblock %}

@@ -117,6 +117,14 @@ class NotificationEmail extends EmailElement
     }
 
     /**
+     * @return string
+     */
+    public static function pluralDisplayName(): string
+    {
+        return Craft::t('sprout-base-email', 'Notification Emails');
+    }
+
+    /**
      * @inheritdoc
      */
     public static function refHandle()
@@ -401,13 +409,12 @@ class NotificationEmail extends EmailElement
     }
 
     /**
-     * @inheritdoc
-     *
+     * @return array
      * @throws InvalidConfigException
      */
-    public function rules(): array
+    protected function defineRules(): array
     {
-        $rules = parent::rules();
+        $rules = parent::defineRules();
 
         $rules[] = [['subjectLine', 'fromName', 'fromEmail'], 'required'];
         $rules[] = [['fromName', 'fromEmail', 'replyToEmail'], 'default', 'value' => ''];

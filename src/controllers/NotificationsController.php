@@ -63,17 +63,20 @@ class NotificationsController extends Controller
     /**
      * @param string $viewContext
      *
+     * @param bool   $hideSidebar
+     *
      * @return Response
      * @throws ForbiddenHttpException
      */
-    public function actionNotificationsIndexTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT): Response
+    public function actionNotificationsIndexTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $hideSidebar = false): Response
     {
         $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
 
         return $this->renderTemplate('sprout-base-email/notifications/index', [
             'viewNotificationsPermission' => $this->permissions['sproutEmail-viewNotifications'],
             'viewContext' => $viewContext,
-            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl
+            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl,
+            'hideSidebar' => $hideSidebar
         ]);
     }
 
