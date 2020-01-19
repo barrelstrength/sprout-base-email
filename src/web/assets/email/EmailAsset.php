@@ -22,7 +22,6 @@ class EmailAsset extends AssetBundle
 
         $this->js = [
             'js/notification.js',
-            'js/sent-email-editor.js',
             'js/sprout-modal.js'
         ];
 
