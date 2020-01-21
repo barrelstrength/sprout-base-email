@@ -2,7 +2,7 @@
 
 {% set title = 'Mailers' %}
 
-{% set mailers = craft.sproutEmail.getCampaignMailers() %}
+{% set mailers = craft.app.getModule('sprout-base-email').app.mailers.getRegisteredMailers() %}
 
 {% set mailerTableHtml %}
 

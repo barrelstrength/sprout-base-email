@@ -21,6 +21,7 @@ use craft\events\RegisterComponentTypesEvent;
 use craft\web\Application;
 use craft\web\twig\variables\CraftVariable;
 use yii\base\Event;
+use yii\base\InvalidConfigException;
 use \yii\base\Module;
 use craft\web\View;
 use craft\events\RegisterTemplateRootsEvent;
@@ -93,9 +94,18 @@ class SproutBaseEmail extends Module
         parent::__construct($id, $parent, $config);
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function init()
     {
-        self::$app = new App();
+        parent::init();
+
+        $this->setComponents([
+            'app' => App::class
+        ]);
+
+        self::$app = $this->get('app');
 
         Craft::setAlias('@sproutbaseemail', $this->getBasePath());
         Craft::setAlias('@sproutbaseemaillib', dirname(__DIR__).'/lib');
@@ -136,7 +146,5 @@ class SproutBaseEmail extends Module
         Event::on(EmailTemplates::class, EmailTemplates::EVENT_REGISTER_EMAIL_TEMPLATES, static function(RegisterComponentTypesEvent $event) {
             $event->types[] = BasicTemplates::class;
         });
-
-        parent::init();
     }
 }

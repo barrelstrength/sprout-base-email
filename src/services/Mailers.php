@@ -6,7 +6,7 @@ use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\events\RegisterMailersEvent;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use craft\base\Component;
-
+use Craft;
 
 use yii\base\Exception;
 
@@ -19,7 +19,7 @@ class Mailers extends Component
     /**
      * @return Mailer[]
      */
-    public function getMailers(): array
+    public function getRegisteredMailers(): array
     {
         $event = new RegisterMailersEvent([
             'mailers' => []
@@ -49,7 +49,7 @@ class Mailers extends Component
      */
     public function getMailerByName($name = null): Mailer
     {
-        $this->mailers = $this->getMailers();
+        $this->mailers = $this->getRegisteredMailers();
 
         $mailer = $this->mailers[$name] ?? null;
 
@@ -62,7 +62,7 @@ class Mailers extends Component
 
     public function includeMailerModalResources()
     {
-        $mailers = SproutBaseEmail::$app->mailers->getMailers();
+        $mailers = SproutBaseEmail::$app->mailers->getRegisteredMailers();
 
         if ($mailers) {
             /**

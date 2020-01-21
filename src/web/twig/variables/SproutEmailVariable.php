@@ -16,14 +16,6 @@ use yii\base\InvalidConfigException;
 class SproutEmailVariable
 {
     /**
-     * @return Mailer[]
-     */
-    public function getCampaignMailers(): array
-    {
-        return SproutBaseEmail::$app->mailers->getMailers();
-    }
-
-    /**
      * @return array
      */
     public function getCampaignTypes(): array
