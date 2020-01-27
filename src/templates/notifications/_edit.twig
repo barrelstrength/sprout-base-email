@@ -28,26 +28,37 @@
     {{ block('pageTitle') }}
     {{ block('contextMenu') }}
 
-    <div class="flex-grow"></div>
-    {% if showPreviewBtn or shareUrl is not null %}
-        {% if showPreviewBtn %}
-            <div class="btn livepreviewbtn">{{ "Live Preview"|t('sprout-base-email') }}</div>
-        {% endif %}
-        {% if shareUrl is defined %}
-            <a href="{{ shareUrl }}" class="btn sharebtn"
-                target="_blank">{{ 'Share'|t('sprout-base-email') }}</a>
-        {% endif %}
-        <div class="flex-grow"></div>
-    {% endif %}
+    <div class="flex">
 
-    {{ block('actionButton') }}
+        {% if showPreviewBtn or shareUrl is not null %}
+
+            <div class="btngroup">
+                {% if showPreviewBtn %}
+                    <div id="preview-btn" class="btn">{{ "Live Preview"|t('sprout-base-email') }}</div>
+                {% endif %}
+                {% if shareUrl is defined %}
+                    <a id="share-btn" class="btn" href="{{ shareUrl }}"
+                        target="_blank">{{ 'Share'|t('sprout-base-email') }}</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {{ block('actionButton') }}
+    </div>
 
 {% endblock %}
 
 {% block actionButton %}
+    {#        <div id="save-btn-container" class="btngroup submit">#}
+    {#            <input type="submit" class="btn submit" value="Save">#}
+    {#            <div class="btn submit menubtn" tabindex="0" role="combobox" aria-owns="menu.Garnish665238668" aria-haspopup="true" aria-expanded="false"></div>#}
 
-    <div class="buttons">
-        <div class="btngroup">
+    {#        </div>#}
+
+    <a href="{{ cpUrl(notificationEmailBaseUrl ~ 'settings/edit/' ~ notificationId) }}"
+        data-icon="settings" class="btn"></a>
+
+    <div id="save-btn-container" class="btngroup submit">
             <input class="btn submit" type="submit"
                 value="{{ 'Save'|t('sprout-base-email') }}">
             <div class="btn submit menubtn"></div>
@@ -77,12 +88,9 @@
                         </li>
                     </ul>
                 {% endif %}
-            </div>
+
         </div>
 
-
-        <a href="{{ cpUrl(notificationEmailBaseUrl ~ 'settings/edit/' ~ notificationId) }}"
-            data-icon="settings" class="btn"></a>
     </div>
 
 
@@ -108,10 +116,6 @@
 
 {% block details %}
 
-    <div class="meta read-only sprout-meta-heading">
-        <h6>{{ "Sender"|t('sprout-base-email') }}</h6>
-    </div>
-    <hr>
     <div class="meta">
 
         {{ forms.textField({
@@ -141,12 +145,6 @@
         }) }}
     </div>
 
-    <hr>
-
-    <div class="meta read-only sprout-meta-heading">
-        <h6>{{ "Recipients"|t('sprout-base-email') }}</h6>
-    </div>
-    <hr>
     <div class="meta">
 
         {{ forms.selectField({
@@ -198,12 +196,6 @@
         }) }}
     </div>
 
-    <hr>
-
-    <div class="meta read-only sprout-meta-heading">
-        <h6>{{ "Event"|t('sprout-base-email') }}</h6>
-    </div>
-    <hr>
     <div class="meta">
 
         {% if events|length %}
@@ -271,12 +263,6 @@
 
     </div>
 
-    <hr>
-
-    <div class="meta read-only sprout-meta-heading">
-        <h6>{{ "General Settings"|t('sprout-base-email') }}</h6>
-    </div>
-    <hr>
     <div class="meta">
 
         {{ forms.textField({
@@ -338,7 +324,7 @@
 
     // add support for select other field
     if (Craft.SproutFields != null) {
-        Craft.SproutFields.initFields($("#details"));
+    Craft.SproutFields.initFields($("#details"));
     }
 
     {% if notificationEmail.sendMethod == 'emailList' %}
