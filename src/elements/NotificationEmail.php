@@ -361,7 +361,7 @@ class NotificationEmail extends EmailElement
         $html = parent::indexHtml($elementQuery, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, true);
 
         Craft::$app->getView()->registerAssetBundle(EmailAsset::class);
-        Craft::$app->getView()->registerJs('var sproutModalInstance = new SproutModal(); sproutModalInstance.init();');
+        Craft::$app->getView()->registerJs('new SproutModal();');
         SproutBaseEmail::$app->mailers->includeMailerModalResources();
 
         return $html;
