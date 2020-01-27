@@ -8,7 +8,7 @@ class SproutModal {
     self.initEventListeners();
     self.initEmailPreview();
 
-    $(".prepare").on("click", function(e) {
+    $('.prepare').on('click', function(e) {
       e.preventDefault();
 
       let $t = $(e.target);
@@ -87,36 +87,36 @@ class SproutModal {
     let self = this;
 
     // Modal setup
-    let $modal = $("#sproutmodal").clone();
+    let $modal = $('#sproutmodal').clone();
     let $content = $modal.html(content);
-    let $spinner = $(".spinner", $modal);
-    let $actions = $(".actions", $modal);
+    let $spinner = $('.spinner', $modal);
+    let $actions = $('.actions', $modal);
 
     // Gives mailers a chance to add their own event handlers
-    $(document).trigger("sproutModalBeforeRender", $content);
+    $(document).trigger('sproutModalBeforeRender', $content);
 
-    $modal.removeClass("hidden");
+    $modal.removeClass('hidden');
 
     // Instantiate and show
     let modal = new Garnish.Modal($modal);
 
     self.initEmailPreview();
 
-    $("#close", $modal).on("click", function() {
+    $('#close', $modal).on('click', function() {
       Craft.elementIndex.updateElements();
 
       modal.hide();
       modal.destroy();
     });
 
-    $("#cancel", $modal).on("click", function() {
+    $('#cancel', $modal).on('click', function() {
       Craft.elementIndex.updateElements();
 
       modal.hide();
       modal.destroy();
     });
 
-    $actions.on("click", function(e) {
+    $actions.on('click', function(e) {
       e.preventDefault();
 
       var $self = $(e.target);
@@ -127,12 +127,12 @@ class SproutModal {
         return;
       }
 
-      $spinner.removeClass("hidden");
+      $spinner.removeClass('hidden');
 
       let data = $self.data();
 
-      if ($("#recipients").val() !== "") {
-        let recipients = {recipients: $("#recipients").val()};
+      if ($('#recipients').val() !== '') {
+        let recipients = {recipients: $('#recipients').val()};
 
         data = $.extend(data, recipients);
       }
@@ -153,7 +153,7 @@ class SproutModal {
           return self.createErrorModal(response.message);
         }
 
-        $spinner.addClass("hidden");
+        $spinner.addClass('hidden');
 
         modal = self.create(response.content);
 
@@ -199,7 +199,7 @@ class SproutModal {
         $content = $($target).select();
 
         // Copy our selected text to the clipboard
-        document.execCommand("copy");
+        document.execCommand('copy');
 
         Craft.cp.displayNotice($message);
       });
