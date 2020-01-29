@@ -8,6 +8,10 @@ use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use craft\base\Component;
 use yii\base\Exception;
 
+/**
+ *
+ * @property array|\barrelstrength\sproutbaseemail\base\Mailer[] $registeredMailers
+ */
 class Mailers extends Component
 {
     const EVENT_REGISTER_MAILER_TYPES = 'defineSproutEmailMailers';

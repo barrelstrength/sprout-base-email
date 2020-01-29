@@ -129,5 +129,6 @@ return [
     'List' => 'List',
     'Always' => 'Always',
     'Send Rule <span class=\'info\'>Defines how to check a form submission to determine if a user has opted in to have data sent to this Integration. The Integration will be sent if the setting is set to \'Always\'; if the Custom Rule is used and evaluates to \'1\', \'true\', \'on\', or \'yes\'. If none of those conditions are met, the Event will not be sent.</span>' => 'Send Rule <span class=\'info\'>Defines how to check a form submission to determine if a user has opted in to have data sent to this Integration. The Integration will be sent if the setting is set to \'Always\'; if the Custom Rule is used and evaluates to \'1\', \'true\', \'on\', or \'yes\'. If none of those conditions are met, the Event will not be sent.</span>',
-    'Cleaning up Sent Email' => 'Cleaning up Sent Email'
+    'Cleaning up Sent Email' => 'Cleaning up Sent Email',
+    'Notification Emails' => 'Notification Emails'
 ];

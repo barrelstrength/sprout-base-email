@@ -49,6 +49,7 @@ abstract class EmailTemplates
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws \yii\base\Exception
      */
     public function getHtmlBody(): string
     {
@@ -72,6 +73,7 @@ abstract class EmailTemplates
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws \yii\base\Exception
      */
     public function getTextBody(): string
     {
@@ -94,6 +96,7 @@ abstract class EmailTemplates
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws \yii\base\Exception
      */
     protected function processEmailTemplates()
     {

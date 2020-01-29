@@ -70,6 +70,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws \yii\base\Exception
      */
     public function getSettingsHtml(array $settings = []): Markup
     {
@@ -277,6 +278,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws \yii\base\Exception
      */
     public function getListsHtml($values = [])
     {

@@ -45,8 +45,8 @@ class SproutModal {
    * Gives us the ability to post to a controller action and register a callback a la NodeJS
    *
    * @example
-   * var payload = {action: 'plugin/controller/action'};
-   * var callback = function(error, data) {};
+   * let payload = {action: 'plugin/controller/action'};
+   * let callback = function(error, data) {};
    *
    * @note
    * The action is required and must be provided in the payload
@@ -119,7 +119,7 @@ class SproutModal {
     $actions.on('click', function(e) {
       e.preventDefault();
 
-      var $self = $(e.target);
+      let $self = $(e.target);
 
       if ($self.hasClass('preventAction')) {
         $self.removeClass('preventAction');
@@ -136,7 +136,7 @@ class SproutModal {
 
         data = $.extend(data, recipients);
       }
-      $spin = $self.parents('.footer').find('.send-spinner');
+      let $spin = $self.parents('.footer').find('.send-spinner');
       $spin.show();
       self.postToControllerAction(data, function handleResponse(error, response) {
         $spin.hide();
@@ -192,11 +192,11 @@ class SproutModal {
       $('.btnSelectAll', content).off().on('click', function(event) {
         event.preventDefault();
 
-        $this = $(event.target);
-        $target = '#' + $this.data('clipboard-target-id');
-        $message = $this.data('success-message');
+        let $this = $(event.target);
+        let $target = '#' + $this.data('clipboard-target-id');
+        let $message = $this.data('success-message');
 
-        $content = $($target).select();
+        let $content = $($target).select();
 
         // Copy our selected text to the clipboard
         document.execCommand('copy');
@@ -211,8 +211,8 @@ class SproutModal {
 
       e.preventDefault();
 
-      $this = $(e.target);
-      $previewUrl = $this.data('preview-url');
+      let $this = $(e.target);
+      let $previewUrl = $this.data('preview-url');
 
       window.open($previewUrl, 'newwindow', 'width=920, height=600');
 
