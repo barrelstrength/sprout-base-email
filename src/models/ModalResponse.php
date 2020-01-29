@@ -3,8 +3,8 @@
 namespace barrelstrength\sproutbaseemail\models;
 
 use barrelstrength\sproutfields\fields\Email;
-use craft\base\Model;
 use Craft;
+use craft\base\Model;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;

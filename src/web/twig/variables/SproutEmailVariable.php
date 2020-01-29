@@ -2,8 +2,8 @@
 
 namespace barrelstrength\sproutbaseemail\web\twig\variables;
 
-use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\EmailTemplates;
+use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutcampaigns\SproutCampaign;

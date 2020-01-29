@@ -5,24 +5,24 @@ namespace barrelstrength\sproutbaseemail\elements;
 use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\SenderTrait;
 use barrelstrength\sproutbaseemail\elements\actions\DeleteNotification;
-use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbaseemail\elements\db\NotificationEmailQuery;
 use barrelstrength\sproutbaseemail\records\NotificationEmail as NotificationEmailRecord;
+use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbaseemail\web\assets\email\EmailAsset;
 use Craft;
 use craft\behaviors\FieldLayoutBehavior;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+use Egulias\EmailValidator\Validation\RFCValidation;
 use InvalidArgumentException;
 use Throwable;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use yii\base\Exception;
-use Egulias\EmailValidator\EmailValidator;
-use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
-use Egulias\EmailValidator\Validation\RFCValidation;
 use yii\base\InvalidConfigException;
 
 /**
@@ -167,25 +167,29 @@ class NotificationEmail extends EmailElement
     /**
      * @inheritdoc
      */
-    public function getStatuses(): array
+    public static function find(): ElementQueryInterface
     {
-        return [
-            self::ENABLED => Craft::t('sprout-base-email', 'enabled'),
-            self::PENDING => Craft::t('sprout-base-email', 'pending'),
-            self::DISABLED => Craft::t('sprout-base-email', 'disabled')
-        ];
+        return new NotificationEmailQuery(static::class);
     }
 
     /**
-     * @inheritdoc
+     * @@inheritdoc
+     *
+     * @throws InvalidConfigException
      */
-    public function getCpEditUrl()
-    {
-        $notificationEmailBaseUrl = Craft::$app->request->getBodyParam('criteria.notificationEmailBaseUrl');
+    public static function indexHtml(
+        ElementQueryInterface $elementQuery, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */
+        array $disabledElementIds = null, array $viewState, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */
+        string $sourceKey = null, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */
+        string $context = null, bool $includeContainer, bool $showCheckboxes
+    ): string {
+        $html = parent::indexHtml($elementQuery, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, true);
 
-        return UrlHelper::cpUrl(
-            $notificationEmailBaseUrl.'edit/'.$this->id
-        );
+        Craft::$app->getView()->registerAssetBundle(EmailAsset::class);
+        Craft::$app->getView()->registerJs('new SproutModal();');
+        SproutBaseEmail::$app->mailers->includeMailerModalResources();
+
+        return $html;
     }
 
     /**
@@ -233,6 +237,42 @@ class NotificationEmail extends EmailElement
     }
 
     /**
+     * @inheritdoc
+     */
+    protected static function defineActions(string $source = null): array
+    {
+        $actions = [];
+
+        $actions[] = DeleteNotification::class;
+
+        return $actions;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getStatuses(): array
+    {
+        return [
+            self::ENABLED => Craft::t('sprout-base-email', 'enabled'),
+            self::PENDING => Craft::t('sprout-base-email', 'pending'),
+            self::DISABLED => Craft::t('sprout-base-email', 'disabled')
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCpEditUrl()
+    {
+        $notificationEmailBaseUrl = Craft::$app->request->getBodyParam('criteria.notificationEmailBaseUrl');
+
+        return UrlHelper::cpUrl(
+            $notificationEmailBaseUrl.'edit/'.$this->id
+        );
+    }
+
+    /**
      * @param string $attribute
      *
      * @return string
@@ -268,15 +308,8 @@ class NotificationEmail extends EmailElement
                 'type' => $attribute
             ]);
         }
-        return parent::getTableAttributeHtml($attribute);
-    }
 
-    /**
-     * @inheritdoc
-     */
-    public static function find(): ElementQueryInterface
-    {
-        return new NotificationEmailQuery(static::class);
+        return parent::getTableAttributeHtml($attribute);
     }
 
     /**
@@ -350,38 +383,6 @@ class NotificationEmail extends EmailElement
     /**
      * @@inheritdoc
      *
-     * @throws InvalidConfigException
-     */
-    public static function indexHtml(
-        ElementQueryInterface $elementQuery, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */
-        array $disabledElementIds = null, array $viewState, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */
-        string $sourceKey = null, /** @noinspection PhpOptionalBeforeRequiredParametersInspection */
-        string $context = null, bool $includeContainer, bool $showCheckboxes
-    ): string {
-        $html = parent::indexHtml($elementQuery, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, true);
-
-        Craft::$app->getView()->registerAssetBundle(EmailAsset::class);
-        Craft::$app->getView()->registerJs('new SproutModal();');
-        SproutBaseEmail::$app->mailers->includeMailerModalResources();
-
-        return $html;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected static function defineActions(string $source = null): array
-    {
-        $actions = [];
-
-        $actions[] = DeleteNotification::class;
-
-        return $actions;
-    }
-
-    /**
-     * @@inheritdoc
-     *
      * @throws Exception
      */
     public function getUriFormat()
@@ -406,23 +407,6 @@ class NotificationEmail extends EmailElement
         }
 
         return null;
-    }
-
-    /**
-     * @return array
-     * @throws InvalidConfigException
-     */
-    protected function defineRules(): array
-    {
-        $rules = parent::defineRules();
-
-        $rules[] = [['subjectLine', 'fromName', 'fromEmail'], 'required'];
-        $rules[] = [['fromName', 'fromEmail', 'replyToEmail'], 'default', 'value' => ''];
-        $rules[] = ['recipients', 'emailList'];
-        $rules[] = ['cc', 'emailList'];
-        $rules[] = ['bcc', 'emailList'];
-
-        return $rules;
     }
 
     /**
@@ -551,5 +535,22 @@ class NotificationEmail extends EmailElement
         }
 
         return false;
+    }
+
+    /**
+     * @return array
+     * @throws InvalidConfigException
+     */
+    protected function defineRules(): array
+    {
+        $rules = parent::defineRules();
+
+        $rules[] = [['subjectLine', 'fromName', 'fromEmail'], 'required'];
+        $rules[] = [['fromName', 'fromEmail', 'replyToEmail'], 'default', 'value' => ''];
+        $rules[] = ['recipients', 'emailList'];
+        $rules[] = ['cc', 'emailList'];
+        $rules[] = ['bcc', 'emailList'];
+
+        return $rules;
     }
 }

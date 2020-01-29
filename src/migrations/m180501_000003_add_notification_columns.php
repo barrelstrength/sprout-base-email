@@ -77,6 +77,7 @@ class m180501_000003_add_notification_columns extends Migration
     public function safeDown(): bool
     {
         echo "m180725_080639_add_notification_columns cannot be reverted.\n";
+
         return false;
     }
 }

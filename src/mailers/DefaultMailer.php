@@ -10,6 +10,7 @@ use barrelstrength\sproutcampaigns\elements\CampaignEmail;
 use barrelstrength\sproutemail\services\SentEmails;
 use barrelstrength\sproutemail\SproutEmail;
 use barrelstrength\sproutforms\fields\formfields\FileUpload;
+use Craft;
 use craft\base\Element;
 use craft\base\LocalVolumeInterface;
 use craft\db\Query;
@@ -19,7 +20,6 @@ use craft\fields\Assets;
 use craft\helpers\FileHelper;
 use craft\helpers\Json;
 use craft\helpers\Template;
-use Craft;
 use craft\mail\Message;
 use craft\volumes\Local;
 use Throwable;
@@ -175,53 +175,6 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         return true;
     }
 
-    private function sendEmail(EmailElement $emailElement, Message $message, $recipients)
-    {
-        $processedRecipients = [];
-        $prepareRecipients = [];
-        $mailer = Craft::$app->getMailer();
-
-        if ($emailElement->sendMethod === 'singleEmail') {
-            /*
-             * Assigning email with name array does not work on craft
-             * [$recipient->email => $recipient->name]
-             */
-            foreach ($recipients as $key => $recipient) {
-                $prepareRecipients[] = $recipient->email;
-            }
-            $message->setTo($prepareRecipients);
-
-            $mailer->send($message);
-        } else {
-            foreach ($recipients as $recipient) {
-
-                if ($recipient->name) {
-                    $message->setTo([$recipient->email => $recipient->name]);
-                } else {
-                    $message->setTo($recipient->email);
-                }
-
-                // Skip any emails that we have already processed
-                if (array_key_exists($recipient->email, $processedRecipients)) {
-                    continue;
-                }
-
-                try {
-                    if ($mailer->send($message)) {
-                        $processedRecipients[] = $recipient->email;
-                    } else {
-                        //  If it fails proceed to next email
-                        continue;
-                    }
-                } catch (\Exception $e) {
-                    $emailElement->addError('send-failure', $e->getMessage());
-                }
-            }
-        }
-
-        return $emailElement;
-    }
-
     /**
      * @param CampaignEmail $campaignEmail
      *
@@ -248,64 +201,6 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         $this->sendEmail($campaignEmail, $message, $recipients);
 
         return true;
-    }
-
-    /**
-     * @param $externalPaths
-     */
-    protected function deleteExternalPaths($externalPaths)
-    {
-        foreach ($externalPaths as $path) {
-            if (file_exists($path)) {
-                unlink($path);
-            }
-        }
-    }
-
-    /**
-     * @param Message $message
-     * @param Asset[] $assets
-     * @param array   $externalPaths
-     *
-     * @throws InvalidConfigException
-     */
-    protected function attachAssetFilesToEmailModel(Message $message, array $assets, &$externalPaths = [])
-    {
-        foreach ($assets as $asset) {
-            $name = $asset->filename;
-            $volume = $asset->getVolume();
-            $path = null;
-
-            if (get_class($volume) === Local::class) {
-                $path = $this->getLocalAssetFilePath($asset);
-            } else {
-                // External Asset sources
-                $path = $asset->getCopyOfFile();
-                // let's save the path to delete it after sent
-                $externalPaths[] = $path;
-            }
-            if ($path) {
-                $message->attach($path, ['fileName' => $name]);
-            }
-        }
-    }
-
-    /**
-     * @param Asset $asset
-     *
-     * @return string
-     * @throws InvalidConfigException
-     */
-    protected function getLocalAssetFilePath(Asset $asset): string
-    {
-        /**
-         * @var $volume LocalVolumeInterface
-         */
-        $volume = $asset->getVolume();
-
-        $path = $volume->getRootPath().DIRECTORY_SEPARATOR.$asset->getPath();
-
-        return FileHelper::normalizePath($path);
     }
 
     /**
@@ -404,5 +299,110 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         return Craft::$app->getView()->renderTemplate('sprout-base-email/_components/mailers/defaultmailer/lists', [
             'selectedElements' => $selectedElements,
         ]);
+    }
+
+    /**
+     * @param $externalPaths
+     */
+    protected function deleteExternalPaths($externalPaths)
+    {
+        foreach ($externalPaths as $path) {
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+    }
+
+    /**
+     * @param Message $message
+     * @param Asset[] $assets
+     * @param array   $externalPaths
+     *
+     * @throws InvalidConfigException
+     */
+    protected function attachAssetFilesToEmailModel(Message $message, array $assets, &$externalPaths = [])
+    {
+        foreach ($assets as $asset) {
+            $name = $asset->filename;
+            $volume = $asset->getVolume();
+            $path = null;
+
+            if (get_class($volume) === Local::class) {
+                $path = $this->getLocalAssetFilePath($asset);
+            } else {
+                // External Asset sources
+                $path = $asset->getCopyOfFile();
+                // let's save the path to delete it after sent
+                $externalPaths[] = $path;
+            }
+            if ($path) {
+                $message->attach($path, ['fileName' => $name]);
+            }
+        }
+    }
+
+    /**
+     * @param Asset $asset
+     *
+     * @return string
+     * @throws InvalidConfigException
+     */
+    protected function getLocalAssetFilePath(Asset $asset): string
+    {
+        /**
+         * @var $volume LocalVolumeInterface
+         */
+        $volume = $asset->getVolume();
+
+        $path = $volume->getRootPath().DIRECTORY_SEPARATOR.$asset->getPath();
+
+        return FileHelper::normalizePath($path);
+    }
+
+    private function sendEmail(EmailElement $emailElement, Message $message, $recipients)
+    {
+        $processedRecipients = [];
+        $prepareRecipients = [];
+        $mailer = Craft::$app->getMailer();
+
+        if ($emailElement->sendMethod === 'singleEmail') {
+            /*
+             * Assigning email with name array does not work on craft
+             * [$recipient->email => $recipient->name]
+             */
+            foreach ($recipients as $key => $recipient) {
+                $prepareRecipients[] = $recipient->email;
+            }
+            $message->setTo($prepareRecipients);
+
+            $mailer->send($message);
+        } else {
+            foreach ($recipients as $recipient) {
+
+                if ($recipient->name) {
+                    $message->setTo([$recipient->email => $recipient->name]);
+                } else {
+                    $message->setTo($recipient->email);
+                }
+
+                // Skip any emails that we have already processed
+                if (array_key_exists($recipient->email, $processedRecipients)) {
+                    continue;
+                }
+
+                try {
+                    if ($mailer->send($message)) {
+                        $processedRecipients[] = $recipient->email;
+                    } else {
+                        //  If it fails proceed to next email
+                        continue;
+                    }
+                } catch (\Exception $e) {
+                    $emailElement->addError('send-failure', $e->getMessage());
+                }
+            }
+        }
+
+        return $emailElement;
     }
 }

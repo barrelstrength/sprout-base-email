@@ -2,18 +2,17 @@
 
 namespace barrelstrength\sproutbaseemail\services;
 
+use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\base\NotificationEvent;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
-use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\records\NotificationEmail as NotificationEmailRecord;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
-use craft\base\Component;
 use Craft;
-use craft\helpers\ElementHelper;
-
+use craft\base\Component;
 use craft\base\ElementInterface;
+use craft\helpers\ElementHelper;
 use craft\models\FieldLayout;
 use Exception;
 use Throwable;
@@ -41,6 +40,7 @@ class NotificationEmails extends Component
     {
         if (!$notificationEmail->validate(null, false)) {
             SproutBase::info(Craft::t('sprout-base-email', 'Notification Email not saved due to validation error.'));
+
             return false;
         }
 

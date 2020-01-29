@@ -94,6 +94,7 @@ class m181026_000000_update_notification_data extends Migration
     public function safeDown(): bool
     {
         echo "m181026_000000_update_notification_data cannot be reverted.\n";
+
         return false;
     }
 }

@@ -26,6 +26,7 @@ class m180501_000005_update_copypaste_type extends Migration
     public function safeDown(): bool
     {
         echo "m180726_080640_update_copypaste_type cannot be reverted.\n";
+
         return false;
     }
 }

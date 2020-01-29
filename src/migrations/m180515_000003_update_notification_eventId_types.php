@@ -41,6 +41,7 @@ class m180515_000003_update_notification_eventId_types extends Migration
     public function safeDown(): bool
     {
         echo "m180515_000003_update_notification_eventId_types cannot be reverted.\n";
+
         return false;
     }
 }

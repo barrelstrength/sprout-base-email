@@ -11,7 +11,9 @@ use Twig\Error\SyntaxError;
 trait SenderTrait
 {
     public $defaultFromName;
+
     public $defaultFromEmail;
+
     public $defaultReplyToEmail;
 
     /**

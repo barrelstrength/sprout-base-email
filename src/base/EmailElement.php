@@ -6,8 +6,8 @@ use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
 use barrelstrength\sproutbaseemail\emailtemplates\CustomTemplates;
 use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
 use barrelstrength\sproutbaseemail\models\Settings;
-use craft\base\Element;
 use Craft;
+use craft\base\Element;
 use craft\base\Field;
 use yii\base\Exception;
 
@@ -22,12 +22,10 @@ use yii\base\Exception;
  */
 abstract class EmailElement extends Element
 {
-    // Constants
-    // =========================================================================
-
     const ENABLED = 'enabled';
     const PENDING = 'pending';
     const DISABLED = 'disabled';
+
     /**
      * The Subject Line of your email. Your title will also default to the Subject Line unless you set a Title Format.
      *
@@ -133,16 +131,6 @@ abstract class EmailElement extends Element
     }
 
     /**
-     * Sets a Notification Event object
-     *
-     * @param object|null $value
-     */
-    public function setEventObject($value = null)
-    {
-        $this->_eventObject = $value;
-    }
-
-    /**
      * Returns the Notification Event object
      *
      * @return object|null
@@ -153,19 +141,21 @@ abstract class EmailElement extends Element
     }
 
     /**
+     * Sets a Notification Event object
+     *
+     * @param object|null $value
+     */
+    public function setEventObject($value = null)
+    {
+        $this->_eventObject = $value;
+    }
+
+    /**
      * Returns the Email Template ID (which is the namespace) for the given Email Element
      *
      * @return string
      */
     abstract public function getEmailTemplateId(): string;
-
-    /**
-     * @param EmailTemplates $emailTemplates
-     */
-    public function setEmailTemplates($emailTemplates)
-    {
-        $this->_emailTemplates = $emailTemplates;
-    }
 
     /**
      * @return EmailTemplates|BasicTemplates|CustomTemplates
@@ -245,6 +235,14 @@ abstract class EmailElement extends Element
         $this->setEmailTemplates($emailTemplates);
 
         return $emailTemplates;
+    }
+
+    /**
+     * @param EmailTemplates $emailTemplates
+     */
+    public function setEmailTemplates($emailTemplates)
+    {
+        $this->_emailTemplates = $emailTemplates;
     }
 
     /**

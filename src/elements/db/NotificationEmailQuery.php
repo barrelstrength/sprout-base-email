@@ -3,9 +3,9 @@
 namespace barrelstrength\sproutbaseemail\elements\db;
 
 use barrelstrength\sproutbaseemail\services\NotificationEmails;
-use craft\elements\db\ElementQuery;
-use craft\base\Element;
 use Craft;
+use craft\base\Element;
+use craft\elements\db\ElementQuery;
 
 class NotificationEmailQuery extends ElementQuery
 {
@@ -13,6 +13,7 @@ class NotificationEmailQuery extends ElementQuery
      * @var string
      */
     public $viewContext;
+
     public $notificationEmailBaseUrl;
 
     /**

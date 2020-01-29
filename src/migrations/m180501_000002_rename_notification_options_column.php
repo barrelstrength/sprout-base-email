@@ -33,6 +33,7 @@ class m180501_000002_rename_notification_options_column extends Migration
     public function safeDown(): bool
     {
         echo "m180515_000002_rename_notification_options_column cannot be reverted.\n";
+
         return false;
     }
 }

@@ -1,4 +1,3 @@
-
 class SproutEmailNotificationEventToggle {
 
   constructor() {
@@ -25,7 +24,7 @@ class SproutEmailNotificationEventToggle {
     if (selectedNotificationEvent !== undefined && selectedNotificationEvent !== '') {
       let eventClass = selectedNotificationEvent.replace(/\\/g, '-').toLowerCase();
 
-      let eventSettingsWrapper = document.querySelector('.'+eventClass);
+      let eventSettingsWrapper = document.querySelector('.' + eventClass);
       console.log(eventSettingsWrapper);
       eventSettingsWrapper.classList.remove('hidden');
     }

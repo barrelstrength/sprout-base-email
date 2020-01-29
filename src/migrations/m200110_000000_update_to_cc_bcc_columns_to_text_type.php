@@ -39,6 +39,7 @@ class m200110_000000_update_to_cc_bcc_columns_to_text_type extends Migration
     public function safeDown(): bool
     {
         echo "m200110_000000_update_to_cc_bcc_columns_to_text_type cannot be reverted.\n";
+
         return false;
     }
 }

@@ -3,8 +3,8 @@
 namespace barrelstrength\sproutbaseemail\controllers;
 
 use barrelstrength\sproutbaseemail\base\EmailElement;
-use craft\web\Controller;
 use Craft;
+use craft\web\Controller;
 use Throwable;
 use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;

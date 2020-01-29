@@ -7,9 +7,8 @@ use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\events\NotificationEmailEvent;
 use barrelstrength\sproutbaseemail\events\SendNotificationEmailEvent;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
-use craft\base\Component;
 use Craft;
-
+use craft\base\Component;
 use craft\helpers\Json;
 use Throwable;
 use yii\base\Event;
@@ -247,6 +246,7 @@ class NotificationEmailEvents extends Component
         foreach ($notificationEmailEventTypes as $notificationEmailEventClass) {
             if ($notificationEmail->eventId === $notificationEmailEventClass) {
                 $settings = Json::decode($notificationEmail->settings);
+
                 return new $notificationEmailEventClass($settings);
             }
         }

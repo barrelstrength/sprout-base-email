@@ -46,6 +46,7 @@ class m190220_000000_clean_up_sent_email_records extends Migration
     public function safeDown(): bool
     {
         echo "m190220_000000_clean_up_sent_email_records cannot be reverted.\n";
+
         return false;
     }
 }

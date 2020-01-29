@@ -12,6 +12,20 @@ use craft\base\Model;
 class SimpleRecipient extends Model
 {
     /**
+     * The name of an email recipient
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     * The email address of an email recipient
+     *
+     * @var string
+     */
+    public $email;
+
+    /**
      * @var array Additional custom fields
      */
     private $_customFieldValues = [];
@@ -28,6 +42,7 @@ class SimpleRecipient extends Model
         if (isset($this->_customFieldValues[$name])) {
             return $this->_customFieldValues[$name] ?? null;
         }
+
         return parent::__get($name);
     }
 
@@ -40,6 +55,7 @@ class SimpleRecipient extends Model
     {
         if (!property_exists($this, $name)) {
             $this->_customFieldValues[$name] = $value;
+
             return;
         }
         parent::__set($name, $value);
@@ -56,18 +72,4 @@ class SimpleRecipient extends Model
             $this->_customFieldValues[$name] = $value;
         }
     }
-
-    /**
-     * The name of an email recipient
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     * The email address of an email recipient
-     *
-     * @var string
-     */
-    public $email;
 }

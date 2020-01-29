@@ -9,9 +9,9 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutbaseemail\models\SimpleRecipient;
 use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
+use Craft;
 use craft\base\Component;
 use craft\helpers\Html;
-use Craft;
 use craft\mail\Message;
 use Exception;
 use Throwable;

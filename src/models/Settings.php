@@ -23,18 +23,22 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
      * @var bool
      */
     public $enableNotificationEmails = true;
+
     /**
      * @var bool
      */
     public $enableCampaignEmails = false;
+
     /**
      * @var bool
      */
     public $enableSentEmails = false;
+
     /**
      * @var null
      */
     public $emailTemplateId;
+
     /**
      * @var int
      */

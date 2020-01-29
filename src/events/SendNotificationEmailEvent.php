@@ -8,6 +8,7 @@ use yii\base\Event;
 class SendNotificationEmailEvent extends Event
 {
     public $event;
+
     /**
      * @var NotificationEmail
      */

@@ -34,6 +34,7 @@ class m180515_000000_rename_notification_pluginId_column extends Migration
     public function safeDown(): bool
     {
         echo "m180515_000000_rename_notification_pluginId_column cannot be reverted.\n";
+
         return false;
     }
 }

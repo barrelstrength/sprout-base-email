@@ -3,8 +3,8 @@
 namespace barrelstrength\sproutbaseemail\services;
 
 use barrelstrength\sproutbaseemail\base\EmailTemplates as BaseEmailTemplates;
-use craft\events\RegisterComponentTypesEvent;
 use craft\base\Component;
+use craft\events\RegisterComponentTypesEvent;
 
 /**
  *

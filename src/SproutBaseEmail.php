@@ -7,36 +7,31 @@
 
 namespace barrelstrength\sproutbaseemail;
 
+use barrelstrength\sproutbase\base\BaseSproutTrait;
+use barrelstrength\sproutbaseemail\controllers\MailersController;
+use barrelstrength\sproutbaseemail\controllers\NotificationsController;
+use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
+use barrelstrength\sproutbaseemail\events\RegisterMailersEvent;
+use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
 use barrelstrength\sproutbaseemail\services\App;
 use barrelstrength\sproutbaseemail\services\EmailTemplates;
-use barrelstrength\sproutbase\base\BaseSproutTrait;
-use barrelstrength\sproutbaseemail\controllers\NotificationsController;
-use barrelstrength\sproutbaseemail\events\RegisterMailersEvent;
-use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
-use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
 use barrelstrength\sproutbaseemail\services\Mailers;
 use barrelstrength\sproutbaseemail\web\twig\variables\SproutEmailVariable;
-use barrelstrength\sproutbaseemail\controllers\MailersController;
+use Craft;
 use craft\events\RegisterComponentTypesEvent;
-use craft\web\Application;
-use craft\web\twig\variables\CraftVariable;
-use yii\base\Event;
-use yii\base\InvalidConfigException;
-use \yii\base\Module;
-use craft\web\View;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\helpers\ArrayHelper;
 use craft\i18n\PhpMessageSource;
-use Craft;
+use craft\web\Application;
+use craft\web\twig\variables\CraftVariable;
+use craft\web\View;
+use yii\base\Event;
+use yii\base\InvalidConfigException;
+use yii\base\Module;
 
 class SproutBaseEmail extends Module
 {
     use BaseSproutTrait;
-
-    /**
-     * @var string
-     */
-    public $handle;
 
     /**
      * @var App
@@ -49,6 +44,11 @@ class SproutBaseEmail extends Module
      * @var string
      */
     public static $pluginHandle = 'sprout-base-email';
+
+    /**
+     * @var string
+     */
+    public $handle;
 
     /**
      * @var string|null The translation category that this module translation messages should use. Defaults to the lowercase plugin handle.

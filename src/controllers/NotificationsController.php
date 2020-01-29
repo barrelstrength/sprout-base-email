@@ -2,25 +2,24 @@
 
 namespace barrelstrength\sproutbaseemail\controllers;
 
+use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\base\EmailTemplates;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
+use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
 use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
 use barrelstrength\sproutbaseemail\models\ModalResponse;
-use barrelstrength\sproutbaseemail\elements\NotificationEmail;
-use barrelstrength\sproutbase\SproutBase;
+use barrelstrength\sproutbaseemail\models\Settings;
 use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
-use barrelstrength\sproutbasefields\SproutBaseFields;
-use barrelstrength\sproutbaseemail\models\Settings;
+use Craft;
+use craft\base\Plugin;
 use craft\errors\MissingComponentException;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
-use Craft;
-use craft\base\Plugin;
 use InvalidArgumentException;
 use Throwable;
 use Twig\Error\LoaderError;
@@ -132,6 +131,7 @@ class NotificationsController extends Controller
 
             if ($notificationEmail) {
                 $url = UrlHelper::cpUrl($this->notificationEmailBaseUrl.'edit/'.$notificationEmail->id);
+
                 return $this->redirect($url);
             }
 
@@ -351,30 +351,6 @@ class NotificationsController extends Controller
         Craft::$app->getSession()->setNotice(Craft::t('sprout-base-email', 'Notification saved.'));
 
         return $this->redirectToPostedUrl();
-    }
-
-    /**
-     * @param NotificationEmail $notificationEmail
-     *
-     * @return bool
-     */
-    private function validateTemplate(NotificationEmail $notificationEmail): bool
-    {
-        try {
-            $notificationEmail->getEmailTemplates()->getTextBody();
-            $notificationEmail->getEmailTemplates()->getHtmlBody();
-        } catch (\Exception $e) {
-            $errorMessage = 'Dynamic variables on your template does not exist. '.$e->getMessage();
-            $notificationEmail->addError('emailTemplateId', $errorMessage);
-
-            // @todo add template errors to notificationEmail model
-            // Don't use utilities class
-            // SproutBaseFields::$app->utilities->addError('template', $errorMessage);
-
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -613,7 +589,6 @@ class NotificationsController extends Controller
         SproutBaseEmail::$app->notifications->getPreviewNotificationEmailById($notificationId, $type);
     }
 
-
     /**
      * Renders a Notification Email for Live Preview
      *
@@ -651,5 +626,29 @@ class NotificationsController extends Controller
         }
 
         return $text;
+    }
+
+    /**
+     * @param NotificationEmail $notificationEmail
+     *
+     * @return bool
+     */
+    private function validateTemplate(NotificationEmail $notificationEmail): bool
+    {
+        try {
+            $notificationEmail->getEmailTemplates()->getTextBody();
+            $notificationEmail->getEmailTemplates()->getHtmlBody();
+        } catch (\Exception $e) {
+            $errorMessage = 'Dynamic variables on your template does not exist. '.$e->getMessage();
+            $notificationEmail->addError('emailTemplateId', $errorMessage);
+
+            // @todo add template errors to notificationEmail model
+            // Don't use utilities class
+            // SproutBaseFields::$app->utilities->addError('template', $errorMessage);
+
+            return false;
+        }
+
+        return true;
     }
 }

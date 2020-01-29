@@ -83,6 +83,7 @@ class m200110_000001_add_sendMethod_notification_column extends Migration
     public function safeDown(): bool
     {
         echo "m200110_000001_add_sendMethod_notification_column cannot be reverted.\n";
+
         return false;
     }
 }

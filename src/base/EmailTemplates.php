@@ -45,22 +45,6 @@ abstract class EmailTemplates
     abstract public function getPath(): string;
 
     /**
-     * @param $html
-     */
-    public function setHtmlBody($html)
-    {
-        $this->_htmlBody = $html;
-    }
-
-    /**
-     * @param $text
-     */
-    public function setTextBody($text)
-    {
-        $this->_textBody = $text;
-    }
-
-    /**
      * @return string
      * @throws LoaderError
      * @throws RuntimeError
@@ -76,6 +60,14 @@ abstract class EmailTemplates
     }
 
     /**
+     * @param $html
+     */
+    public function setHtmlBody($html)
+    {
+        $this->_htmlBody = $html;
+    }
+
+    /**
      * @return string
      * @throws LoaderError
      * @throws RuntimeError
@@ -88,6 +80,14 @@ abstract class EmailTemplates
         }
 
         return $this->_textBody;
+    }
+
+    /**
+     * @param $text
+     */
+    public function setTextBody($text)
+    {
+        $this->_textBody = $text;
     }
 
     /**
