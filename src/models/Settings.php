@@ -18,34 +18,7 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
      * @var string
      */
     public $pluginNameOverride = '';
-    /**
-     * @var bool
-     */
-    public $appendTitleValue = false;
-    /**
-     * @var string
-     */
-    public $localeIdOverride = '';
-    /**
-     * @var bool
-     */
-    public $displayFieldHandles = false;
-    /**
-     * @var bool
-     */
-    public $enableCustomSections = false;
-    /**
-     * @var bool
-     */
-    public $enableMetaDetailsFields = false;
-    /**
-     * @var bool
-     */
-    public $enableMetadataRendering = true;
-    /**
-     * @var string
-     */
-    public $metadataVariable = 'metadata';
+
     /**
      * @var bool
      */
@@ -76,6 +49,11 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
      * @var int
      */
     public $cleanupProbability = 1000;
+
+    /**
+     * @var bool
+     */
+    public $showReportsTab = true;
 
     /**
      * @inheritdoc
