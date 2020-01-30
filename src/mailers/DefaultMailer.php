@@ -236,11 +236,15 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function hasLists(): bool
     {
+        $sproutReportsIsEnabled = Craft::$app->getPlugins()->isPluginEnabled('sprout-reports');
         $sproutReportsTableExists = Craft::$app->db->tableExists('{{%sproutreports_reports}}');
 
-        if ($sproutReportsTableExists) {
+        if ($sproutReportsIsEnabled && $sproutReportsTableExists) {
             return (new Query())
                 ->select('id')
                 ->from('{{%sproutreports_reports}}')
