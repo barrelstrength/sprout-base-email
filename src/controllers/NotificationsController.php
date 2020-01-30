@@ -61,15 +61,18 @@ class NotificationsController extends Controller
 
     /**
      * @param string $viewContext
-     *
      * @param bool   $hideSidebar
      *
-     * @return Response
-     * @throws ForbiddenHttpException
+     * @return \yii\web\Response
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\web\ForbiddenHttpException
      */
     public function actionNotificationsIndexTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $hideSidebar = false): Response
     {
         $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
+
+        Craft::$app->getSession()->set('sprout.notificationEmailBaseUrl', $this->notificationEmailBaseUrl);
+        Craft::$app->getSession()->set('sprout.viewContext', $viewContext);
 
         return $this->renderTemplate('sprout-base-email/notifications/index', [
             'viewNotificationsPermission' => $this->permissions['sproutEmail-viewNotifications'],

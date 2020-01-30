@@ -23,20 +23,7 @@
 {% endblock %}
 
 {% block initJs %}
-    // Pass segment to the NotificationEmailQuery class to filter notification entries
-    var criteria = $.extend({}, Craft.defaultIndexCriteria);
-    criteria.viewContext = '{{ viewContext }}';
-    criteria.notificationEmailBaseUrl = '{{ notificationEmailBaseUrl }}';
-
-    Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#page-container'), {
-    elementTypeName: '{{ elementInstance.displayName()|e("js") }}',
-    elementTypePluralName: '{{ elementInstance.pluralDisplayName()|e("js") }}',
-    context: '{{ context }}',
-    storageKey: 'elementindex.{{ elementType|e("js") }}',
-    criteria: criteria,
-    toolbarSelector: '#toolbar',
-    hideSidebar: '{{ hideSidebar ?? false }}'
-    });
+    {{ parent() }}
 
     {% if hideSidebar %}
         $('#sidebar-toggle-container').remove();

@@ -17,7 +17,8 @@ class NotificationEmailQuery extends ElementQuery
     public $notificationEmailBaseUrl;
 
     /**
-     * @inheritdoc
+     * @return bool
+     * @throws \craft\errors\MissingComponentException
      */
     protected function beforePrepare(): bool
     {
@@ -46,14 +47,8 @@ class NotificationEmailQuery extends ElementQuery
             'sproutemail_notificationemails.fieldLayoutId'
         ]);
 
-        /** @deprecated
-         *  We only need the check for console request because we use
-         *  saveNotification m180314_161540_craft2_to_craft3. We can remove
-         *  the check for the console request once we set a minVersionRequired
-         *  and get folks upgraded past that migration.
-         */
         if (!Craft::$app->getRequest()->getIsConsoleRequest()) {
-            $this->viewContext = Craft::$app->request->getBodyParam('criteria.viewContext');
+            $this->viewContext = Craft::$app->getSession()->get('sprout.viewContext');
 
             if ($this->viewContext !== null && $this->viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT) {
                 $this->query->where(['sproutemail_notificationemails.viewContext' => $this->viewContext]);

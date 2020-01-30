@@ -261,11 +261,12 @@ class NotificationEmail extends EmailElement
     }
 
     /**
-     * @inheritdoc
+     * @return string|null
+     * @throws \craft\errors\MissingComponentException
      */
     public function getCpEditUrl()
     {
-        $notificationEmailBaseUrl = Craft::$app->request->getBodyParam('criteria.notificationEmailBaseUrl');
+        $notificationEmailBaseUrl = Craft::$app->getSession()->get('sprout.notificationEmailBaseUrl');
 
         return UrlHelper::cpUrl(
             $notificationEmailBaseUrl.'edit/'.$this->id
