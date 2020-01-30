@@ -145,7 +145,6 @@ class NotificationEmails extends Component
             echo Craft::t('sprout-base-email', 'Notification Email cannot display. The Event setting must be set.');
 
             // End the request
-
             Craft::$app->end();
         }
 

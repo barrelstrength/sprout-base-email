@@ -277,11 +277,6 @@ trait RecipientsTrait
 
                 $recipientModel = new SimpleRecipient();
 
-//                $firstName = $listRecipient['firstName'] ?? '';
-//                $lastName = $listRecipient['lastName'] ?? '';
-//                $name = $firstName.' '.$lastName;
-//                $recipientModel->name = trim($name);
-
                 $email = $recipientArray[$emailColumn] ?? null;
 
                 // Skip duplicate emails, only process the first email found
