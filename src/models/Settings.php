@@ -65,23 +65,17 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
     public function getSettingsNavItems(): array
     {
         return [
-            'settingsHeading' => [
-                'heading' => Craft::t('sprout-email', 'Settings'),
-            ],
             'general' => [
-                'label' => Craft::t('sprout-email', 'General'),
+                'label' => Craft::t('sprout-base-email', 'General'),
                 'url' => 'sprout-email/settings/general',
                 'selected' => 'general',
                 'template' => 'sprout-base-email/settings/general'
             ],
             'mailers' => [
-                'label' => Craft::t('sprout-email', 'Mailers'),
+                'label' => Craft::t('sprout-base-email', 'Mailers'),
                 'url' => 'sprout-email/settings/mailers',
                 'selected' => 'mailers',
                 'template' => 'sprout-base-email/settings/mailers'
-            ],
-            'emailHeading' => [
-                'heading' => Craft::t('sprout-email', 'Email'),
             ],
 //            'campaigntypes' => [
 //                'label' => Craft::t('sprout-email', 'Campaigns'),
@@ -91,16 +85,25 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
 //                'settingsForm' => false
 //            ],
             'notifications' => [
-                'label' => Craft::t('sprout-email', 'Notifications'),
+                'label' => Craft::t('sprout-base-email', 'Notifications'),
                 'url' => 'sprout-email/settings/notifications',
                 'selected' => 'notifications',
                 'template' => 'sprout-base-email/settings/notifications'
             ],
             'sentemails' => [
-                'label' => Craft::t('sprout-email', 'Sent Emails'),
+                'label' => Craft::t('sprout-base-email', 'Sent Emails'),
                 'url' => 'sprout-email/settings/sentemails',
                 'selected' => 'sentemails',
                 'template' => 'sprout-base-email/settings/sentemails'
+            ],
+            'integrationsHeading' => [
+                'heading' => Craft::t('sprout-base-email', 'Integrations'),
+            ],
+            'reports' => [
+                'label' => Craft::t('sprout-base-email', 'Reports'),
+                'url' => 'sprout-email/settings/reports',
+                'selected' => 'reports',
+                'template' => 'sprout-base-email/settings/reports'
             ]
         ];
     }
