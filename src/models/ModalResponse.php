@@ -79,7 +79,7 @@ class ModalResponse extends Model
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public static function createErrorModalResponse($template = null, array $variables = []): ModalResponse
+    public static function createErrorModalResponse($template, array $variables = []): ModalResponse
     {
         /** @var ModalResponse $instance */
         $instance = static::class;
@@ -88,11 +88,12 @@ class ModalResponse extends Model
         $instance->success = false;
         $instance->setAttributes($variables, false);
 
-        if ($template && Craft::$app->getView()->doesTemplateExist($template)) {
-            $variables = array_merge($variables, $instance->getAttributes());
+        $variables = array_merge($variables, $instance->getAttributes());
 
-            $instance->content = Craft::$app->getView()->renderTemplate($template, $variables);
-        }
+        // Ensure we're loading CP templates in case we email template errors tripped up the path
+        Craft::$app->getView()->setTemplatesPath(Craft::$app->getPath()->getCpTemplatesPath());
+
+        $instance->content = Craft::$app->getView()->renderTemplate($template, $variables);
 
         return $instance;
     }
