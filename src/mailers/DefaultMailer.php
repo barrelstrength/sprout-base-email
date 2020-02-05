@@ -139,7 +139,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         $recipientCc = $mailer->getRecipients($notificationEmail, $notificationEmail->cc);
         $recipientBc = $mailer->getRecipients($notificationEmail, $notificationEmail->bcc);
 
-        if (!$recipients) {
+        if ($notificationEmail->hasErrors() || !$recipients) {
             return false;
         }
 
