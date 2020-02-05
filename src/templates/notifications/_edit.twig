@@ -34,7 +34,7 @@
 
             <div class="btngroup">
                 {% if showPreviewBtn %}
-                    <div id="preview-btn" class="btn">{{ "Live Preview"|t('sprout-base-email') }}</div>
+                    <div class="btn livepreviewbtn" data-icon="view" tabindex="0">{{ "Preview"|t('sprout-base-email') }}</div>
                 {% endif %}
                 {% if shareUrl is defined %}
                     <a id="share-btn" class="btn" href="{{ shareUrl }}"

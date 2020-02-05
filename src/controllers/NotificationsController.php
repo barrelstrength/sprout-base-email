@@ -156,19 +156,15 @@ class NotificationsController extends Controller
         if (!$isMobileBrowser && $isSproutEmailInstalled) {
             $showPreviewBtn = true;
 
-            Craft::$app->getView()->registerJs(
-                'Craft.LivePreview.init('.Json::encode(
-                    [
-                        'fields' => '#subjectLine-field, #body-field, #defaultBody, #title-field, #fields > div > .field',
-                        'extraFields' => '#settings',
-                        'previewUrl' => $notificationEmail->getUrl(),
-                        'previewAction' => Craft::$app->getSecurity()->hashData('sprout-base-email/notifications/live-preview-notification-email'),
-                        'previewParams' => [
-                            'notificationId' => $notificationEmail->id,
-                        ]
+            $this->getView()->registerJs('Craft.LivePreview.init('.Json::encode([
+                    'fields' => '#subjectLine-field, #defaultBody-field, #fields > div > div > .field',
+                    'extraFields' => '#settings',
+                    'previewUrl' => $notificationEmail->getUrl(),
+                    'previewAction' => Craft::$app->getSecurity()->hashData('sprout-base-email/notifications/live-preview-notification-email'),
+                    'previewParams' => [
+                        'notificationId' => $notificationEmail->id,
                     ]
-                ).');'
-            );
+                ]).');');
 
             if ($notificationEmail->id && $notificationEmail->getUrl()) {
                 $shareUrl = UrlHelper::actionUrl('sprout-base-email/notifications/share-notification-email', [
