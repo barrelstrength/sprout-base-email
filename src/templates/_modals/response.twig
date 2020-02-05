@@ -34,8 +34,7 @@
             <tr>
                 <td><strong>{{ 'Message'|t('sprout-base-email') }}</strong></td>
                 <td>
-                    <p><em>{{ message is defined ? message : 'An error occurred while sending your campaign. Please review the Craft logs
-     for more info.'|t('sprout-base-email') }}</em></p>
+                    <p><em>{{ message is defined ? message : 'An error occurred while sending your campaign. Please review the Craft logs for more info.'|t('sprout-base-email') }}</em></p>
 
                     {% if email.getErrors()|length %}
                         {{ forms.errorList(email.getErrors()) }}
