@@ -300,7 +300,7 @@ class NotificationEmail extends EmailElement
                 ]);
             }
 
-            $notificationEmailBaseUrl = Craft::$app->request->getBodyParam('criteria.notificationEmailBaseUrl');
+            $notificationEmailBaseUrl = Craft::$app->getSession()->get('sprout.notificationEmailBaseUrl');
 
             return Craft::$app->getView()->renderTemplate('sprout-base-email/_components/elementindex/NotificationEmail/preview-links', [
                 'email' => $this,
