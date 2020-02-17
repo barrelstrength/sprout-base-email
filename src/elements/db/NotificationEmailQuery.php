@@ -47,7 +47,7 @@ class NotificationEmailQuery extends ElementQuery
             'sproutemail_notificationemails.fieldLayoutId'
         ]);
 
-        if (!Craft::$app->getRequest()->getIsConsoleRequest()) {
+        if (!Craft::$app->getRequest()->getIsConsoleRequest() || Craft::$app->getRequest()->getIsConsoleRequest() === null) {
             $this->viewContext = Craft::$app->getSession()->get('sprout.viewContext');
 
             if ($this->viewContext !== null && $this->viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT) {
