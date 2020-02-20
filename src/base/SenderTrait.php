@@ -7,6 +7,7 @@ use Craft;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use yii\base\Exception;
 
 trait SenderTrait
 {
@@ -36,7 +37,7 @@ trait SenderTrait
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function getSenderHtml(CampaignEmail $campaignEmail): string
     {

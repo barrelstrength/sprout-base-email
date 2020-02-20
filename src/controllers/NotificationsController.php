@@ -14,7 +14,6 @@ use barrelstrength\sproutbaseemail\models\Settings;
 use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasereports\base\DataSource;
-use barrelstrength\sproutbasereports\services\DataSources;
 use Craft;
 use craft\base\Plugin;
 use craft\errors\MissingComponentException;
@@ -65,9 +64,9 @@ class NotificationsController extends Controller
      * @param string $viewContext
      * @param bool   $hideSidebar
      *
-     * @return \yii\web\Response
-     * @throws \craft\errors\MissingComponentException
-     * @throws \yii\web\ForbiddenHttpException
+     * @return Response
+     * @throws MissingComponentException
+     * @throws ForbiddenHttpException
      */
     public function actionNotificationsIndexTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $hideSidebar = false): Response
     {

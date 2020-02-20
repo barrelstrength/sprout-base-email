@@ -12,6 +12,7 @@ use barrelstrength\sproutbaseemail\web\assets\email\EmailAsset;
 use Craft;
 use craft\behaviors\FieldLayoutBehavior;
 use craft\elements\db\ElementQueryInterface;
+use craft\errors\MissingComponentException;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use Egulias\EmailValidator\EmailValidator;
@@ -262,7 +263,7 @@ class NotificationEmail extends EmailElement
 
     /**
      * @return string|null
-     * @throws \craft\errors\MissingComponentException
+     * @throws MissingComponentException
      */
     public function getCpEditUrl()
     {

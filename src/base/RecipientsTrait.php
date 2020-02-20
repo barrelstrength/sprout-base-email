@@ -4,7 +4,7 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutbaseemail\models\SimpleRecipient;
 use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
-use barrelstrength\sproutbasereports\SproutBaseReports;
+use barrelstrength\sproutbasereports\elements\Report;
 use Craft;
 use craft\helpers\Json;
 use Egulias\EmailValidator\EmailValidator;
@@ -113,6 +113,7 @@ trait RecipientsTrait
      * @param array $values
      *
      * @return null
+     * @noinspection PhpUnusedParameterInspection
      */
     public function getListsHtml($values = [])
     {
@@ -241,16 +242,15 @@ trait RecipientsTrait
 
         foreach ($listIds as $reportId) {
 
-            $report = SproutBaseReports::$app->reports->getReport($reportId);
+            /** @var Report $report */
+            $report = Craft::$app->elements->getElementById($reportId, Report::class);
 
-            // @todo - handle errors better
             if (!$report) {
                 throw new NotFoundHttpException('Report not found.');
             }
 
             $dataSource = $report->getDataSource();
 
-            // @todo - handle errors better
             if (!$dataSource) {
                 throw new NotFoundHttpException('Data Source not found.');
             }

@@ -6,6 +6,7 @@ use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQuery;
+use craft\errors\MissingComponentException;
 
 class NotificationEmailQuery extends ElementQuery
 {
@@ -18,7 +19,7 @@ class NotificationEmailQuery extends ElementQuery
 
     /**
      * @return bool
-     * @throws \craft\errors\MissingComponentException
+     * @throws MissingComponentException
      */
     protected function beforePrepare(): bool
     {

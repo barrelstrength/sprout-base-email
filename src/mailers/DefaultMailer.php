@@ -6,6 +6,7 @@ use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
+use barrelstrength\sproutbasereports\elements\Report;
 use barrelstrength\sproutcampaigns\elements\CampaignEmail;
 use barrelstrength\sproutemail\services\SentEmails;
 use barrelstrength\sproutemail\SproutEmail;
@@ -70,7 +71,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function getSettingsHtml(array $settings = []): Markup
     {
@@ -284,7 +285,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function getListsHtml($values = [])
     {
@@ -293,14 +294,14 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
         $listIds = [];
 
         // Convert json format to array
-        if ($values !== null AND is_string($values)) {
+        if ($values !== null && is_string($values)) {
             $listIds = Json::decode($values);
             $listIds = $listIds['listIds'];
         }
 
         if (!empty($listIds)) {
             foreach ($listIds as $key => $listId) {
-                $selectedElements[] = Craft::$app->elements->getElementById($listId);
+                $selectedElements[] = Craft::$app->elements->getElementById($listId, Report::class);
             }
         }
 

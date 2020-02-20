@@ -7,6 +7,7 @@ use League\HTMLToMarkdown\HtmlConverter;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use yii\base\Exception;
 
 /**
  * Class EmailTemplates
@@ -49,7 +50,7 @@ abstract class EmailTemplates
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function getHtmlBody(): string
     {
@@ -73,7 +74,7 @@ abstract class EmailTemplates
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function getTextBody(): string
     {
@@ -96,7 +97,7 @@ abstract class EmailTemplates
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     protected function processEmailTemplates()
     {
