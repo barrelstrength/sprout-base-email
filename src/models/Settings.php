@@ -96,15 +96,15 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
                 'selected' => 'sentemails',
                 'template' => 'sprout-base-email/settings/sentemails'
             ],
-//            'integrationsHeading' => [
-//                'heading' => Craft::t('sprout-base-email', 'Integrations'),
-//            ],
-//            'reports' => [
-//                'label' => Craft::t('sprout-base-email', 'Reports'),
-//                'url' => 'sprout-email/settings/reports',
-//                'selected' => 'reports',
-//                'template' => 'sprout-base-email/settings/reports'
-//            ]
+            'integrationsHeading' => [
+                'heading' => Craft::t('sprout-base-email', 'Integrations'),
+            ],
+            'mailing-lists' => [
+                'label' => Craft::t('sprout-base-email', 'Mailing Lists'),
+                'url' => 'sprout-email/settings/mailing-lists',
+                'selected' => 'mailing-lists',
+                'template' => 'sprout-base-email/settings/mailing-lists'
+            ]
         ];
     }
 
