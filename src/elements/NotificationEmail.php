@@ -266,7 +266,7 @@ class NotificationEmail extends EmailElement
      */
     public function getCpEditUrl()
     {
-        $notificationEmailBaseUrl = Craft::$app->getSession()->get('sprout.notificationEmailBaseUrl');
+        $notificationEmailBaseUrl = Craft::$app->getSession()->get('sprout.notifications.notificationEmailBaseUrl');
 
         return UrlHelper::cpUrl(
             $notificationEmailBaseUrl.'edit/'.$this->id
@@ -300,7 +300,7 @@ class NotificationEmail extends EmailElement
                 ]);
             }
 
-            $notificationEmailBaseUrl = Craft::$app->getSession()->get('sprout.notificationEmailBaseUrl');
+            $notificationEmailBaseUrl = Craft::$app->getSession()->get('sprout.notifications.notificationEmailBaseUrl');
 
             return Craft::$app->getView()->renderTemplate('sprout-base-email/_components/elementindex/NotificationEmail/preview-links', [
                 'email' => $this,

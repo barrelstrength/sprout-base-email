@@ -49,7 +49,7 @@ class NotificationEmailQuery extends ElementQuery
 
         if (!Craft::$app->getRequest()->getIsConsoleRequest() && Craft::$app->getSession()->getIsActive()) {
 
-            $this->viewContext = Craft::$app->getSession()->get('sprout.viewContext');
+            $this->viewContext = Craft::$app->getSession()->get('sprout.notifications.viewContext');
 
             if ($this->viewContext !== null && $this->viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT) {
                 $this->query->where(['sproutemail_notificationemails.viewContext' => $this->viewContext]);

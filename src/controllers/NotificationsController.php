@@ -13,6 +13,8 @@ use barrelstrength\sproutbaseemail\models\ModalResponse;
 use barrelstrength\sproutbaseemail\models\Settings;
 use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
+use barrelstrength\sproutbasereports\base\DataSource;
+use barrelstrength\sproutbasereports\services\DataSources;
 use Craft;
 use craft\base\Plugin;
 use craft\errors\MissingComponentException;
@@ -71,8 +73,8 @@ class NotificationsController extends Controller
     {
         $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
 
-        Craft::$app->getSession()->set('sprout.notificationEmailBaseUrl', $this->notificationEmailBaseUrl);
-        Craft::$app->getSession()->set('sprout.viewContext', $viewContext);
+        Craft::$app->getSession()->set('sprout.notifications.notificationEmailBaseUrl', $this->notificationEmailBaseUrl);
+        Craft::$app->getSession()->set('sprout.notifications.viewContext', $viewContext);
 
         return $this->renderTemplate('sprout-base-email/notifications/index', [
             'viewNotificationsPermission' => $this->permissions['sproutEmail-viewNotifications'],
@@ -125,6 +127,9 @@ class NotificationsController extends Controller
     public function actionEditNotificationEmailTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $emailId = null, NotificationEmail $notificationEmail = null): Response
     {
         $this->requirePermission($this->permissions['sproutEmail-editNotifications']);
+
+        Craft::$app->getSession()->set('sprout.notifications.viewContext', $viewContext);
+        Craft::$app->getSession()->set('sprout.reports.viewContext', DataSource::DEFAULT_VIEW_CONTEXT);
 
         $routeParams = Craft::$app->getUrlManager()->getRouteParams();
 
