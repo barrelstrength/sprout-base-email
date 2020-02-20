@@ -161,12 +161,14 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
             $message->variables = $variables;
         }
 
-        if ($bcc = $recipientBc->getRecipientEmails()) {
-            $message->setBcc($bcc);
-        }
+        if ($notificationEmail->sendMethod === 'singleEmail') {
+            if ($bcc = $recipientBc->getRecipientEmails()) {
+                $message->setBcc($bcc);
+            }
 
-        if ($cc = $recipientCc->getRecipientEmails()) {
-            $message->setCc($cc);
+            if ($cc = $recipientCc->getRecipientEmails()) {
+                $message->setCc($cc);
+            }
         }
 
         $this->sendEmail($notificationEmail, $message, $recipients);
