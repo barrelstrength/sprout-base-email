@@ -9,6 +9,7 @@ use barrelstrength\sproutbaseemail\events\SendNotificationEmailEvent;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use Craft;
 use craft\base\Component;
+use craft\helpers\ArrayHelper;
 use craft\helpers\Json;
 use Throwable;
 use yii\base\Event;
@@ -165,6 +166,26 @@ class NotificationEmailEvents extends Component
      */
     public function handleDynamicEvent($notificationEmailEventClassName, Event $event, NotificationEvent $eventHandlerClass): bool
     {
+        $request = Craft::$app->getRequest();
+
+        // Only handle notifications on web requests
+        if ($request->getIsConsoleRequest()) {
+            return false;
+        }
+
+        // Don't process Notification Events when migrations are running
+        // Code taken from Web Application _processUpdateLogic
+        if ($request->getIsActionRequest()) {
+            $actionSegments = $request->getActionSegments();
+            if (
+                ArrayHelper::firstValue($actionSegments) === 'updater' ||
+                $actionSegments === ['app', 'migrate'] ||
+                $actionSegments === ['pluginstore', 'install', 'migrate']
+            ) {
+                return false;
+            }
+        }
+
         Craft::info(Craft::t('sprout-base-email', 'A Notification Event has been triggered: {eventName}', [
             'eventName' => $eventHandlerClass->getName()
         ]));
