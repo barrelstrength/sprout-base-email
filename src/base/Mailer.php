@@ -9,9 +9,9 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutbaseemail\models\SimpleRecipient;
 use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
+use barrelstrength\sproutbaseemail\web\twig\EmailTemplateSandboxExtension;
 use Craft;
 use craft\base\Component;
-use craft\helpers\Html;
 use craft\mail\Message;
 use Exception;
 use Throwable;
@@ -134,6 +134,7 @@ abstract class Mailer extends Component
         $this->renderObjectTemplateSafely($email, 'fromName', $object);
         $this->renderObjectTemplateSafely($email, 'fromEmail', $object);
         $this->renderObjectTemplateSafely($email, 'replyToEmail', $object);
+        $this->renderObjectTemplateSafely($email, 'defaultBody', $object);
 
         $message->setSubject($email->subjectLine);
         $message->setFrom([$email->fromEmail => $email->fromName]);
@@ -158,32 +159,6 @@ abstract class Mailer extends Component
         if (empty($htmlBody)) {
             $email->addError('htmlBody', Craft::t('sprout-base-email', 'HTML template is blank.'));
         }
-
-        $styleTags = [];
-
-        // Swap out Style tags so we don't run into conflicts with shorthand object-syntax
-        $htmlBody = $this->addPlaceholderStyleTags($htmlBody, $styleTags);
-
-        // Some Twig code in our email fields may need us to decode
-        // entities so our email doesn't throw errors when we try to
-        // render the field objects. Example: {variable|date("Y/m/d")}
-        $textBody = Html::decode($textBody);
-        $htmlBody = Html::decode($htmlBody);
-
-        // Process the results of the templates once more, to render any dynamic objects used in fields
-        try {
-            $textBody = Craft::$app->getView()->renderObjectTemplate($textBody, $object);
-        } catch (Exception $e) {
-            $email->addError('body', $e->getMessage());
-        }
-
-        try {
-            $htmlBody = Craft::$app->getView()->renderObjectTemplate($htmlBody, $object);
-        } catch (Exception $e) {
-            $email->addError('htmlBody', $e->getMessage());
-        }
-
-        $htmlBody = $this->removePlaceholderStyleTags($htmlBody, $styleTags);
 
         $message->setTextBody($textBody);
         $message->setHtmlBody($htmlBody);
@@ -212,42 +187,5 @@ abstract class Mailer extends Component
         } catch (Exception $e) {
             $email->addError($email->{$attribute}, $e->getMessage());
         }
-    }
-
-    private function addPlaceholderStyleTags($htmlBody, &$styleTags)
-    {
-        // Get the style tag
-        preg_match_all("/<style\\b[^>]*>(.*?)<\\/style>/s", $htmlBody, $matches);
-
-        if (!empty($matches)) {
-            $tags = $matches[0];
-
-            // Temporarily replace with style tags with a random string
-            if (!empty($tags)) {
-                $i = 0;
-                foreach ($tags as $tag) {
-                    $key = "<!-- %style$i% -->";
-
-                    $styleTags[$key] = $tag;
-
-                    $htmlBody = str_replace($tag, $key, $htmlBody);
-
-                    $i++;
-                }
-            }
-        }
-
-        return $htmlBody;
-    }
-
-    private function removePlaceholderStyleTags($htmlBody, $styleTags)
-    {
-        if (!empty($styleTags)) {
-            foreach ($styleTags as $key => $tag) {
-                $htmlBody = str_replace($key, $tag, $htmlBody);
-            }
-        }
-
-        return $htmlBody;
     }
 }
