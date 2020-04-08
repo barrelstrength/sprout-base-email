@@ -196,7 +196,7 @@ abstract class EmailElement extends Element
                     $emailTemplates = new $settings->emailTemplateId();
                 } else {
                     // custom folder on site path
-                    $templatePath = $sitePath.DIRECTORY_SEPARATOR.$settings->emailTemplateId;
+                    $templatePath = $settings->emailTemplateId;
 
                     $emailTemplates = new CustomTemplates();
                     $emailTemplates->setPath($templatePath);
@@ -222,7 +222,7 @@ abstract class EmailElement extends Element
 
         if ($isCustom) {
             // custom folder on site path
-            $templatePath = $sitePath.DIRECTORY_SEPARATOR.$emailTemplateId;
+            $templatePath = $emailTemplateId;
 
             $emailTemplates = new CustomTemplates();
             $emailTemplates->setPath($templatePath);

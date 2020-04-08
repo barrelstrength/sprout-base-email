@@ -2,7 +2,9 @@
 
 namespace barrelstrength\sproutbaseemail\base;
 
+use barrelstrength\sproutbaseemail\emailtemplates\CustomTemplates;
 use Craft;
+use craft\web\View;
 use League\HTMLToMarkdown\HtmlConverter;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -37,9 +39,16 @@ abstract class EmailTemplates
     abstract public function getName(): string;
 
     /**
-     * The folder path where your email templates exist
+     * The root folder where the Email Templates exist
      *
-     * This value should be a folder. Sprout Email will look for a required email.html file and an optional email.txt file within this folder.
+     * @return string
+     */
+    abstract public function getTemplateRoot(): string;
+
+    /**
+     * The folder path where your email templates exist in relation to the folder defined in [[self::getTemplateRoot]]
+     *
+     * This value should also be a folder. Sprout Email will look for a required email.twig file and an optional email.txt file within this folder.
      *
      * @return string
      */
@@ -103,15 +112,15 @@ abstract class EmailTemplates
     {
         $view = Craft::$app->getView();
         $oldTemplatePath = $view->getTemplatesPath();
-        $view->setTemplatesPath($this->getPath());
 
-        // @todo - make dynamic
-        $htmlEmailTemplate = 'email.html';
-        $textEmailTemplate = 'email.txt';
+        $view->setTemplatesPath($this->getTemplateRoot());
+
+        $htmlEmailTemplate = null;
+        $textEmailTemplate = $this->getPath().'/email.txt';
 
         // Allow other extensions for email.html
         foreach (Craft::$app->getConfig()->getGeneral()->defaultTemplateExtensions as $extension) {
-            $templateName = 'email.'.$extension;
+            $templateName = $this->getPath().'/email.'.$extension;
 
             if (Craft::$app->getView()->doesTemplateExist($templateName)) {
                 $htmlEmailTemplate = $templateName;
