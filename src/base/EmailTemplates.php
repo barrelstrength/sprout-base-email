@@ -39,6 +39,16 @@ abstract class EmailTemplates
     abstract public function getName(): string;
 
     /**
+     * The Template Mode to use when loading the email template
+     *
+     * @return string
+     */
+    public function getTemplateMode(): string
+    {
+        return View::TEMPLATE_MODE_CP;
+    }
+
+    /**
      * The root folder where the Email Templates exist
      *
      * @return string
@@ -111,8 +121,10 @@ abstract class EmailTemplates
     protected function processEmailTemplates()
     {
         $view = Craft::$app->getView();
+        $oldTemplateMode = $view->getTemplateMode();
         $oldTemplatePath = $view->getTemplatesPath();
 
+        $view->setTemplateMode($this->getTemplateMode());
         $view->setTemplatesPath($this->getTemplateRoot());
 
         $htmlEmailTemplate = null;
@@ -154,6 +166,7 @@ abstract class EmailTemplates
             $body = trim($markdown);
         }
 
+        $view->setTemplateMode($oldTemplateMode);
         $view->setTemplatesPath($oldTemplatePath);
 
         $this->setHtmlBody($htmlBody);

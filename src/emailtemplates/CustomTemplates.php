@@ -29,6 +29,11 @@ class CustomTemplates extends EmailTemplates
         return Craft::t('sprout-base-email', 'Custom Templates');
     }
 
+    public function getTemplateMode(): string
+    {
+        return View::TEMPLATE_MODE_SITE;
+    }
+
     public function getTemplateRoot(): string
     {
         return Craft::$app->getView()->getTemplatesPath();
