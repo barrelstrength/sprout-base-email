@@ -2,7 +2,6 @@
 
 namespace barrelstrength\sproutbaseemail\base;
 
-use barrelstrength\sproutbase\base\BaseSproutTrait;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use craft\base\SavableComponent;
@@ -27,8 +26,6 @@ use yii\base\Event;
  */
 abstract class NotificationEvent extends SavableComponent
 {
-    use BaseSproutTrait;
-
     /**
      * @var NotificationEmail $notificationEmail
      */

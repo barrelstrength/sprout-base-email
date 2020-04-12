@@ -6,8 +6,10 @@ use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\base\EmailTemplates;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
+use barrelstrength\sproutbaseemail\base\NotificationEvent;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
+use barrelstrength\sproutbaseemail\events\NotificationEmailEvent;
 use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
 use barrelstrength\sproutbaseemail\models\ModalResponse;
 use barrelstrength\sproutbaseemail\models\Settings;
@@ -16,6 +18,7 @@ use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasereports\base\DataSource;
 use Craft;
 use craft\base\Plugin;
+use craft\base\PluginInterface;
 use craft\errors\MissingComponentException;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
@@ -296,7 +299,9 @@ class NotificationsController extends Controller
         }
 
         $event = null;
+
         if ($notificationEmail->eventId) {
+            /** @var NotificationEvent $event */
             $event = SproutBaseEmail::$app->notificationEvents->getEventById($notificationEmail->eventId);
         }
 
@@ -309,10 +314,8 @@ class NotificationsController extends Controller
                 $notificationEmail->settings = Json::encode($eventSettings);
             }
 
-            /**
-             * @var $plugin Plugin
-             */
-            $plugin = $event->getPlugin();
+            /** @var Plugin $plugin */
+            $plugin = $this->getPlugin($event);
 
             if ($plugin) {
                 $notificationEmail->viewContext = $plugin->id;
@@ -337,7 +340,7 @@ class NotificationsController extends Controller
             Craft::$app->getSession()->setError(Craft::t('sprout-base-email', 'Unable to save notification.'));
 
 //            $errorMessage = $this->formatErrors();
-//            SproutBase::error($errorMessage);
+//            Craft::error($errorMessage, __METHOD__);
 
             // Set the previous cp path to avoid not found template when showing errors
             if ($cpPath) {
@@ -389,7 +392,7 @@ class NotificationsController extends Controller
             Craft::$app->getSession()->setError(Craft::t('sprout-base-email', 'Unable to save notification.'));
 
 //            $errorMessage = $this->formatErrors();
-//            SproutBase::error($errorMessage);
+//            Craft::error($errorMessage, __METHOD__);
 
             return Craft::$app->getUrlManager()->setRouteParams([
                 'notificationEmail' => $notificationEmail
@@ -428,7 +431,7 @@ class NotificationsController extends Controller
                 return $this->asJson(['success' => false]);
             }
 
-            Craft::info(Json::encode($notificationEmail->getErrors()));
+            Craft::info(Json::encode($notificationEmail->getErrors()), __METHOD__);
 
             Craft::$app->getSession()->setNotice(Craft::t('sprout-base-email', 'Couldn’t delete notification.'));
 
@@ -629,6 +632,26 @@ class NotificationsController extends Controller
         }
 
         return $text;
+    }
+
+    /**
+     * @param NotificationEvent $event
+     *
+     * @return PluginInterface|null
+     */
+    private function getPlugin(NotificationEvent $event)
+    {
+        $pluginClass = get_class($event);
+
+        $pluginHandle = Craft::$app->getPlugins()->getPluginHandleByClass($pluginClass);
+
+        $plugin = null;
+
+        if ($pluginHandle) {
+            $plugin = Craft::$app->getPlugins()->getPlugin($pluginHandle);
+        }
+
+        return $plugin;
     }
 
     /**

@@ -7,7 +7,6 @@
 
 namespace barrelstrength\sproutbaseemail;
 
-use barrelstrength\sproutbase\base\BaseSproutTrait;
 use barrelstrength\sproutbaseemail\controllers\MailersController;
 use barrelstrength\sproutbaseemail\controllers\NotificationsController;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
@@ -31,19 +30,10 @@ use yii\base\Module;
 
 class SproutBaseEmail extends Module
 {
-    use BaseSproutTrait;
-
     /**
      * @var App
      */
     public static $app;
-
-    /**
-     * Identify our plugin for BaseSproutTrait
-     *
-     * @var string
-     */
-    public static $pluginHandle = 'sprout-base-email';
 
     /**
      * @var string

@@ -186,9 +186,7 @@ class NotificationEmailEvents extends Component
             }
         }
 
-        Craft::info(Craft::t('sprout-base-email', 'A Notification Event has been triggered: {eventName}', [
-            'eventName' => $eventHandlerClass->getName()
-        ]));
+        Craft::info('A Notification Event has been triggered: '.$eventHandlerClass->getName(), __METHOD__);
 
         // Get all Notification Emails that match this Notification Event
         $notificationEmails = SproutBaseEmail::$app->notifications->getAllNotificationEmails($notificationEmailEventClassName);
