@@ -7,6 +7,7 @@ use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbasereports\elements\Report;
+use barrelstrength\sproutbasereports\records\Report as ReportRecord;
 use barrelstrength\sproutcampaigns\elements\CampaignEmail;
 use barrelstrength\sproutemail\services\SentEmails;
 use barrelstrength\sproutemail\SproutEmail;
@@ -245,12 +246,12 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
     public function hasLists(): bool
     {
         $sproutReportsIsEnabled = Craft::$app->getPlugins()->isPluginEnabled('sprout-reports');
-        $sproutReportsTableExists = Craft::$app->db->tableExists('{{%sproutreports_reports}}');
+        $sproutReportsTableExists = Craft::$app->db->tableExists(ReportRecord::tableName());
 
         if ($sproutReportsIsEnabled && $sproutReportsTableExists) {
             return (new Query())
                 ->select('id')
-                ->from('{{%sproutreports_reports}}')
+                ->from(ReportRecord::tableName())
                 ->where(['not', ['emailColumn' => null]])
                 ->exists();
         }

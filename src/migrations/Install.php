@@ -7,26 +7,21 @@
 
 namespace barrelstrength\sproutbaseemail\migrations;
 
+use barrelstrength\sproutbaseemail\records\NotificationEmail as NotificationEmailRecord;
 use craft\db\Migration;
+use craft\db\Table;
 
 class Install extends Migration
 {
-    private $notificationEmailTable = '{{%sproutemail_notificationemails}}';
-
     /**
      * @inheritdoc
      */
     public function safeUp()
     {
-        $this->createTables();
-    }
+        $notificationTableName = NotificationEmailRecord::tableName();
 
-    public function createTables()
-    {
-        $notificationTable = $this->getDb()->tableExists($this->notificationEmailTable);
-
-        if ($notificationTable == false) {
-            $this->createTable($this->notificationEmailTable,
+        if ($this->getDb()->tableExists($notificationTableName)) {
+            $this->createTable($notificationTableName,
                 [
                     'id' => $this->primaryKey(),
                     'viewContext' => $this->string(),
@@ -53,16 +48,12 @@ class Install extends Migration
                 ]
             );
 
-            $this->addForeignKey(null, $this->notificationEmailTable, ['id'], '{{%elements}}', ['id'], 'CASCADE');
+            $this->addForeignKey(null, $notificationTableName, ['id'], Table::ELEMENTS, ['id'], 'CASCADE');
         }
     }
 
-    public function dropTables()
+    public function safeDown()
     {
-        $notificationTable = $this->getDb()->tableExists($this->notificationEmailTable);
-
-        if ($notificationTable) {
-            $this->dropTable($this->notificationEmailTable);
-        }
+        $this->dropTableIfExists(NotificationEmailRecord::tableName());
     }
 }
