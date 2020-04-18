@@ -7,7 +7,7 @@ use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutcampaigns\SproutCampaign;
-use barrelstrength\sproutemail\elements\SentEmail;
+use barrelstrength\sproutbasesentemail\elements\SentEmail;
 use Craft;
 use craft\helpers\UrlHelper;
 use yii\base\Exception;
