@@ -218,23 +218,21 @@ class NotificationsController extends Controller
 
     /**
      * @param null   $emailId
-     * @param string $emailType
      *
      * @return Response
      * @throws ForbiddenHttpException
      */
-    public function actionPreview(string $emailType, $emailId = null): Response
+    public function actionPreview($emailId = null): Response
     {
         $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
 
-        $folder = $emailType == 'notification' ? 'notifications/' : '';
+        $email = Craft::$app->getElements()->getElementById($emailId, NotificationEmail::class);
 
-        $email = Craft::$app->getElements()->getElementById($emailId);
-
-        return $this->renderTemplate("sprout-base-email/{$folder}_special/preview", [
+        return $this->renderTemplate('sprout-base-email/_preview/preview-body', [
             'email' => $email,
             'emailId' => $emailId,
-            'emailType' => $emailType
+            'htmlBody' => null,
+            'body' => null
         ]);
     }
 
