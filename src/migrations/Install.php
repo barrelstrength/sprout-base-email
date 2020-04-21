@@ -7,8 +7,11 @@
 
 namespace barrelstrength\sproutbaseemail\migrations;
 
+use barrelstrength\sproutbase\records\Settings as SproutBaseSettingsRecord;
+use barrelstrength\sproutbaseemail\models\Settings as SproutBaseEmailSettings;
 use barrelstrength\sproutbaseemail\records\NotificationEmail as NotificationEmailRecord;
 use craft\db\Migration;
+use craft\db\Query;
 use craft\db\Table;
 
 class Install extends Migration
@@ -50,10 +53,33 @@ class Install extends Migration
 
             $this->addForeignKey(null, $notificationTableName, ['id'], Table::ELEMENTS, ['id'], 'CASCADE');
         }
+
+        $this->insertDefaultSettings();
     }
 
     public function safeDown()
     {
         $this->dropTableIfExists(NotificationEmailRecord::tableName());
+    }
+
+    public function insertDefaultSettings()
+    {
+        $settingsRow = (new Query())
+            ->select(['*'])
+            ->from([SproutBaseSettingsRecord::tableName()])
+            ->where(['model' => SproutBaseEmailSettings::class])
+            ->one();
+
+        if ($settingsRow === null) {
+
+            $settings = new SproutBaseEmailSettings();
+
+            $settingsArray = [
+                'model' => SproutBaseEmailSettings::class,
+                'settings' => json_encode($settings->toArray())
+            ];
+
+            $this->insert(SproutBaseSettingsRecord::tableName(), $settingsArray);
+        }
     }
 }
