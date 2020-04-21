@@ -27,6 +27,11 @@ class App extends Component
     public $emailTemplates;
 
     /**
+     * @var Settings;
+     */
+    public $settings;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -36,5 +41,6 @@ class App extends Component
         $this->mailers = new Mailers();
         $this->notifications = new NotificationEmails();
         $this->notificationEvents = new NotificationEmailEvents();
+        $this->settings = new Settings();
     }
 }

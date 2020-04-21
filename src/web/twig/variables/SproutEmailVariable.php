@@ -114,11 +114,7 @@ class SproutEmailVariable
         }
 
         $templateFolder = null;
-        $plugin = Craft::$app->getPlugins()->getPlugin('sprout-email');
-
-        if ($plugin) {
-            $settings = $plugin->getSettings();
-        }
+        $settings = SproutBaseEmail::$app->settings->getEmailSettings();
 
         $templateFolder = $notificationEmail->emailTemplateId ?? $settings->emailTemplateId ?? $defaultEmailTemplates->getPath();
 

@@ -1,14 +1,20 @@
 <?php
+/**
+ * @link      https://sprout.barrelstrengthdesign.com
+ * @copyright Copyright (c) Barrel Strength Design LLC
+ * @license   https://craftcms.github.io/license
+ */
 
 namespace barrelstrength\sproutbaseemail\models;
 
 use barrelstrength\sproutbase\base\SharedPermissionsInterface;
 use barrelstrength\sproutbase\base\SproutSettingsInterface;
+use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
+use barrelstrength\sproutemail\SproutEmail;
 use Craft;
 use craft\base\Model;
 
 /**
- *
  * @property array $sharedPermissions
  * @property array $settingsNavItems
  */
@@ -25,19 +31,9 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
     public $enableNotificationEmails = true;
 
     /**
-     * @var bool
-     */
-    public $enableCampaignEmails = false;
-
-    /**
-     * @var bool
-     */
-    public $enableSentEmails = false;
-
-    /**
      * @var null
      */
-    public $emailTemplateId;
+    public $emailTemplateId = BasicTemplates::class;
 
     /**
      * @var int
@@ -45,67 +41,69 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
     public $enablePerEmailEmailTemplateIdOverride = 0;
 
     /**
-     * @var int
-     */
-    public $sentEmailsLimit;
-
-    /**
-     * @var int
-     */
-    public $cleanupProbability = 1000;
-
-    /**
-     * @var bool
-     */
-//    public $showReportsTab = true;
-
-    /**
      * @inheritdoc
      */
     public function getSettingsNavItems(): array
     {
-        return [
-            'general' => [
-                'label' => Craft::t('sprout-base-email', 'General'),
-                'url' => 'sprout-email/settings/general',
-                'selected' => 'general',
-                'template' => 'sprout-base-email/settings/general'
-            ],
-            'mailers' => [
-                'label' => Craft::t('sprout-base-email', 'Mailers'),
-                'url' => 'sprout-email/settings/mailers',
-                'selected' => 'mailers',
-                'template' => 'sprout-base-email/settings/mailers'
-            ],
+        /** @var SproutEmail $plugin */
+        $plugin = SproutEmail::getInstance();
+        $isPro = $plugin->is(SproutEmail::EDITION_PRO);
+
+        $navItems['general'] = [
+            'label' => Craft::t('sprout-base-email', 'General'),
+            'url' => 'sprout-email/settings/general',
+            'selected' => 'general',
+            'template' => 'sprout-base-email/settings/general'
+        ];
+        $navItems['mailers'] = [
+            'label' => Craft::t('sprout-base-email', 'Mailers'),
+            'url' => 'sprout-email/settings/mailers',
+            'selected' => 'mailers',
+            'template' => 'sprout-base-email/settings/mailers'
+        ];
 //            'campaigntypes' => [
-//                'label' => Craft::t('sprout-email', 'Campaigns'),
+//                'label' => Craft::t('sprout-base-email', 'Campaigns'),
 //                'url' => 'sprout-email/settings/campaigntypes',
 //                'selected' => 'campaigntypes',
 //                'template' => 'sprout-base-email/settings/campaigntypes',
 //                'settingsForm' => false
 //            ],
-            'notifications' => [
-                'label' => Craft::t('sprout-base-email', 'Notifications'),
-                'url' => 'sprout-email/settings/notifications',
-                'selected' => 'notifications',
-                'template' => 'sprout-base-email/settings/notifications'
-            ],
-            'sentemails' => [
-                'label' => Craft::t('sprout-base-email', 'Sent Emails'),
-                'url' => 'sprout-email/settings/sentemails',
-                'selected' => 'sentemails',
-                'template' => 'sprout-base-email/settings/sentemails'
-            ],
-            'integrationsHeading' => [
-                'heading' => Craft::t('sprout-base-email', 'Integrations'),
-            ],
-            'mailing-lists' => [
-                'label' => Craft::t('sprout-base-email', 'Mailing Lists'),
-                'url' => 'sprout-email/settings/mailing-lists',
-                'selected' => 'mailing-lists',
-                'template' => 'sprout-base-email/settings/mailing-lists'
-            ]
+        $navItems['notifications'] = [
+            'label' => Craft::t('sprout-base-email', 'Notifications'),
+            'url' => 'sprout-email/settings/notifications',
+            'selected' => 'notifications',
+            'template' => 'sprout-base-email/settings/notifications'
         ];
+
+        if (Craft::$app->getUser()->checkPermission('sproutEmail-viewSentEmail')) {
+            $navItems['sent-email'] = [
+                'label' => Craft::t('sprout-base-email', 'Sent Emails'),
+                'url' => 'sprout-email/settings/sent-email',
+                'selected' => 'sent-email',
+                'template' => 'sprout-base-sent-email/settings/sent-email'
+            ];
+        }
+
+        $navItems['integrationsHeading'] = [
+            'heading' => Craft::t('sprout-base-email', 'Integrations'),
+        ];
+        $navItems['mailing-lists'] = [
+            'label' => Craft::t('sprout-base-email', 'Mailing Lists'),
+            'url' => 'sprout-email/settings/mailing-lists',
+            'selected' => 'mailing-lists',
+            'template' => 'sprout-base-email/settings/mailing-lists'
+        ];
+
+        if (!$isPro) {
+            $navItems['upgrade'] = [
+                'label' => Craft::t('sprout-base-email', 'Upgrade to PRO'),
+                'url' => 'sprout-email/settings/upgrade',
+                'selected' => 'upgrade',
+                'template' => 'sprout-email/settings/upgrade'
+            ];
+        }
+
+        return $navItems;
     }
 
     /**

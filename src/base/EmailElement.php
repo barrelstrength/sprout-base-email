@@ -180,8 +180,7 @@ abstract class EmailElement extends Element
         // Set our default
         $emailTemplates = new BasicTemplates();
 
-        $sproutEmail = Craft::$app->plugins->getPlugin('sprout-email');
-        $sitePath = Craft::$app->path->getSiteTemplatesPath();
+        $settings = SproutBaseEmail::$app->settings->getEmailSettings();
 
         // Allow our settings to override our default
         if ($sproutEmail) {
