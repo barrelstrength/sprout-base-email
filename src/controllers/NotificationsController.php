@@ -9,13 +9,13 @@ use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\base\NotificationEvent;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
-use barrelstrength\sproutbaseemail\events\NotificationEmailEvent;
 use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
 use barrelstrength\sproutbaseemail\models\ModalResponse;
 use barrelstrength\sproutbaseemail\models\Settings as SproutBaseEmailSettings;
 use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasereports\base\DataSource;
+use barrelstrength\sproutbasesentemail\elements\SentEmail;
 use Craft;
 use craft\base\Plugin;
 use craft\base\PluginInterface;
@@ -50,8 +50,11 @@ class NotificationsController extends Controller
 
     public function init()
     {
-        $this->permissions = SproutBase::$app->settings->getPluginPermissions(new Settings(), 'sprout-email');
+        $routeParams = Craft::$app->getUrlManager()->getRouteParams();
+        $currentPluginHandle = $routeParams['pluginHandle'] ?? null;
 
+        $this->permissions = SproutBase::$app->settings->getPluginPermissions(new SproutBaseEmailSettings(), 'sprout-email', $currentPluginHandle);
+        
         // Only use notificationEmailBaseUrl variable in template routes, segments won't be accurate in action requests
         if (!Craft::$app->getRequest()->getIsActionRequest()) {
             $segmentOne = Craft::$app->getRequest()->getSegment(1);
