@@ -1,16 +1,14 @@
 {% import "_includes/forms" as forms %}
 
-{% block content %}
+<input type="hidden" name="sproutBaseSettingsType" value="{{ className(settings) }}">
 
-    {{ forms.textField({
-        label: "Plugin Name"|t('sprout-base-email'),
-        instructions: "Intuitive, human-readable plugin name for the end user."|t('sprout-base-email'),
-        id: 'pluginNameOverride',
-        name: 'pluginNameOverride',
-        value: settings.pluginNameOverride,
-        autofocus: true,
-        first: true,
-        errors: ''
-    }) }}
-
-{% endblock %}
+{{ forms.textField({
+    label: "Plugin Name"|t('sprout-base-email'),
+    instructions: "Intuitive, human-readable plugin name for the end user."|t('sprout-base-email'),
+    id: 'pluginNameOverride',
+    name: 'pluginNameOverride',
+    value: settings.pluginNameOverride,
+    autofocus: true,
+    first: true,
+    errors: ''
+}) }}
