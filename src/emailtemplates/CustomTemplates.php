@@ -5,6 +5,7 @@ namespace barrelstrength\sproutbaseemail\emailtemplates;
 use barrelstrength\sproutbaseemail\base\EmailTemplates;
 use Craft;
 use craft\web\View;
+use yii\base\Exception;
 
 /**
  * The Custom Templates is used to dynamically create an EmailTemplate
@@ -34,9 +35,13 @@ class CustomTemplates extends EmailTemplates
         return View::TEMPLATE_MODE_SITE;
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     public function getTemplateRoot(): string
     {
-        return Craft::$app->getView()->getTemplatesPath();
+        return Craft::$app->path->getSiteTemplatesPath();
     }
 
     /**
