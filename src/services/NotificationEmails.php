@@ -2,7 +2,6 @@
 
 namespace barrelstrength\sproutbaseemail\services;
 
-use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\base\NotificationEvent;
@@ -12,6 +11,7 @@ use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use Craft;
 use craft\base\Component;
 use craft\base\ElementInterface;
+use craft\errors\ElementNotFoundException;
 use craft\helpers\ElementHelper;
 use craft\models\FieldLayout;
 use Exception;
@@ -132,18 +132,17 @@ class NotificationEmails extends Component
      */
     public function getPreviewNotificationEmailById($notificationId, $type = null)
     {
-        /**
-         * @var $notificationEmail NotificationEmail
-         */
         $notificationEmail = Craft::$app->getElements()->getElementById($notificationId, NotificationEmail::class);
+
+        if (!$notificationEmail instanceof NotificationEmail) {
+            throw new ElementNotFoundException('Notification Email not found using id '.$$notificationId); 
+        }
 
         $event = SproutBaseEmail::$app->notificationEvents->getEvent($notificationEmail);
 
         if (!$event) {
             ob_start();
-
             echo Craft::t('sprout-base-email', 'Notification Email cannot display. The Event setting must be set.');
-
             // End the request
             Craft::$app->end();
         }
