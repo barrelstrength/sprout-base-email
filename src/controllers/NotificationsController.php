@@ -12,7 +12,7 @@ use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
 use barrelstrength\sproutbaseemail\events\NotificationEmailEvent;
 use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
 use barrelstrength\sproutbaseemail\models\ModalResponse;
-use barrelstrength\sproutbaseemail\models\Settings;
+use barrelstrength\sproutbaseemail\models\Settings as SproutBaseEmailSettings;
 use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasereports\base\DataSource;
@@ -79,7 +79,6 @@ class NotificationsController extends Controller
         Craft::$app->getSession()->set('sprout.notifications.viewContext', $viewContext);
 
         return $this->renderTemplate('sprout-base-email/notifications/index', [
-            'viewNotificationsPermission' => $this->permissions['sproutEmail-viewNotifications'],
             'viewContext' => $viewContext,
             'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl,
             'hideSidebar' => $hideSidebar
@@ -213,7 +212,6 @@ class NotificationsController extends Controller
             'tabs' => $tabs,
             'showPreviewBtn' => $showPreviewBtn,
             'shareUrl' => $shareUrl,
-            'editNotificationsPermission' => $this->permissions['sproutEmail-editNotifications'],
             'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl
         ]);
     }
