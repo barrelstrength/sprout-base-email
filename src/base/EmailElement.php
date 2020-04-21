@@ -5,7 +5,7 @@ namespace barrelstrength\sproutbaseemail\base;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
 use barrelstrength\sproutbaseemail\emailtemplates\CustomTemplates;
 use barrelstrength\sproutbaseemail\mailers\DefaultMailer;
-use barrelstrength\sproutbaseemail\models\Settings;
+use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use Craft;
 use craft\base\Element;
 use craft\base\Field;
@@ -159,7 +159,6 @@ abstract class EmailElement extends Element
 
     /**
      * @return EmailTemplates|BasicTemplates|CustomTemplates
-     * @throws Exception
      */
     public function getEmailTemplates()
     {
@@ -178,28 +177,22 @@ abstract class EmailElement extends Element
         }
 
         // Set our default
-        $emailTemplates = new BasicTemplates();
+        $emailTemplates = '';
 
         $settings = SproutBaseEmail::$app->settings->getEmailSettings();
 
         // Allow our settings to override our default
-        if ($sproutEmail) {
-            /**
-             * @var Settings $settings
-             */
-            $settings = $sproutEmail->getSettings();
+        if ($settings->emailTemplateId) {
+            if (class_exists($settings->emailTemplateId)) {
+                $emailTemplates = new $settings->emailTemplateId();
+            }
 
-            if ($settings->emailTemplateId) {
+            if (!$emailTemplates instanceof EmailTemplates) {
+                // custom folder on site path
+                $templatePath = $settings->emailTemplateId;
 
-                if ($settings->emailTemplateId instanceof EmailTemplates) {
-                    $emailTemplates = new $settings->emailTemplateId();
-                } else {
-                    // custom folder on site path
-                    $templatePath = $settings->emailTemplateId;
-
-                    $emailTemplates = new CustomTemplates();
-                    $emailTemplates->setPath($templatePath);
-                }
+                $emailTemplates = new CustomTemplates();
+                $emailTemplates->setPath($templatePath);
             }
         }
 
