@@ -1,8 +1,8 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.checkboxSelectField({
-    label: "Status"|t('sprout-email'),
-    instructions: "Select which transaction statuses will trigger the notification."|t('sprout-email'),
+    label: "Status"|t('sprout-base-email'),
+    instructions: "Select which transaction statuses will trigger the notification."|t('sprout-base-email'),
     name: "commerceStatuses",
     options: statuses,
     values: fieldValue,

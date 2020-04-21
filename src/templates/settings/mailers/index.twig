@@ -11,9 +11,9 @@
         {% if loop.first %}
             <table id="mailers" class="data fullwidth">
             <thead>
-            <th>{{ "Mailer"|t('sprout-email') }}</th>
-            <th>{{ "Settings"|t('sprout-email') }}</th>
-            <th>{{ "Description"|t('sprout-email') }}</th>
+            <th>{{ "Mailer"|t('sprout-base-email') }}</th>
+            <th>{{ "Settings"|t('sprout-base-email') }}</th>
+            <th>{{ "Description"|t('sprout-base-email') }}</th>
             </thead>
         {% endif %}
 
@@ -24,7 +24,7 @@
             <td>
                 {% if mailer.getCpSettingsUrl() != null %}
                     <a href="{{ mailer.getCpSettingsUrl() }}"
-                        title="{{ mailer.displayName() }}">{{ "Settings"|t('sprout-email') }}</a>
+                        title="{{ mailer.displayName() }}">{{ "Settings"|t('sprout-base-email') }}</a>
                 {% endif %}
             </td>
             <td>{{ mailer.getDescription()|md }}</td>

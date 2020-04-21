@@ -291,7 +291,7 @@
             name: 'emailTemplateId',
             options: templateOptions,
             value: notificationEmail is defined ? notificationEmail.emailTemplateId : null,
-            otherPlaceholderText: '_email/email-template-folder'|t('sprout-email'),
+            otherPlaceholderText: '_email/email-template-folder'|t('sprout-base-email'),
             errors: notificationEmail is defined ? notificationEmail.getErrors('emailTemplateId')
         })) }}
 

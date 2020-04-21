@@ -1,7 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.checkboxSelectField({
-    label: "Old Status"|t('sprout-email'),
+    label: "Old Status"|t('sprout-base-email'),
     name: "commerceOrderStatuses[old]",
     options : statuses,
     values: oldFieldValue,
@@ -9,7 +9,7 @@
 }) }}
 
 {{ forms.checkboxSelectField({
-    label: "New Status"|t('sprout-email'),
+    label: "New Status"|t('sprout-base-email'),
     name: "commerceOrderStatuses[new]",
     options: statuses,
     values: newFieldValue,

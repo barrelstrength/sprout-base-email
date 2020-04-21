@@ -17,7 +17,7 @@
         required: true,
         errors: (settings is defined ? settings.getErrors('emailTemplateId') :
         null),
-        instructions: "The templates that will be used to display your Notification Emails. Add additional Email Templates via the Email Templates API or providing a custom path to your email templates folder."|t('sprout-email'),
+        instructions: "The templates that will be used to display your Notification Emails. Add additional Email Templates via the Email Templates API or providing a custom path to your email templates folder."|t('sprout-base-email'),
     }, sproutFields.selectOther({
         name: 'emailTemplateId',
         options: templateOptions,
