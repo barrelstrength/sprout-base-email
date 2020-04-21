@@ -8,9 +8,9 @@ use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbasereports\elements\Report;
 use barrelstrength\sproutbasereports\records\Report as ReportRecord;
+use barrelstrength\sproutbasesentemail\services\SentEmails;
+use barrelstrength\sproutbasesentemail\SproutBaseSentEmail;
 use barrelstrength\sproutcampaigns\elements\CampaignEmail;
-use barrelstrength\sproutemail\services\SentEmails;
-use barrelstrength\sproutemail\SproutEmail;
 use barrelstrength\sproutforms\fields\formfields\FileUpload;
 use Craft;
 use craft\base\Element;
@@ -145,10 +145,10 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
             return false;
         }
 
-        // Only track Sent Emails if Sprout Email is installed
+        // Only track Sent Emails if Sprout Email is installed ...
         if (Craft::$app->plugins->getPlugin('sprout-email')) {
 
-            $infoTable = SproutEmail::$app->sentEmails->createInfoTableModel('sprout-email', [
+            $infoTable = SproutBaseSentEmail::$app->sentEmails->createInfoTableModel('sprout-email', [
                 'emailType' => $notificationEmail->displayName(),
                 'mailer' => self::displayName()
             ]);
