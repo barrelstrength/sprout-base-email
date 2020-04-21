@@ -186,6 +186,12 @@ class NotificationEmailEvents extends Component
             }
         }
 
+        $settings = SproutBaseEmail::$app->settings->getEmailSettings();
+
+        if (!$settings->enableNotificationEmails) {
+            return false;
+        }
+
         Craft::info('A Notification Event has been triggered: '.$eventHandlerClass->getName(), __METHOD__);
 
         // Get all Notification Emails that match this Notification Event
