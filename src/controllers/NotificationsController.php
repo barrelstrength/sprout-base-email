@@ -181,14 +181,18 @@ class NotificationsController extends Controller
 
         $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEvents($notificationEmail);
 
-        $defaultEmailTemplate = BasicTemplates::class;
+        $defaultEmailTemplate = null;
 
         if ($viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT) {
             $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEventsByViewContext($notificationEmail, $viewContext);
 
-            if (new $routeParams['defaultEmailTemplate'] instanceof EmailTemplates) {
-                $defaultEmailTemplate = $routeParams['defaultEmailTemplate'];
+            if (class_exists($routeParams['defaultEmailTemplate'])) {
+                $defaultEmailTemplate = new $routeParams['defaultEmailTemplate']();
             }
+        }
+
+        if (!$defaultEmailTemplate instanceof EmailTemplates) {
+            $defaultEmailTemplate = BasicTemplates::class;
         }
 
         // Set a default template if we don't have one set
