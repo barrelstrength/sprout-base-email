@@ -8,6 +8,7 @@
 namespace barrelstrength\sproutbaseemail\migrations;
 
 use barrelstrength\sproutbase\records\Settings as SproutBaseSettingsRecord;
+use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\models\Settings as SproutBaseEmailSettings;
 use barrelstrength\sproutbaseemail\records\NotificationEmail as NotificationEmailRecord;
 use craft\db\Migration;
@@ -59,7 +60,11 @@ class Install extends Migration
 
     public function safeDown()
     {
+        // Delete Notification Email Elements
+        $this->delete(Table::ELEMENTS, ['type', NotificationEmail::class]);
+
         $this->dropTableIfExists(NotificationEmailRecord::tableName());
+        $this->removeSharedSettings();
     }
 
     public function insertDefaultSettings()
@@ -80,6 +85,21 @@ class Install extends Migration
             ];
 
             $this->insert(SproutBaseSettingsRecord::tableName(), $settingsArray);
+        }
+    }
+
+    public function removeSharedSettings()
+    {
+        $settingsExist = (new Query())
+            ->select(['*'])
+            ->from([SproutBaseSettingsRecord::tableName()])
+            ->where(['model' => SproutBaseEmailSettings::class])
+            ->exists();
+
+        if ($settingsExist) {
+            $this->delete(SproutBaseSettingsRecord::tableName(), [
+                'model' => SproutBaseEmailSettings::class
+            ]);
         }
     }
 }
