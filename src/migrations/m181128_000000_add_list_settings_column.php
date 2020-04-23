@@ -24,7 +24,7 @@ class m181128_000000_add_list_settings_column extends Migration
 
         $table = '{{%sproutemail_campaignemails}}';
 
-        if (!$this->db->columnExists($table, 'listSettings')) {
+        if ($this->db->tableExists($table) && !$this->db->columnExists($table, 'listSettings')) {
             $this->addColumn($table, 'listSettings', $this->string()->after('recipients'));
         }
     }
