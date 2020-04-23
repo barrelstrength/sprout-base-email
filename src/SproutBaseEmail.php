@@ -31,6 +31,12 @@ use yii\base\Module;
 class SproutBaseEmail extends Module
 {
     /**
+     * This Pro Edition value will be used to test for all pro plugins:
+     * - Sprout Email Pro
+     */
+    const EDITION_PRO = 'pro';
+
+    /**
      * @var App
      */
     public static $app;

@@ -9,7 +9,9 @@ namespace barrelstrength\sproutbaseemail\models;
 
 use barrelstrength\sproutbase\base\SharedPermissionsInterface;
 use barrelstrength\sproutbase\base\SproutSettingsInterface;
+use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
+use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutemail\SproutEmail;
 use Craft;
 use craft\base\Model;
@@ -45,10 +47,6 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
      */
     public function getSettingsNavItems(): array
     {
-        /** @var SproutEmail $plugin */
-        $plugin = SproutEmail::getInstance();
-        $isPro = $plugin->is(SproutEmail::EDITION_PRO);
-
         $navItems['general'] = [
             'label' => Craft::t('sprout-base-email', 'General'),
             'url' => 'sprout-email/settings/general',
@@ -75,10 +73,14 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
             'template' => 'sprout-base-email/settings/notifications'
         ];
 
+        $isInstalledSentEmail = Craft::$app->getPlugins()->getPlugin('sprout-sent-email');
+
         if (Craft::$app->getUser()->checkPermission('sproutEmail-viewSentEmail')) {
             $navItems['sent-email'] = [
                 'label' => Craft::t('sprout-base-email', 'Sent Emails'),
-                'url' => 'sprout-email/settings/sent-email',
+                'url' => $isInstalledSentEmail
+                    ? 'sprout-sent-email/settings/sent-email'
+                    : 'sprout-email/settings/sent-email',
                 'selected' => 'sent-email',
                 'template' => 'sprout-base-sent-email/settings/sent-email'
             ];
@@ -93,15 +95,6 @@ class Settings extends Model implements SproutSettingsInterface, SharedPermissio
             'selected' => 'mailing-lists',
             'template' => 'sprout-base-email/settings/mailing-lists'
         ];
-
-        if (!$isPro) {
-            $navItems['upgrade'] = [
-                'label' => Craft::t('sprout-base-email', 'Upgrade to PRO'),
-                'url' => 'sprout-email/settings/upgrade',
-                'selected' => 'upgrade',
-                'template' => 'sprout-email/settings/upgrade'
-            ];
-        }
 
         return $navItems;
     }
