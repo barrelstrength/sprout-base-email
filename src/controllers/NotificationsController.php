@@ -73,28 +73,36 @@ class NotificationsController extends Controller
      * @throws MissingComponentException
      * @throws ForbiddenHttpException
      */
-    public function actionNotificationsIndexTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $hideSidebar = false): Response
+    public function actionNotificationsIndexTemplate(string $pluginHandle = 'sprout-email', string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $hideSidebar = false): Response
     {
         $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
 
         Craft::$app->getSession()->set('sprout.notifications.notificationEmailBaseUrl', $this->notificationEmailBaseUrl);
         Craft::$app->getSession()->set('sprout.notifications.viewContext', $viewContext);
 
+        $isSproutEmailPro = SproutBase::$app->settings->isEdition('sprout-email', SproutBaseEmail::EDITION_PRO);
+
+        $isSproutEmailIntegration = $viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT;
+
         return $this->renderTemplate('sprout-base-email/notifications/index', [
             'viewContext' => $viewContext,
+            'pluginHandle' => $pluginHandle,
             'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl,
-            'hideSidebar' => $hideSidebar
+            'hideSidebar' => $hideSidebar,
+            'isSproutEmailIntegration' => $isSproutEmailIntegration,
+            'isPro' => $isSproutEmailPro
         ]);
     }
 
     /**
+     * @param string                 $viewContext
      * @param null                   $emailId
      * @param NotificationEmail|null $notificationEmail
      *
      * @return Response
      * @throws ForbiddenHttpException
      */
-    public function actionEditNotificationEmailSettingsTemplate($emailId = null, NotificationEmail $notificationEmail = null): Response
+    public function actionEditNotificationEmailSettingsTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $emailId = null, NotificationEmail $notificationEmail = null): Response
     {
         $this->requireAdmin();
 
@@ -108,11 +116,18 @@ class NotificationsController extends Controller
             }
         }
 
+        $isSproutEmailPro = SproutBase::$app->settings->isEdition('sprout-email', SproutBaseEmail::EDITION_PRO);
+        $isSproutEmailIntegration = $viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT;
+
         return $this->renderTemplate('sprout-base-email/notifications/_editFieldLayout', [
             'emailId' => $emailId,
             'notificationEmail' => $notificationEmail,
             'isNewNotificationEmail' => $isNewNotificationEmail,
-            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl
+            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl,
+            'pluginHandle' => 'sprout-email',
+            'viewContext' => $viewContext,
+            'isSproutEmailIntegration' => $isSproutEmailIntegration,
+            'isPro' => $isSproutEmailPro,
         ]);
     }
 
@@ -184,8 +199,9 @@ class NotificationsController extends Controller
         $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEvents($notificationEmail);
 
         $defaultEmailTemplate = null;
+        $isSproutEmailIntegration = $viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT;
 
-        if ($viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT) {
+        if ($isSproutEmailIntegration) {
             $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEventsByViewContext($notificationEmail, $viewContext);
 
             if (class_exists($routeParams['defaultEmailTemplate'])) {
@@ -212,18 +228,23 @@ class NotificationsController extends Controller
 
         $tabs = $notificationEmail->getFieldLayoutTabs() ?: $tabs;
 
+        $isSproutEmailPro = SproutBase::$app->settings->isEdition('sprout-email', SproutBaseEmail::EDITION_PRO);
+
         return $this->renderTemplate('sprout-base-email/notifications/_edit', [
             'notificationEmail' => $notificationEmail,
             'events' => $events,
             'tabs' => $tabs,
             'showPreviewBtn' => $showPreviewBtn,
             'shareUrl' => $shareUrl,
-            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl
+            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl,
+            'pluginHandle' => $viewContext,
+            'isSproutEmailIntegration' => $isSproutEmailIntegration,
+            'isPro' => $isSproutEmailPro
         ]);
     }
 
     /**
-     * @param null   $emailId
+     * @param null $emailId
      *
      * @return Response
      * @throws ForbiddenHttpException
