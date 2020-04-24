@@ -15,7 +15,6 @@ use barrelstrength\sproutbaseemail\models\Settings as SproutBaseEmailSettings;
 use barrelstrength\sproutbaseemail\services\NotificationEmails;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbasereports\base\DataSource;
-use barrelstrength\sproutbasesentemail\elements\SentEmail;
 use Craft;
 use craft\base\Plugin;
 use craft\base\PluginInterface;
@@ -54,7 +53,7 @@ class NotificationsController extends Controller
         $currentPluginHandle = $routeParams['pluginHandle'] ?? null;
 
         $this->permissions = SproutBase::$app->settings->getPluginPermissions(new SproutBaseEmailSettings(), 'sprout-email', $currentPluginHandle);
-        
+
         // Only use notificationEmailBaseUrl variable in template routes, segments won't be accurate in action requests
         if (!Craft::$app->getRequest()->getIsActionRequest()) {
             $segmentOne = Craft::$app->getRequest()->getSegment(1);
@@ -246,13 +245,14 @@ class NotificationsController extends Controller
     /**
      * Save a Notification Email from the Notification Email template
      *
-     * @return Response
-     * @throws Exception
-     * @throws Throwable
-     * @throws MissingComponentException
+     * @return Response|null
      * @throws BadRequestHttpException
+     * @throws Exception
+     * @throws ForbiddenHttpException
+     * @throws MissingComponentException
+     * @throws Throwable
      */
-    public function actionSaveNotificationEmail(): Response
+    public function actionSaveNotificationEmail()
     {
         $this->requirePostRequest();
         $this->requirePermission($this->permissions['sproutEmail-editNotifications']);
@@ -333,17 +333,14 @@ class NotificationsController extends Controller
 
         // Get cp path cause template validation change current template path
         $cpPath = Craft::$app->getView()->getTemplatesPath();
-        // @todo - disable template validations due to errors on clean installations
-        // $validateTemplate = $this->validateTemplate($notificationEmail);
-        $validateTemplate = true;
 
-        if (!SproutBaseEmail::$app->notifications->saveNotification($notificationEmail)
-            || $validateTemplate == false) {
+        // @todo - disable template validations due to errors on clean installations
+        //  - Should we block the save action if templates don't validate? Can we know for sure?
+        // $validateTemplate = $this->validateTemplate($notificationEmail);
+
+        if (SproutBaseEmail::$app->notifications->saveNotification($notificationEmail)) {
 
             Craft::$app->getSession()->setError(Craft::t('sprout-base-email', 'Unable to save notification.'));
-
-//            $errorMessage = $this->formatErrors();
-//            Craft::error($errorMessage, __METHOD__);
 
             // Set the previous cp path to avoid not found template when showing errors
             if ($cpPath) {
@@ -397,9 +394,11 @@ class NotificationsController extends Controller
 //            $errorMessage = $this->formatErrors();
 //            Craft::error($errorMessage, __METHOD__);
 
-            return Craft::$app->getUrlManager()->setRouteParams([
+            Craft::$app->getUrlManager()->setRouteParams([
                 'notificationEmail' => $notificationEmail
             ]);
+
+            return null;
         }
 
         Craft::$app->getSession()->setNotice(Craft::t('sprout-base-email', 'Notification saved.'));
