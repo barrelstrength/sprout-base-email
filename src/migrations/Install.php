@@ -61,7 +61,7 @@ class Install extends Migration
     public function safeDown()
     {
         // Delete Notification Email Elements
-        $this->delete(Table::ELEMENTS, ['type', NotificationEmail::class]);
+        $this->delete(Table::ELEMENTS, ['type' => NotificationEmail::class]);
 
         $this->dropTableIfExists(NotificationEmailRecord::tableName());
         $this->removeSharedSettings();
