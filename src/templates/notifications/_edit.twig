@@ -13,14 +13,14 @@
 {% endif %}
 
 {% set crumbs = [
-    { label: "Notifications"|t('sprout-base-email'), url: cpUrl(notificationEmailBaseUrl) },
-    { label: "Settings"|t('sprout-base-email'), url: cpUrl(notificationEmailBaseUrl ~ 'settings/edit/' ~ notificationId) },
+    { label: "Notifications"|t('sprout-base-email'), url: cpUrl(currentBaseUrl) },
+    { label: "Settings"|t('sprout-base-email'), url: cpUrl(currentBaseUrl ~ 'settings/edit/' ~ notificationId) },
 ] %}
 
 {% set title  = notificationEmail is defined ? notificationEmail.title : 'Create a new Notification Email'|t('sprout-base-email') %}
 
 {% set fullPageForm = true %}
-{% set saveShortcutRedirect = cpUrl(notificationEmailBaseUrl ~ 'edit/' ~ notificationId) %}
+{% set saveShortcutRedirect = cpUrl(currentBaseUrl ~ 'edit/' ~ notificationId) %}
 
 {% set mailer = notificationEmail.getMailer() %}
 
@@ -57,7 +57,7 @@
     {#        </div>#}
 
     <div class="buttons">
-        <a href="{{ cpUrl(notificationEmailBaseUrl ~ 'settings/edit/' ~ notificationId) }}"
+        <a href="{{ cpUrl(currentBaseUrl ~ 'settings/edit/' ~ notificationId) }}"
             data-icon="settings" class="btn"></a>
 
         <div id="save-btn-container" class="btngroup submit">
@@ -73,14 +73,14 @@
                                 class="shortcut">⌘S</span></a></li>
                     <li><a class="formsubmit"
 
-                            data-redirect="{{ notificationEmailBaseUrl }}settings/edit/new"
+                            data-redirect="{{ currentBaseUrl }}settings/edit/new"
                             title="{{ 'Edit Field Layout'|t('sprout-base-email') }}">
                             {{ "Save and add another"|t('sprout-base-email') }}</a>
                     </li>
                 </ul>
                 {% if notificationEmail.id is not null %}
                     <hr>
-                    {% set redirectOnDelete = notificationEmailBaseUrl %}
+                    {% set redirectOnDelete = currentBaseUrl %}
                     <ul>
                         <li><a class="formsubmit error"
                                 data-action="sprout-base-email/notifications/delete-notification-email"
@@ -110,7 +110,7 @@
 
     <input type="hidden" name="action"
         value="sprout-base-email/notifications/save-notification-email">
-    {{ redirectInput(notificationEmailBaseUrl) }}
+    {{ redirectInput(currentBaseUrl) }}
     {% if notificationEmail.id is not null %}
         <input type="hidden" name="emailId" value="{{ notificationEmail.id }}">
     {% endif %}

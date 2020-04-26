@@ -9,11 +9,11 @@
 {% set title = "Edit Notification"|t('sprout-base-email') %}
 
 {% set crumbs = [
-    { label: "Notifications", url: url(notificationEmailBaseUrl) },
+    { label: "Notifications", url: url(currentBaseUrl) },
 ] %}
 
 {% set fullPageForm = true %}
-{% set saveShortcutRedirect = url(notificationEmailBaseUrl ~ 'settings/edit/{id}') %}
+{% set saveShortcutRedirect = url(currentBaseUrl ~ 'settings/edit/{id}') %}
 
 {% if notificationEmail['id'] %}
     {% set notificationEmailId = notificationEmail['id'] %}
@@ -30,7 +30,7 @@
 
             {% if notificationEmail['id'] is defined %}
 
-                {% set dataSaveEditRedirect = cpUrl(notificationEmailBaseUrl ~ 'edit/' ~ notificationEmailId) %}
+                {% set dataSaveEditRedirect = cpUrl(currentBaseUrl ~ 'edit/' ~ notificationEmailId) %}
 
                 <div class="btn submit menubtn"></div>
                 <div class="menu">
@@ -61,7 +61,7 @@
 
     <input type="hidden" name="action"
         value="sprout-base-email/notifications/save-notification-email-settings">
-    {{ redirectInput(notificationEmailBaseUrl ~ 'edit/' ~ notificationEmailId) }}
+    {{ redirectInput(currentBaseUrl ~ 'edit/' ~ notificationEmailId) }}
 
     <input type="hidden" name="emailId" value="{{ emailId }}">
     <input type="hidden" name="mailer" value="defaultmailer">

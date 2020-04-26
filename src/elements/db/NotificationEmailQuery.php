@@ -15,7 +15,7 @@ class NotificationEmailQuery extends ElementQuery
      */
     public $viewContext;
 
-    public $notificationEmailBaseUrl;
+    public $currentBaseUrl;
 
     /**
      * @return bool
