@@ -2,6 +2,8 @@
 
 namespace barrelstrength\sproutbaseemail\controllers;
 
+use barrelstrength\sproutbase\base\SharedPermissionsInterface;
+use barrelstrength\sproutbase\controllers\SharedController;
 use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\base\EmailTemplates;
 use barrelstrength\sproutbaseemail\base\Mailer;
@@ -22,7 +24,6 @@ use craft\errors\MissingComponentException;
 use craft\helpers\ElementHelper;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
-use craft\web\Controller;
 use InvalidArgumentException;
 use Throwable;
 use Twig\Error\LoaderError;
@@ -36,73 +37,80 @@ use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
 use yii\web\Response;
 
-/**
- * Class NotificationsController
- *
- * @package barrelstrength\sproutbase\controllers
- */
-class NotificationsController extends Controller
+class NotificationsController extends SharedController
 {
-    private $permissions = [];
+    private $isSproutEmailPro;
 
-    private $notificationEmailBaseUrl;
+    private $isSproutEmailIntegration;
 
+    /**
+     * @throws InvalidConfigException
+     * @throws MissingComponentException
+     */
     public function init()
     {
-        $routeParams = Craft::$app->getUrlManager()->getRouteParams();
-        $currentPluginHandle = $routeParams['pluginHandle'] ?? null;
-
-        $this->permissions = SproutBase::$app->settings->getPluginPermissions(new SproutBaseEmailSettings(), 'sprout-email', $currentPluginHandle);
-
-        // Only use notificationEmailBaseUrl variable in template routes, segments won't be accurate in action requests
-        if (!Craft::$app->getRequest()->getIsActionRequest()) {
-            $segmentOne = Craft::$app->getRequest()->getSegment(1);
-            $segmentTwo = Craft::$app->getRequest()->getSegment(2);
-
-            $this->notificationEmailBaseUrl = UrlHelper::cpUrl($segmentOne.'/'.$segmentTwo).'/';
-        }
-
         parent::init();
+
+        $this->isSproutEmailPro = SproutBase::$app->settings->isEdition('sprout-email', SproutBaseEmail::EDITION_PRO);
+        $this->isSproutEmailIntegration = $this->viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT;
+
+        Craft::$app->getSession()->set('sprout.notifications.currentBaseUrl', $this->currentBaseUrl);
+        Craft::$app->getSession()->set('sprout.notifications.viewContext', $this->viewContext);
+        Craft::$app->getSession()->set('sprout.reports.viewContext', DataSource::DEFAULT_VIEW_CONTEXT);
     }
 
     /**
-     * @param string $viewContext
-     * @param bool   $hideSidebar
+     * @return string
+     */
+    public function getDefaultPluginHandle(): string
+    {
+        return 'sprout-email';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultViewContext(): string
+    {
+        return NotificationEmails::DEFAULT_VIEW_CONTEXT;
+    }
+
+    /**
+     * @return SharedPermissionsInterface|SproutBaseEmailSettings|null
+     */
+    public function getSharedSettingsModel()
+    {
+        return new SproutBaseEmailSettings();
+    }
+
+    /**
+     * @param bool $hideSidebar
      *
      * @return Response
-     * @throws MissingComponentException
      * @throws ForbiddenHttpException
      */
-    public function actionNotificationsIndexTemplate(string $pluginHandle = 'sprout-email', string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $hideSidebar = false): Response
+    public function actionNotificationsIndexTemplate($hideSidebar = false): Response
     {
         $this->requirePermission($this->permissions['sproutEmail-viewNotifications']);
 
-        Craft::$app->getSession()->set('sprout.notifications.notificationEmailBaseUrl', $this->notificationEmailBaseUrl);
-        Craft::$app->getSession()->set('sprout.notifications.viewContext', $viewContext);
-
-        $isSproutEmailPro = SproutBase::$app->settings->isEdition('sprout-email', SproutBaseEmail::EDITION_PRO);
-
-        $isSproutEmailIntegration = $viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT;
-
         return $this->renderTemplate('sprout-base-email/notifications/index', [
-            'viewContext' => $viewContext,
-            'pluginHandle' => $pluginHandle,
-            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl,
+            'viewContext' => $this->viewContext,
+            'pluginHandle' => $this->pluginHandle,
+            'currentBaseUrl' => $this->currentBaseUrl,
             'hideSidebar' => $hideSidebar,
-            'isSproutEmailIntegration' => $isSproutEmailIntegration,
-            'isPro' => $isSproutEmailPro
+            'isSproutEmailIntegration' => $this->isSproutEmailIntegration,
+            'isPro' => $this->isSproutEmailPro
         ]);
     }
 
     /**
-     * @param string                 $viewContext
      * @param null                   $emailId
      * @param NotificationEmail|null $notificationEmail
      *
      * @return Response
      * @throws ForbiddenHttpException
      */
-    public function actionEditNotificationEmailSettingsTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $emailId = null, NotificationEmail $notificationEmail = null): Response
+    public function actionEditNotificationEmailSettingsTemplate($emailId = null, NotificationEmail $notificationEmail = null): Response
     {
         $this->requireAdmin();
 
@@ -116,23 +124,19 @@ class NotificationsController extends Controller
             }
         }
 
-        $isSproutEmailPro = SproutBase::$app->settings->isEdition('sprout-email', SproutBaseEmail::EDITION_PRO);
-        $isSproutEmailIntegration = $viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT;
-
         return $this->renderTemplate('sprout-base-email/notifications/_editFieldLayout', [
             'emailId' => $emailId,
             'notificationEmail' => $notificationEmail,
             'isNewNotificationEmail' => $isNewNotificationEmail,
-            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl,
+            'currentBaseUrl' => $this->currentBaseUrl,
             'pluginHandle' => 'sprout-email',
-            'viewContext' => $viewContext,
-            'isSproutEmailIntegration' => $isSproutEmailIntegration,
-            'isPro' => $isSproutEmailPro,
+            'viewContext' => $this->viewContext,
+            'isSproutEmailIntegration' => $this->isSproutEmailIntegration,
+            'isPro' => $this->isSproutEmailPro,
         ]);
     }
 
     /**
-     * @param string                 $viewContext
      * @param null                   $emailId
      * @param NotificationEmail|null $notificationEmail
      *
@@ -142,21 +146,18 @@ class NotificationsController extends Controller
      * @throws InvalidConfigException
      * @throws ForbiddenHttpException
      */
-    public function actionEditNotificationEmailTemplate(string $viewContext = NotificationEmails::DEFAULT_VIEW_CONTEXT, $emailId = null, NotificationEmail $notificationEmail = null): Response
+    public function actionEditNotificationEmailTemplate($emailId = null, NotificationEmail $notificationEmail = null): Response
     {
         $this->requirePermission($this->permissions['sproutEmail-editNotifications']);
-
-        Craft::$app->getSession()->set('sprout.notifications.viewContext', $viewContext);
-        Craft::$app->getSession()->set('sprout.reports.viewContext', DataSource::DEFAULT_VIEW_CONTEXT);
 
         $routeParams = Craft::$app->getUrlManager()->getRouteParams();
 
         // Immediately create a new Notification
         if ($emailId === 'new') {
-            $notificationEmail = SproutBaseEmail::$app->notifications->createNewNotification($viewContext);
+            $notificationEmail = SproutBaseEmail::$app->notifications->createNewNotification($this->viewContext);
 
             if ($notificationEmail) {
-                $url = UrlHelper::cpUrl($this->notificationEmailBaseUrl.'edit/'.$notificationEmail->id);
+                $url = UrlHelper::cpUrl($this->currentBaseUrl.'edit/'.$notificationEmail->id);
 
                 return $this->redirect($url);
             }
@@ -174,9 +175,7 @@ class NotificationsController extends Controller
 
         $isMobileBrowser = Craft::$app->getRequest()->isMobileBrowser(true);
 
-        $isSproutEmailInstalled = Craft::$app->plugins->getPlugin('sprout-email');
-
-        if (!$isMobileBrowser && $isSproutEmailInstalled) {
+        if (!$isMobileBrowser) {
             $showPreviewBtn = true;
 
             $this->getView()->registerJs('Craft.LivePreview.init('.Json::encode([
@@ -199,10 +198,9 @@ class NotificationsController extends Controller
         $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEvents($notificationEmail);
 
         $defaultEmailTemplate = null;
-        $isSproutEmailIntegration = $viewContext !== NotificationEmails::DEFAULT_VIEW_CONTEXT;
 
-        if ($isSproutEmailIntegration) {
-            $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEventsByViewContext($notificationEmail, $viewContext);
+        if ($this->isSproutEmailIntegration) {
+            $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEventsByViewContext($notificationEmail, $this->viewContext);
 
             if (class_exists($routeParams['defaultEmailTemplate'])) {
                 $defaultEmailTemplate = new $routeParams['defaultEmailTemplate']();
@@ -228,18 +226,16 @@ class NotificationsController extends Controller
 
         $tabs = $notificationEmail->getFieldLayoutTabs() ?: $tabs;
 
-        $isSproutEmailPro = SproutBase::$app->settings->isEdition('sprout-email', SproutBaseEmail::EDITION_PRO);
-
         return $this->renderTemplate('sprout-base-email/notifications/_edit', [
             'notificationEmail' => $notificationEmail,
             'events' => $events,
             'tabs' => $tabs,
             'showPreviewBtn' => $showPreviewBtn,
             'shareUrl' => $shareUrl,
-            'notificationEmailBaseUrl' => $this->notificationEmailBaseUrl,
-            'pluginHandle' => $viewContext,
-            'isSproutEmailIntegration' => $isSproutEmailIntegration,
-            'isPro' => $isSproutEmailPro
+            'currentBaseUrl' => $this->currentBaseUrl,
+            'pluginHandle' => $this->viewContext,
+            'isSproutEmailIntegration' => $this->isSproutEmailIntegration,
+            'isPro' => $this->isSproutEmailPro
         ]);
     }
 
@@ -353,20 +349,18 @@ class NotificationsController extends Controller
         }
 
         // Get cp path cause template validation change current template path
-        $cpPath = Craft::$app->getView()->getTemplatesPath();
+        $oldPath = Craft::$app->getView()->getTemplatesPath();
 
         // @todo - disable template validations due to errors on clean installations
         //  - Should we block the save action if templates don't validate? Can we know for sure?
         // $validateTemplate = $this->validateTemplate($notificationEmail);
 
-        if (SproutBaseEmail::$app->notifications->saveNotification($notificationEmail)) {
+        if (!SproutBaseEmail::$app->notifications->saveNotification($notificationEmail)) {
 
             Craft::$app->getSession()->setError(Craft::t('sprout-base-email', 'Unable to save notification.'));
 
             // Set the previous cp path to avoid not found template when showing errors
-            if ($cpPath) {
-                Craft::$app->getView()->setTemplatesPath($cpPath);
-            }
+            Craft::$app->getView()->setTemplatesPath($oldPath);
 
             Craft::$app->getUrlManager()->setRouteParams([
                 'notificationEmail' => $notificationEmail
