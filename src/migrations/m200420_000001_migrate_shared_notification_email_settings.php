@@ -38,10 +38,10 @@ class m200420_000001_migrate_shared_notification_email_settings extends Migratio
         }
 
         $newEmailSharedSettings = [
-            'pluginNameOverride' => $sproutEmailSettings['pluginNameOverride'],
-            'enableNotificationEmails' => $sproutEmailSettings['enableNotificationEmails'],
-            'emailTemplateId' => $sproutEmailSettings['emailTemplateId'],
-            'enablePerEmailEmailTemplateIdOverride' => $sproutEmailSettings['enablePerEmailEmailTemplateIdOverride']
+            'pluginNameOverride' => $sproutEmailSettings['pluginNameOverride'] ?? '',
+            'enableNotificationEmails' => $sproutEmailSettings['enableNotificationEmails'] ?? 1,
+            'emailTemplateId' => $sproutEmailSettings['emailTemplateId'] ?? 'barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates',
+            'enablePerEmailEmailTemplateIdOverride' => $sproutEmailSettings['enablePerEmailEmailTemplateIdOverride'] ?? 0
         ];
 
         $this->insert('{{%sprout_settings}}', [
