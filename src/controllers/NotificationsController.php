@@ -213,7 +213,7 @@ class NotificationsController extends SharedController
 
         // Set a default template if we don't have one set
         if (!$notificationEmail->emailTemplateId) {
-            $notificationEmail->emailTemplateId = $defaultEmailTemplate;
+            $notificationEmail->emailTemplateId = get_class($defaultEmailTemplate);
         }
 
         $tabs = [
