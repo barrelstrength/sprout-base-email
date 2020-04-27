@@ -7,6 +7,7 @@
 
 namespace barrelstrength\sproutbaseemail\migrations;
 
+use barrelstrength\sproutbase\migrations\Install as SproutBaseInstall;
 use barrelstrength\sproutbase\records\Settings as SproutBaseSettingsRecord;
 use barrelstrength\sproutbaseemail\elements\NotificationEmail;
 use barrelstrength\sproutbaseemail\models\Settings as SproutBaseEmailSettings;
@@ -22,6 +23,11 @@ class Install extends Migration
      */
     public function safeUp()
     {
+        $migration = new SproutBaseInstall();
+        ob_start();
+        $migration->safeUp();
+        ob_end_clean();
+
         $notificationTableName = NotificationEmailRecord::tableName();
 
         if ($this->getDb()->tableExists($notificationTableName)) {
