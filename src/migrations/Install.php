@@ -30,7 +30,7 @@ class Install extends Migration
 
         $notificationTableName = NotificationEmailRecord::tableName();
 
-        if ($this->getDb()->tableExists($notificationTableName)) {
+        if (!$this->getDb()->tableExists($notificationTableName)) {
             $this->createTable($notificationTableName,
                 [
                     'id' => $this->primaryKey(),
