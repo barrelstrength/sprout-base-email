@@ -197,24 +197,17 @@ class NotificationsController extends SharedController
 
         $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEvents($notificationEmail);
 
-        $defaultEmailTemplate = null;
+        $defaultEmailTemplateId = BasicTemplates::class;
 
         if ($this->isSproutEmailIntegration) {
             $events = SproutBaseEmail::$app->notificationEvents->getNotificationEmailEventsByViewContext($notificationEmail, $this->viewContext);
 
-            if (class_exists($routeParams['defaultEmailTemplate'])) {
-                $defaultEmailTemplate = new $routeParams['defaultEmailTemplate']();
+            if (class_exists($routeParams['defaultEmailTemplateId'])) {
+                $defaultEmailTemplateId = $routeParams['defaultEmailTemplateId'];
             }
         }
 
-        if (!$defaultEmailTemplate instanceof EmailTemplates) {
-            $defaultEmailTemplate = BasicTemplates::class;
-        }
-
-        // Set a default template if we don't have one set
-        if (!$notificationEmail->emailTemplateId) {
-            $notificationEmail->emailTemplateId = get_class($defaultEmailTemplate);
-        }
+        $notificationEmail->emailTemplateId = $defaultEmailTemplateId;
 
         $tabs = [
             [
