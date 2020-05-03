@@ -58,7 +58,7 @@ class m200420_000001_migrate_shared_notification_email_settings extends Migratio
             'enablePerEmailEmailTemplateIdOverride' => $sproutEmailSettings['enablePerEmailEmailTemplateIdOverride'] ?? 0
         ];
 
-        $this->insert('{{%sprout_settings}}', [
+        $this->update('{{%sprout_settings}}', [
             'model' => 'barrelstrength\sproutbaseemail\models\Settings',
             'settings' => json_encode($newEmailSharedSettings)
         ]);

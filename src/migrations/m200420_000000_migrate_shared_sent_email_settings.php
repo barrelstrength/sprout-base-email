@@ -71,7 +71,7 @@ class m200420_000000_migrate_shared_sent_email_settings extends Migration
             $sproutEmailSettings['cleanupProbability']
         );
 
-        $this->insert('{{%sprout_settings}}', [
+        $this->update('{{%sprout_settings}}', [
             'model' => 'barrelstrength\sproutbasesentemail\models\Settings',
             'settings' => json_encode($newSentEmailSharedSettings)
         ]);
