@@ -12,6 +12,8 @@
 
 namespace barrelstrength\sproutbaseemail\migrations;
 
+use barrelstrength\sproutbase\migrations\Install as SproutBaseInstall;
+use barrelstrength\sproutbaseemail\migrations\Install as SproutBaseEmailInstall;
 use Craft;
 use craft\db\Migration;
 use craft\services\Plugins;
@@ -23,6 +25,18 @@ class m200420_000001_migrate_shared_notification_email_settings extends Migratio
      */
     public function safeUp(): bool
     {
+
+        // Make sure we have the sprout_settings table
+        $migration = new SproutBaseInstall();
+        ob_start();
+        $migration->safeUp();
+        ob_end_clean();
+
+        $migration = new SproutBaseEmailInstall();
+        ob_start();
+        $migration->insertDefaultSettings();
+        ob_end_clean();
+
         // Don't make the same config changes twice
         $projectConfig = Craft::$app->getProjectConfig();
         $pluginHandle = 'sprout-email';
