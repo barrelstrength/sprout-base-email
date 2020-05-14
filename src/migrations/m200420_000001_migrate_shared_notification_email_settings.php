@@ -59,8 +59,9 @@ class m200420_000001_migrate_shared_notification_email_settings extends Migratio
         ];
 
         $this->update('{{%sprout_settings}}', [
-            'model' => 'barrelstrength\sproutbaseemail\models\Settings',
             'settings' => json_encode($newEmailSharedSettings)
+        ], [
+            'model' => 'barrelstrength\sproutbaseemail\models\Settings'
         ]);
 
         Craft::$app->getProjectConfig()->remove(Plugins::CONFIG_PLUGINS_KEY.'.'.$pluginHandle.'.settings', 'Migrated Sprout Email settings to Sent Base Email.');
