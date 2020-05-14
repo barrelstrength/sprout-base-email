@@ -121,6 +121,7 @@ abstract class EmailTemplates
     protected function processEmailTemplates()
     {
         $view = Craft::$app->getView();
+
         $oldTemplateMode = $view->getTemplateMode();
         $oldTemplatePath = $view->getTemplatesPath();
 

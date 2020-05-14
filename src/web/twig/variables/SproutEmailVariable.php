@@ -2,6 +2,7 @@
 
 namespace barrelstrength\sproutbaseemail\web\twig\variables;
 
+use barrelstrength\sproutbasecampaigns\SproutBaseCampaigns;
 use barrelstrength\sproutbaseemail\base\EmailTemplates;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
@@ -20,7 +21,8 @@ class SproutEmailVariable
      */
     public function getCampaignTypes(): array
     {
-        return SproutCampaign::$app->campaignTypes->getCampaignTypes();
+        // @todo - move to sprout-base-campaigns
+        return SproutBaseCampaigns::$app->campaignTypes->getCampaignTypes();
     }
 
     /**
