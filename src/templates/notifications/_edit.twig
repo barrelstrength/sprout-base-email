@@ -108,6 +108,7 @@
 
 {% block content %}
 
+    <input type="hidden" name="pluginHandle" value="{{ pluginHandle }}">
     <input type="hidden" name="action"
         value="sprout-base-email/notifications/save-notification-email">
     {{ redirectInput(currentBaseUrl) }}
