@@ -13,7 +13,7 @@
 namespace barrelstrength\sproutbaseemail\migrations;
 
 use barrelstrength\sproutbase\migrations\Install as SproutBaseInstall;
-use barrelstrength\sproutbaseemail\migrations\Install as SproutBaseEmailInstall;
+use barrelstrength\sproutbasesentemail\migrations\Install as SproutBaseSentEmailInstall;
 use Craft;
 use craft\db\Migration;
 use craft\services\Plugins;
@@ -39,7 +39,7 @@ class m200420_000000_migrate_shared_sent_email_settings extends Migration
         $migration->safeUp();
         ob_end_clean();
 
-        $migration = new SproutBaseEmailInstall();
+        $migration = new SproutBaseSentEmailInstall();
         ob_start();
         $migration->insertDefaultSettings();
         ob_end_clean();
