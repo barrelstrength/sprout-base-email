@@ -72,8 +72,9 @@ class m200420_000000_migrate_shared_sent_email_settings extends Migration
         );
 
         $this->update('{{%sprout_settings}}', [
+            'settings' => json_encode($newSentEmailSharedSettings),
+        ], [
             'model' => 'barrelstrength\sproutbasesentemail\models\Settings',
-            'settings' => json_encode($newSentEmailSharedSettings)
         ]);
 
         Craft::$app->getProjectConfig()->set(Plugins::CONFIG_PLUGINS_KEY.'.'.$pluginHandle.'.settings', $sproutEmailSettings, 'Updated Sprout Email settings to remove Sent Email settings.');
