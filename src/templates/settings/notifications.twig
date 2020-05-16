@@ -9,6 +9,8 @@
 
 {% from _self import configWarning %}
 
+<input type="hidden" name="sproutBaseSettingsType" value="{{ className(settings) }}">
+
 {{ forms.lightswitchField({
     label: "Enable Notifications?"|t('sprout-base-email'),
     instructions: "Disable Notifications to remove them from the sidebar navigation and make them no longer accessible in the Control Panel."|t('sprout-base-email'),
