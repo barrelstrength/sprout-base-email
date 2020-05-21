@@ -494,7 +494,6 @@ class NotificationsController extends SharedController
             );
         }
 
-        $notificationEmail->recipients = $recipients;
         $notificationEmail->title = $notificationEmail->subjectLine;
 
         $event = SproutBaseEmail::$app->notificationEvents->getEvent($notificationEmail);
@@ -513,6 +512,10 @@ class NotificationsController extends SharedController
 
         $notificationEmail->setEventObject($event->getMockEventObject());
 
+        // Make sure we're only sending to Test recipients
+        $notificationEmail->recipients = null;
+        $onTheFlyRecipients = array_map('trim', explode(',', $recipients));
+        $mailer->setOnTheFlyRecipients($onTheFlyRecipients);
         $recipientList = $mailer->getRecipientList($notificationEmail);
 
         if ($recipientList->getInvalidRecipients()) {

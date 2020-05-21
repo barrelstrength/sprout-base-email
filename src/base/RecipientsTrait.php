@@ -141,9 +141,9 @@ trait RecipientsTrait
             foreach ($onTheFlyRecipients as $onTheFlyRecipient) {
                 if ($validator->isValid($onTheFlyRecipient->email, $multipleValidations)) {
                     $recipientList->addRecipient($onTheFlyRecipient);
+                } else {
+                    $recipientList->addInvalidRecipient($onTheFlyRecipient);
                 }
-
-                $recipientList->addInvalidRecipient($onTheFlyRecipient);
             }
 
             // On the Fly Recipients are added in Test Modals and override all other
@@ -152,7 +152,6 @@ trait RecipientsTrait
         }
 
         $recipientList = $this->getRecipients($email, $email->recipients);
-
 
         $listRecipients = $this->getRecipientsFromSelectedLists($email->listSettings);
 
