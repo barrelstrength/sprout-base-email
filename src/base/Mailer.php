@@ -184,7 +184,9 @@ abstract class Mailer extends Component
     private function renderObjectTemplateSafely(EmailElement $email, $attribute, $object)
     {
         try {
-            $email->{$attribute} = Craft::$app->getView()->renderObjectTemplate($email->{$attribute}, $object);
+            // Make sure we don't process any null values
+            $attributeString = $email->{$attribute} ?? '';
+            $email->{$attribute} = Craft::$app->getView()->renderObjectTemplate($attributeString, $object);
         } catch (Exception $e) {
             $email->addError($attribute, $e->getMessage());
         }
