@@ -37,7 +37,13 @@
                     <p><em>{{ message is defined ? message : 'An error occurred while sending your campaign. Please review the Craft logs for more info.'|t('sprout-base-email') }}</em></p>
 
                     {% if email.getErrors()|length %}
-                        {{ forms.errorList(email.getErrors()) }}
+                        {% if email.getErrors() is iterable %}
+                            {% for error in email.getErrors() %}
+                                {{ forms.errorList(error) }}
+                            {% endfor %}
+                        {% else %}
+                            {{ forms.errorList(email.getErrors()) }}
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>

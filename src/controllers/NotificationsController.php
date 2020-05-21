@@ -535,14 +535,24 @@ class NotificationsController extends SharedController
             );
         }
 
-        if (!$mailer->sendNotificationEmail($notificationEmail)) {
+        try {
+            if (!$mailer->sendNotificationEmail($notificationEmail)) {
+                return $this->asJson(
+                    ModalResponse::createErrorModalResponse('sprout-base-email/_modals/response', [
+                        'email' => $notificationEmail,
+                        'message' => Craft::t('sprout-base-email', 'Unable to send Test Notification Email')
+                    ])
+                );
+            }
+        } catch (\Exception $exception) {
             return $this->asJson(
                 ModalResponse::createErrorModalResponse('sprout-base-email/_modals/response', [
                     'email' => $notificationEmail,
-                    'message' => Craft::t('sprout-base-email', 'Unable to send Test Notification Email')
+                    'message' => $exception->getMessage()
                 ])
             );
         }
+
 
         return $this->asJson(
             ModalResponse::createModalResponse('sprout-base-email/_modals/response', [
