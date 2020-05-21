@@ -136,6 +136,7 @@ abstract class Mailer extends Component
         $this->renderObjectTemplateSafely($email, 'replyToEmail', $object);
         $this->renderObjectTemplateSafely($email, 'defaultBody', $object);
 
+
         $message->setSubject($email->subjectLine);
         $message->setFrom([$email->fromEmail => $email->fromName]);
         $message->setReplyTo($email->replyToEmail);
@@ -185,7 +186,7 @@ abstract class Mailer extends Component
         try {
             $email->{$attribute} = Craft::$app->getView()->renderObjectTemplate($email->{$attribute}, $object);
         } catch (Exception $e) {
-            $email->addError($email->{$attribute}, $e->getMessage());
+            $email->addError($attribute, $e->getMessage());
         }
     }
 }
