@@ -415,7 +415,7 @@ class NotificationEmail extends EmailElement
      * @return bool
      * @throws Throwable
      */
-    public function emailList($attribute): bool
+    public function validateEmailList($attribute): bool
     {
         $recipients = $this->{$attribute};
         $validator = new EmailValidator();
@@ -434,8 +434,9 @@ class NotificationEmail extends EmailElement
                 }
                 // Validate actual emails
                 if (!$validator->isValid(trim($recipient), $multipleValidations)) {
+
                     $this->addError($attribute, Craft::t('sprout-base-email',
-                        $recipient.' email is not valid.'));
+                        'Email is invalid: '.$recipient));
                 }
             }
         }
@@ -547,9 +548,9 @@ class NotificationEmail extends EmailElement
 
         $rules[] = [['subjectLine', 'fromName', 'fromEmail'], 'required'];
         $rules[] = [['fromName', 'fromEmail', 'replyToEmail'], 'default', 'value' => ''];
-        $rules[] = ['recipients', 'emailList'];
-        $rules[] = ['cc', 'emailList'];
-        $rules[] = ['bcc', 'emailList'];
+        $rules[] = ['recipients', 'validateEmailList'];
+        $rules[] = ['cc', 'validateEmailList'];
+        $rules[] = ['bcc', 'validateEmailList'];
 
         return $rules;
     }
