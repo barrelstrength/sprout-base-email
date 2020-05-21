@@ -512,8 +512,9 @@ class NotificationsController extends SharedController
 
         $notificationEmail->setEventObject($event->getMockEventObject());
 
-        // Make sure we're only sending to Test recipients
-        $notificationEmail->recipients = null;
+        // We need to set recipients but it will be overridden with the
+        // onTheFlyRecipients. In this test use case, they are both the same.
+        $notificationEmail->recipients = $recipients;
         $onTheFlyRecipients = array_map('trim', explode(',', $recipients));
         $mailer->setOnTheFlyRecipients($onTheFlyRecipients);
         $recipientList = $mailer->getRecipientList($notificationEmail);
