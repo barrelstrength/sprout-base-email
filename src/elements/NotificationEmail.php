@@ -11,6 +11,7 @@ use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use barrelstrength\sproutbaseemail\web\assets\email\EmailAsset;
 use Craft;
 use craft\behaviors\FieldLayoutBehavior;
+use barrelstrength\sproutbaseemail\elements\actions\SetStatus;
 use craft\elements\db\ElementQueryInterface;
 use craft\errors\MissingComponentException;
 use craft\helpers\Json;
@@ -244,6 +245,7 @@ class NotificationEmail extends EmailElement
     {
         $actions = [];
 
+        $actions[] = SetStatus::class;
         $actions[] = DeleteNotification::class;
 
         return $actions;
@@ -252,12 +254,12 @@ class NotificationEmail extends EmailElement
     /**
      * @inheritdoc
      */
-    public function getStatuses(): array
+    public static function statuses(): array
     {
         return [
-            self::ENABLED => Craft::t('sprout-base-email', 'enabled'),
-            self::PENDING => Craft::t('sprout-base-email', 'pending'),
-            self::DISABLED => Craft::t('sprout-base-email', 'disabled')
+            self::ENABLED => Craft::t('sprout-base-email', 'Enabled'),
+//            self::PENDING => Craft::t('sprout-base-email', 'Pending'),
+            self::DISABLED => Craft::t('sprout-base-email', 'Disabled')
         ];
     }
 
