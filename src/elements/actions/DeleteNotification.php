@@ -35,7 +35,7 @@ class DeleteNotification extends Delete
     {
         parent::performAction($query);
 
-        $this->setMessage(Craft::t('app', 'Notification(s) deleted.'));
+        $this->setMessage(Craft::t('sprout-base-email', 'Notification(s) deleted.'));
 
         return true;
     }
