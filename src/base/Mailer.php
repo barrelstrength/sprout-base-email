@@ -9,7 +9,6 @@ namespace barrelstrength\sproutbaseemail\base;
 
 use barrelstrength\sproutbaseemail\models\SimpleRecipient;
 use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
-use barrelstrength\sproutbaseemail\web\twig\EmailTemplateSandboxExtension;
 use Craft;
 use craft\base\Component;
 use craft\mail\Message;
@@ -121,7 +120,6 @@ abstract class Mailer extends Component
      *
      * @return Message
      * @throws Throwable
-     * @throws \yii\base\Exception
      */
     public function getMessage(EmailElement $email): Message
     {

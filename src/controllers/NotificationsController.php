@@ -5,7 +5,6 @@ namespace barrelstrength\sproutbaseemail\controllers;
 use barrelstrength\sproutbase\base\SharedPermissionsInterface;
 use barrelstrength\sproutbase\controllers\SharedController;
 use barrelstrength\sproutbase\SproutBase;
-use barrelstrength\sproutbaseemail\base\EmailTemplates;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
 use barrelstrength\sproutbaseemail\base\NotificationEvent;

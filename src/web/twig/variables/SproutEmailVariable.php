@@ -10,7 +10,6 @@ use barrelstrength\sproutbasesentemail\elements\SentEmail;
 use Craft;
 use craft\helpers\UrlHelper;
 use yii\base\Exception;
-use yii\base\InvalidConfigException;
 
 class SproutEmailVariable
 {

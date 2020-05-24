@@ -2,7 +2,7 @@
 
 namespace barrelstrength\sproutbaseemail\base;
 
-use barrelstrength\sproutcampaigns\elements\CampaignEmail;
+use barrelstrength\sproutbasecampaigns\elements\CampaignEmail;
 use Craft;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;

@@ -225,7 +225,7 @@ trait RecipientsTrait
         $listIds = [];
 
         // Convert json format to array
-        if ($listSettings !== null AND is_string($listSettings)) {
+        if ($listSettings !== null && is_string($listSettings)) {
             $listIds = Json::decode($listSettings);
             $listIds = $listIds['listIds'];
         }

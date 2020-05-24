@@ -2,7 +2,6 @@
 
 namespace barrelstrength\sproutbaseemail\base;
 
-use barrelstrength\sproutbaseemail\emailtemplates\CustomTemplates;
 use Craft;
 use craft\web\View;
 use League\HTMLToMarkdown\HtmlConverter;

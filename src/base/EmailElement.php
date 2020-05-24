@@ -9,7 +9,6 @@ use barrelstrength\sproutbaseemail\SproutBaseEmail;
 use Craft;
 use craft\base\Element;
 use craft\base\Field;
-use yii\base\Exception;
 
 /**
  *

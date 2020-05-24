@@ -9,10 +9,7 @@ namespace barrelstrength\sproutbaseemail\models;
 
 use barrelstrength\sproutbase\base\SharedPermissionsInterface;
 use barrelstrength\sproutbase\base\SproutSettingsInterface;
-use barrelstrength\sproutbase\SproutBase;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
-use barrelstrength\sproutbaseemail\SproutBaseEmail;
-use barrelstrength\sproutemail\SproutEmail;
 use Craft;
 use craft\base\Model;
 

@@ -219,7 +219,7 @@ class NotificationEmailEvents extends Component
                 $notificationEmail->setEventObject($object);
 
                 // Don't send emails for disabled notification email entries.
-                if (!$notificationEmail->isReady() OR
+                if (!$notificationEmail->isReady() ||
                     !$notificationEmail->sendRuleIsTrue()) {
                     continue;
                 }

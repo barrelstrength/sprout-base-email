@@ -135,7 +135,7 @@ class NotificationEmails extends Component
         $notificationEmail = Craft::$app->getElements()->getElementById($notificationId, NotificationEmail::class);
 
         if (!$notificationEmail instanceof NotificationEmail) {
-            throw new ElementNotFoundException('Notification Email not found using id '.$$notificationId); 
+            throw new ElementNotFoundException('Notification Email not found using id '.$$notificationId);
         }
 
         $event = SproutBaseEmail::$app->notificationEvents->getEvent($notificationEmail);

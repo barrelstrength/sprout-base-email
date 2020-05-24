@@ -2,6 +2,7 @@
 
 namespace barrelstrength\sproutbaseemail\mailers;
 
+use barrelstrength\sproutbasecampaigns\elements\CampaignEmail;
 use barrelstrength\sproutbaseemail\base\EmailElement;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\base\NotificationEmailSenderInterface;
@@ -10,7 +11,6 @@ use barrelstrength\sproutbasereports\elements\Report;
 use barrelstrength\sproutbasereports\records\Report as ReportRecord;
 use barrelstrength\sproutbasesentemail\services\SentEmails;
 use barrelstrength\sproutbasesentemail\SproutBaseSentEmail;
-use barrelstrength\sproutcampaigns\elements\CampaignEmail;
 use barrelstrength\sproutforms\fields\formfields\FileUpload;
 use Craft;
 use craft\base\Element;
@@ -118,7 +118,7 @@ class DefaultMailer extends Mailer implements NotificationEmailSenderInterface
             $object->getFieldLayout()) {
 
             foreach ($object->getFieldLayout()->getFields() as $field) {
-                if (get_class($field) === FileUpload::class OR get_class($field) === Assets::class) {
+                if (get_class($field) === FileUpload::class || get_class($field) === Assets::class) {
                     $query = $object->{$field->handle};
 
                     if ($query instanceof AssetQuery) {
