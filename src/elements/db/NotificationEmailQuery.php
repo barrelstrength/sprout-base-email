@@ -23,6 +23,10 @@ class NotificationEmailQuery extends ElementQuery
      */
     protected function beforePrepare(): bool
     {
+        if ($this->currentBaseUrl) {
+            Craft::$app->getSession()->set('sprout.notifications.currentBaseUrl', $this->currentBaseUrl);
+        }
+
         $this->joinElementTable('sproutemail_notificationemails');
 
         $this->query->select([

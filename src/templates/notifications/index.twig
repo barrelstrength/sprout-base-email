@@ -32,6 +32,9 @@
 {% endblock %}
 
 {% block initJs %}
+
+    Craft.defaultIndexCriteria.currentBaseUrl = '{{ currentBaseUrl }}';
+
     {{ parent() }}
 
     {% if hideSidebar %}
