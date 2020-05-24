@@ -2,12 +2,10 @@
 
 namespace barrelstrength\sproutbaseemail\web\twig\variables;
 
-use barrelstrength\sproutbasecampaigns\SproutBaseCampaigns;
 use barrelstrength\sproutbaseemail\base\EmailTemplates;
 use barrelstrength\sproutbaseemail\base\Mailer;
 use barrelstrength\sproutbaseemail\emailtemplates\BasicTemplates;
 use barrelstrength\sproutbaseemail\SproutBaseEmail;
-use barrelstrength\sproutcampaigns\SproutCampaign;
 use barrelstrength\sproutbasesentemail\elements\SentEmail;
 use Craft;
 use craft\helpers\UrlHelper;
@@ -17,15 +15,6 @@ use yii\base\InvalidConfigException;
 class SproutEmailVariable
 {
     /**
-     * @return array
-     */
-    public function getCampaignTypes(): array
-    {
-        // @todo - move to sprout-base-campaigns
-        return SproutBaseCampaigns::$app->campaignTypes->getCampaignTypes();
-    }
-
-    /**
      * @param $mailer
      *
      * @return Mailer
@@ -34,28 +23,6 @@ class SproutEmailVariable
     public function getMailer($mailer): Mailer
     {
         return SproutBaseEmail::$app->mailers->getMailerByName($mailer);
-    }
-
-    /**
-     * Returns the value of the displayDateScheduled general config setting
-     *
-     * @return mixed|null
-     * @throws InvalidConfigException
-     */
-    public function getDisplayDateScheduled()
-    {
-        $config = Craft::$app->getConfig()->getConfigSettings('general');
-
-        if (!is_array($config)) {
-            return false;
-        }
-
-        return $config->displayDateScheduled ?? false;
-    }
-
-    public function getCampaignEmailById($id)
-    {
-        return SproutCampaign::$app->campaignEmails->getCampaignEmailById($id);
     }
 
     public function getSentEmailById($sentEmailId)
