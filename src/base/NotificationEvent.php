@@ -116,7 +116,7 @@ abstract class NotificationEvent extends SavableComponent
      */
     public function getDescription(): string
     {
-        return null;
+        return '';
     }
 
     /**
