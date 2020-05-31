@@ -16,7 +16,8 @@
     instructions: "Disable Notifications to remove them from the sidebar navigation and make them no longer accessible in the Control Panel."|t('sprout-base-email'),
     name: 'enableNotificationEmails',
     on: settings.enableNotificationEmails,
-    warning: config.enableNotificationEmails is defined ? configWarning('enableNotificationEmails')
+    warning: config.enableNotificationEmails is defined ? configWarning('enableNotificationEmails'),
+    first: true
 }) }}
 
 {% set templateOptions = craft.sproutEmail.getEmailTemplateOptions() %}
