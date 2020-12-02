@@ -307,13 +307,13 @@
         {% set templateOptions = craft.sproutEmail.getEmailTemplateOptions(notificationEmail) %}
 
         {{ forms.field({
-            label: "Templates <span class='info'>The Email Templates to display your email.</span>"|t('sprout-base-email'),
+            label: "Templates <span class='info'>The Email Templates folder. Email Templates should be named `email.twig` (required) and `email.txt` (optional)</span>"|t('sprout-base-email'),
             errors: notificationEmail is defined ? notificationEmail.getErrors('emailTemplateId') : null,
         }, sproutFields.selectOther({
             name: 'emailTemplateId',
             options: templateOptions,
             value: notificationEmail is defined ? notificationEmail.emailTemplateId : null,
-            otherPlaceholderText: '_email/email-template-folder'|t('sprout-base-email'),
+            otherPlaceholderText: '_emails/folder'|t('sprout-base-email'),
             errors: notificationEmail is defined ? notificationEmail.getErrors('emailTemplateId')
         })) }}
 
