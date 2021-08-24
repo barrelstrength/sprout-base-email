@@ -230,8 +230,8 @@ class NotificationEmails extends Component
         $systemEmailSettings = \craft\helpers\App::mailSettings();
 
         // @todo - add override settings to Sprout Email
-        $notificationEmail->fromName = $systemEmailSettings->fromName;
-        $notificationEmail->fromEmail = $systemEmailSettings->fromEmail;
+        $notificationEmail->fromName = Craft::parseEnv($systemEmailSettings->fromName);
+        $notificationEmail->fromEmail = Craft::parseEnv($systemEmailSettings->fromEmail);
 
         if ($this->saveNotification($notificationEmail)) {
             return $notificationEmail;
