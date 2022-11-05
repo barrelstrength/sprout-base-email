@@ -2,6 +2,11 @@
 
 A collection of common email classes and libraries for the Sprout Plugins Suite for Craft CMS.
 
+## Resources
+
+- [Report issues](https://github.com/barrelstrength/craft-sprout-email/issues) to the [Sprout Email](https://github.com/barrelstrength/craft-sprout-email) plugin repository.
+- Pull Requests should reference an open issue in the Sprout Email plugin repository
+
 ## Usage
 
 Include Sprout Base Email in your Sprout plugin composer.json file:
