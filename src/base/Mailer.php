@@ -11,6 +11,7 @@ use barrelstrength\sproutbaseemail\models\SimpleRecipient;
 use barrelstrength\sproutbaseemail\models\SimpleRecipientList;
 use Craft;
 use craft\base\Component;
+use craft\helpers\App;
 use craft\mail\Message;
 use Exception;
 use Throwable;
@@ -127,14 +128,17 @@ abstract class Mailer extends Component
 
         $message = new Message();
 
+        $email->fromName = App::parseEnv($email->fromName);
+        $email->fromEmail = App::parseEnv($email->fromEmail);
+        $email->replyToEmail = App::parseEnv($email->replyToEmail);
+
         // Render Email Entry fields that have dynamic values
         $this->renderObjectTemplateSafely($email, 'subjectLine', $object);
         $this->renderObjectTemplateSafely($email, 'fromName', $object);
         $this->renderObjectTemplateSafely($email, 'fromEmail', $object);
         $this->renderObjectTemplateSafely($email, 'replyToEmail', $object);
         $this->renderObjectTemplateSafely($email, 'defaultBody', $object);
-
-
+        
         $message->setSubject($email->subjectLine);
         $message->setFrom([$email->fromEmail => $email->fromName]);
         $message->setReplyTo($email->replyToEmail);
